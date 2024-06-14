@@ -1,9 +1,9 @@
 {
-  "name": "@ponchrobles_/inertiajs-tables-laravel-query-builder",
+  "name": "@adesin-fr/inertiajs-tables-laravel-query-builder",
   "version": "3.0.8",
   "description": "Inertia.js Front-end Components for Spatie's Laravel Query Builder",
   "private": false,
-  "author": "PonchRobles <ponchrobles@gmail.com>",
+  "author": "AdesinFr <AdesinFr@gmail.com>",
   "license": "MIT",
   "type": "module",
   "main": "./dist/inertiajs-tables-laravel-query-builder.umd.js",
@@ -40,13 +40,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PonchRobles/inertiajs-tables-laravel-query-builder.git"
+    "url": "git+https://github.com/AdesinFr/inertiajs-tables-laravel-query-builder.git"
   },
   "keywords": [
     "inertiajs-tables-laravel-query-builder"
   ],
   "bugs": {
-    "url": "https://github.com/PonchRobles/inertiajs-tables-laravel-query-builder/issues"
+    "url": "https://github.com/AdesinFr/inertiajs-tables-laravel-query-builder/issues"
   },
-  "homepage": "https://github.com/PonchRobles/inertiajs-tables-laravel-query-builder#readme"
+  "homepage": "https://github.com/AdesinFr/inertiajs-tables-laravel-query-builder#readme"
 }

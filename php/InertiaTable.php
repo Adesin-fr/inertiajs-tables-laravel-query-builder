@@ -1,16 +1,16 @@
 <?php
 
-namespace ProtoneMedia\LaravelQueryBuilderInertiaJs;
+namespace AdesinFr\LaravelQueryBuilderInertiaJs;
 
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Inertia\Response;
-use ProtoneMedia\LaravelQueryBuilderInertiaJs\Filters\Filter;
-use ProtoneMedia\LaravelQueryBuilderInertiaJs\Filters\Filterable;
-use ProtoneMedia\LaravelQueryBuilderInertiaJs\Filters\ToggleFilter;
-use ProtoneMedia\LaravelQueryBuilderInertiaJs\Filters\NumberRangeFilter;
+use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\Filter;
+use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\Filterable;
+use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\ToggleFilter;
+use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\NumberRangeFilter;
 
 class InertiaTable
 {

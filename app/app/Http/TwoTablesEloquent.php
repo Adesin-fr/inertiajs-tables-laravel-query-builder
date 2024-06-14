@@ -5,7 +5,7 @@ namespace App\Http;
 use App\Models\Company;
 use App\Models\User;
 use Inertia\Inertia;
-use ProtoneMedia\LaravelQueryBuilderInertiaJs\InertiaTable;
+use AdesinFr\LaravelQueryBuilderInertiaJs\InertiaTable;
 
 class TwoTablesEloquent
 {

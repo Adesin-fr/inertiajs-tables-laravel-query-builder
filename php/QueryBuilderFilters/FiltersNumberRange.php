@@ -1,6 +1,6 @@
 <?php
 
-namespace ProtoneMedia\LaravelQueryBuilderInertiaJs\QueryBuilderFilters;
+namespace AdesinFr\LaravelQueryBuilderInertiaJs\QueryBuilderFilters;
 
 use Spatie\QueryBuilder\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;

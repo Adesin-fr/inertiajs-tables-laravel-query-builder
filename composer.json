@@ -1,13 +1,13 @@
 {
-    "name": "ponchrobles/inertiajs-tables-laravel-query-builder",
+    "name": "adesin-fr/inertiajs-tables-laravel-query-builder",
     "description": "Inertia.js Front-end Components for Spatie's Laravel Query Builder",
-    "homepage": "https://github.com/ponchrobles/inertiajs-tables-laravel-query-builder",
+    "homepage": "https://github.com/AdesinFr/inertiajs-tables-laravel-query-builder",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
-            "name": "PonchRobles",
-            "email": "ponchrobles@gmail.com"
+            "name": "AdesinFr",
+            "email": "AdesinFr@gmail.com"
         }
     ],
     "require": {
@@ -22,12 +22,12 @@
     },
     "autoload": {
         "psr-4": {
-            "ProtoneMedia\\LaravelQueryBuilderInertiaJs\\": "php"
+            "AdesinFr\\LaravelQueryBuilderInertiaJs\\": "php"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "ProtoneMedia\\LaravelQueryBuilderInertiaJs\\Tests\\": "tests"
+            "AdesinFr\\LaravelQueryBuilderInertiaJs\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -43,7 +43,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "ProtoneMedia\\LaravelQueryBuilderInertiaJs\\InertiaTableServiceProvider"
+                "AdesinFr\\LaravelQueryBuilderInertiaJs\\InertiaTableServiceProvider"
             ]
         }
     }
