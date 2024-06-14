@@ -1,7 +1,7 @@
 {
     "name": "adesin-fr/inertiajs-tables-laravel-query-builder",
     "description": "Inertia.js Front-end Components for Spatie's Laravel Query Builder",
-    "homepage": "https://github.com/AdesinFr/inertiajs-tables-laravel-query-builder",
+    "homepage": "https://github.com/Adesin-Fr/inertiajs-tables-laravel-query-builder",
     "type": "library",
     "license": "MIT",
     "authors": [

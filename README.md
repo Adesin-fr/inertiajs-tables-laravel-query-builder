@@ -5,7 +5,7 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/AdesinFr/inertiajs-tables-laravel-query-builder.svg?style=flat-square)](https://packagist.org/packages/AdesinFr/inertiajs-tables-laravel-query-builder)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
-## [Fork reason](https://github.com/AdesinFr/inertiajs-tables-laravel-query-builder/issues/122)
+## [Fork reason](https://github.com/Adesin-Fr/inertiajs-tables-laravel-query-builder/issues/122)
 
 This package provides a *DataTables-like* experience for [Inertia.js](https://inertiajs.com/) with support for searching, filtering, sorting, toggling columns, and pagination. It generates URLs that can be consumed by Spatie's excellent [Laravel Query Builder](https://github.com/spatie/laravel-query-builder) package, with no additional logic needed. The components are styled with [Tailwind CSS 3.0](https://tailwindcss.com/), but it's fully customizable with slots. The data refresh logic is based on Inertia's [Ping CRM demo](https://github.com/inertiajs/pingcrm).
 
@@ -720,7 +720,7 @@ php artisan dusk
 
 * The `InteractsWithQueryBuilder` mixin has been removed and is no longer needed.
 * The `Table` component no longer needs the `filters`, `search`, `columns`, and `on-update` properties.
-* When using a custom `thead` or `tbody` slot, you need to provide [the styling](https://github.com/AdesinFr/inertiajs-tables-laravel-query-builder/blob/c8e21649ad372d309eeb62a8f771aa4c7cd0089e/js/Tailwind2/Table.vue#L1) manually.
+* When using a custom `thead` or `tbody` slot, you need to provide [the styling](https://github.com/Adesin-Fr/inertiajs-tables-laravel-query-builder/blob/c8e21649ad372d309eeb62a8f771aa4c7cd0089e/js/Tailwind2/Table.vue#L1) manually.
 * When using a custom `thead`, the `showColumn` method has been renamed to `show`.
 * The `setTranslations` method is no longer part of the `Pagination` component, but should be imported.
 * The templates and logic of the components are not separated anymore. Use slots to inject your own implementations.
@@ -739,9 +739,9 @@ If you discover any security related issues, please email alfonsorodriguez@live.
 
 ## Credits
 
-- [Pascal Baljet](https://github.com/AdesinFr)
+- [Pascal Baljet](https://github.com/Adesin-Fr)
 - [All Contributors](../../contributors)
-- [Alfonso Rodríguez](https://github.com/AdesinFr)
+- [Alfonso Rodríguez](https://github.com/Adesin-Fr)
 
 ## License
 

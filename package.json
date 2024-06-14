@@ -40,13 +40,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AdesinFr/inertiajs-tables-laravel-query-builder.git"
+    "url": "git+https://github.com/Adesin-Fr/inertiajs-tables-laravel-query-builder.git"
   },
   "keywords": [
     "inertiajs-tables-laravel-query-builder"
   ],
   "bugs": {
-    "url": "https://github.com/AdesinFr/inertiajs-tables-laravel-query-builder/issues"
+    "url": "https://github.com/Adesin-Fr/inertiajs-tables-laravel-query-builder/issues"
   },
-  "homepage": "https://github.com/AdesinFr/inertiajs-tables-laravel-query-builder#readme"
+  "homepage": "https://github.com/Adesin-Fr/inertiajs-tables-laravel-query-builder#readme"
 }
