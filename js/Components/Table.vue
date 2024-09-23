@@ -1,222 +1,132 @@
 <template>
-  <Transition>
-    <fieldset
-      ref="tableFieldset"
-      :key="`table-${name}`"
-      :dusk="`table-${name}`"
-      class="min-w-0"
-      :class="{'opacity-75': isVisiting}"
-    >
-      <div class="flex flex-row flex-wrap sm:flex-nowrap justify-start px-4 sm:px-0">
-        <div
-          v-if="queryBuilderProps.globalSearch"
-          class="flex flex-row w-full sm:w-auto sm:grow mb-2 sm:mb-0 sm:mr-4"
-        >
-          <slot
-            name="tableGlobalSearch"
-            :has-global-search="queryBuilderProps.globalSearch"
-            :label="queryBuilderProps.globalSearch ? queryBuilderProps.globalSearch.label : null"
-            :value="queryBuilderProps.globalSearch ? queryBuilderProps.globalSearch.value : null"
-            :on-change="changeGlobalSearchValue"
-          >
-            <TableGlobalSearch
-              v-if="queryBuilderProps.globalSearch"
-              class="grow"
-              :label="queryBuilderProps.globalSearch.label"
-              :value="queryBuilderProps.globalSearch.value"
-              :on-change="changeGlobalSearchValue"
-              :color="color"
-            />
-          </slot>
-        </div>
+    <Transition>
+        <fieldset ref="tableFieldset" :key="`table-${name}`" :dusk="`table-${name}`" class="min-w-0"
+                  :class="{ 'opacity-75': isVisiting }">
+            <div class="flex flex-row flex-wrap sm:flex-nowrap justify-start px-4 sm:px-0">
+                <div v-if="queryBuilderProps.globalSearch" class="flex flex-row w-full sm:w-auto sm:grow mb-2 sm:mb-0 sm:mr-4">
+                    <slot name="tableGlobalSearch" :has-global-search="queryBuilderProps.globalSearch"
+                          :label="queryBuilderProps.globalSearch ? queryBuilderProps.globalSearch.label : null"
+                          :value="queryBuilderProps.globalSearch ? queryBuilderProps.globalSearch.value : null"
+                          :on-change="changeGlobalSearchValue">
+                        <TableGlobalSearch v-if="queryBuilderProps.globalSearch" class="grow"
+                                           :label="queryBuilderProps.globalSearch.label" :value="queryBuilderProps.globalSearch.value"
+                                           :on-change="changeGlobalSearchValue" :color="color"/>
+                    </slot>
+                </div>
 
-        <div class="mr-2 sm:mr-4">
-          <slot
-            name="tableFilter"
-            :has-filters="queryBuilderProps.hasFilters"
-            :has-enabled-filters="queryBuilderProps.hasEnabledFilters"
-            :filters="queryBuilderProps.filters"
-            :on-filter-change="changeFilterValue"
-          >
-            <TableFilter
-              v-if="queryBuilderProps.hasFilters"
-              :has-enabled-filters="queryBuilderProps.hasEnabledFilters"
-              :filters="queryBuilderProps.filters"
-              :on-filter-change="changeFilterValue"
-              :color="color"
-            />
-          </slot>
-        </div>
+                <div class="mr-2 sm:mr-4">
+                    <slot name="tableFilter" :has-filters="queryBuilderProps.hasFilters"
+                          :has-enabled-filters="queryBuilderProps.hasEnabledFilters" :filters="queryBuilderProps.filters"
+                          :on-filter-change="changeFilterValue">
+                        <TableFilter v-if="queryBuilderProps.hasFilters" :has-enabled-filters="queryBuilderProps.hasEnabledFilters"
+                                     :filters="queryBuilderProps.filters" :on-filter-change="changeFilterValue" :color="color"/>
+                    </slot>
+                </div>
 
-        <slot
-          v-if="!withGroupedMenu"
-          name="tableAddSearchRow"
-          :has-search-inputs="queryBuilderProps.hasSearchInputs"
-          :has-search-inputs-without-value="queryBuilderProps.hasSearchInputsWithoutValue"
-          :search-inputs="queryBuilderProps.searchInputsWithoutGlobal"
-          :on-add="showSearchInput"
-        >
-          <TableAddSearchRow
-            v-if="queryBuilderProps.hasSearchInputs"
-            class="mr-2 sm:mr-4"
-            :search-inputs="queryBuilderProps.searchInputsWithoutGlobal"
-            :has-search-inputs-without-value="queryBuilderProps.hasSearchInputsWithoutValue"
-            :on-add="showSearchInput"
-            :color="color"
-          />
-        </slot>
-
-        <slot
-          v-if="!withGroupedMenu"
-          name="tableColumns"
-          :has-columns="queryBuilderProps.hasToggleableColumns"
-          :columns="queryBuilderProps.columns"
-          :has-hidden-columns="queryBuilderProps.hasHiddenColumns"
-          :on-change="changeColumnStatus"
-        >
-          <TableColumns
-            v-if="queryBuilderProps.hasToggleableColumns"
-            :class="{ 'mr-2 sm:mr-4' : canBeReset }"
-            :columns="queryBuilderProps.columns"
-            :has-hidden-columns="queryBuilderProps.hasHiddenColumns"
-            :on-change="changeColumnStatus"
-            :color="color"
-          />
-        </slot>
-
-        <slot
-          v-if="withGroupedMenu"
-          name="groupedAction"
-          :actions="defaultActions"
-        >
-          <GroupedActions
-            :color="color"
-            :actions="defaultActions"
-          />
-        </slot>
-
-        <slot
-          v-if="!withGroupedMenu"
-          name="tableReset"
-          :can-be-reset="canBeReset"
-          :on-click="resetQuery"
-        >
-          <div
-            v-if="canBeReset"
-            class="mr-4 sm:mr-0"
-          >
-            <TableReset
-              :on-click="resetQuery"
-              :color="color"
-            />
-          </div>
-        </slot>
-      </div>
-
-      <slot
-        name="tableSearchRows"
-        :has-search-rows-with-value="queryBuilderProps.hasSearchInputsWithValue"
-        :search-inputs="queryBuilderProps.searchInputsWithoutGlobal"
-        :forced-visible-search-inputs="forcedVisibleSearchInputs"
-        :on-change="changeSearchInputValue"
-      >
-        <TableSearchRows
-          v-if="queryBuilderProps.hasSearchInputsWithValue || forcedVisibleSearchInputs.length > 0"
-          :search-inputs="queryBuilderProps.searchInputsWithoutGlobal"
-          :forced-visible-search-inputs="forcedVisibleSearchInputs"
-          :on-change="changeSearchInputValue"
-          :on-remove="disableSearchInput"
-          :color="color"
-        />
-      </slot>
-
-      <slot
-        name="tableWrapper"
-        :meta="resourceMeta"
-      >
-        <TableWrapper :class="{ 'mt-3': !hasOnlyData }">
-          <slot name="table">
-            <table class="min-w-full divide-y divide-gray-300">
-              <thead class="bg-gray-50">
-                <slot
-                  name="head"
-                  :show="show"
-                  :sort-by="sortBy"
-                  :header="header"
-                >
-                  <tr>
-                    <HeaderCell
-                      v-for="column in queryBuilderProps.columns"
-                      :key="`table-${name}-header-${column.key}`"
-                      :cell="header(column.key)"
-                    >
-                      <template #label>
-                        <slot
-                          :name="`header(${column.key})`"
-                          :label="header(column.key).label"
-                          :column="header(column.key)"
-                        />
-                      </template>
-                    </HeaderCell>
-                  </tr>
+                <slot v-if="!withGroupedMenu" name="tableAddSearchRow" :has-search-inputs="queryBuilderProps.hasSearchInputs"
+                      :has-search-inputs-without-value="queryBuilderProps.hasSearchInputsWithoutValue"
+                      :search-inputs="queryBuilderProps.searchInputsWithoutGlobal" :on-add="showSearchInput">
+                    <TableAddSearchRow v-if="queryBuilderProps.hasSearchInputs" class="mr-2 sm:mr-4"
+                                       :search-inputs="queryBuilderProps.searchInputsWithoutGlobal"
+                                       :has-search-inputs-without-value="queryBuilderProps.hasSearchInputsWithoutValue" :on-add="showSearchInput"
+                                       :color="color"/>
                 </slot>
-              </thead>
-              <tbody class="divide-y divide-gray-200 bg-white">
-                <slot
-                  name="body"
-                  :show="show"
-                >
-                  <tr
-                    v-for="(item, key) in resourceData"
-                    :key="`table-${name}-row-${key}`"
-                    class=""
-                    :class="{
-                      'bg-gray-50': striped && key % 2,
-                      'hover:bg-gray-100': striped,
-                      'hover:bg-gray-50': !striped
-                    }"
-                    @click="rowClicked($event, item, key)"
-                  >
-                    <td
-                      v-for="column in queryBuilderProps.columns"
-                      v-show="show(column.key)"
-                      :key="`table-${name}-row-${key}-column-${column.key}`"
-                      class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
-                    >
-                      <slot
-                        :name="`cell(${column.key})`"
-                        :item="item"
-                      >
-                        {{ item[column.key] }}
-                      </slot>
-                    </td>
-                  </tr>
-                </slot>
-              </tbody>
-            </table>
-          </slot>
 
-          <slot
-            name="pagination"
-            :on-click="visitPageFromUrl"
-            :has-data="hasData"
-            :meta="resourceMeta"
-            :per-page-options="queryBuilderProps.perPageOptions"
-            :on-per-page-change="onPerPageChange"
-          >
-            <Pagination
-              :on-click="visitPageFromUrl"
-              :has-data="hasData"
-              :meta="resourceMeta"
-              :per-page-options="queryBuilderProps.perPageOptions"
-              :on-per-page-change="onPerPageChange"
-              :color="color"
-            />
-          </slot>
-        </TableWrapper>
-      </slot>
-    </fieldset>
-  </Transition>
+                <slot v-if="!withGroupedMenu" name="tableColumns" :has-columns="queryBuilderProps.hasToggleableColumns"
+                      :columns="queryBuilderProps.columns" :has-hidden-columns="queryBuilderProps.hasHiddenColumns"
+                      :on-change="changeColumnStatus">
+                    <TableColumns v-if="queryBuilderProps.hasToggleableColumns" :class="{ 'mr-2 sm:mr-4': canBeReset }"
+                                  :columns="queryBuilderProps.columns" :has-hidden-columns="queryBuilderProps.hasHiddenColumns"
+                                  :on-change="changeColumnStatus" :color="color"/>
+                </slot>
+
+                <slot v-if="withGroupedMenu" name="groupedAction" :actions="defaultActions">
+                    <GroupedActions :color="color" :actions="defaultActions"/>
+                </slot>
+
+                <slot v-if="!withGroupedMenu" name="tableReset" :can-be-reset="canBeReset" :on-click="resetQuery">
+                    <div v-if="canBeReset" class="mr-4 sm:mr-0">
+                        <TableReset :on-click="resetQuery" :color="color"/>
+                    </div>
+                </slot>
+            </div>
+
+            <slot name="tableSearchRows" :has-search-rows-with-value="queryBuilderProps.hasSearchInputsWithValue"
+                  :search-inputs="queryBuilderProps.searchInputsWithoutGlobal"
+                  :forced-visible-search-inputs="forcedVisibleSearchInputs" :on-change="changeSearchInputValue">
+                <TableSearchRows v-if="queryBuilderProps.hasSearchInputsWithValue || forcedVisibleSearchInputs.length > 0"
+                                 :search-inputs="queryBuilderProps.searchInputsWithoutGlobal"
+                                 :forced-visible-search-inputs="forcedVisibleSearchInputs" :on-change="changeSearchInputValue"
+                                 :on-remove="disableSearchInput" :color="color"/>
+            </slot>
+
+            <slot name="tableWrapper" :meta="resourceMeta">
+                <TableWrapper :class="{ 'mt-3': !hasOnlyData }">
+                    <slot name="table">
+                        <table class="min-w-full divide-y divide-gray-300">
+                            <thead class="bg-gray-50">
+                            <slot name="head" :show="show" :sort-by="sortBy" :header="header">
+                                <tr>
+                                    <th v-if="hasCheckboxes"
+                                        class="py-3.5 pl-1 text-left text-sm font-semibold text-gray-900">
+                                        <input type="checkbox" :id="`table-${name}-select-header`" @change="toggleSelection"
+                                               v-model="headerCheckboxSelected"
+                                               class="rounded-sm mr-1 border-gray-300"/>
+                                    </th>
+                                    <HeaderCell v-for="column in queryBuilderProps.columns" :key="`table-${name}-header-${column.key}`"
+                                                :cell="header(column.key)">
+                                        <template #label>
+                                            <slot :name="`header(${column.key})`" :label="header(column.key).label"
+                                                  :column="header(column.key)"/>
+                                        </template>
+                                    </HeaderCell>
+                                </tr>
+                            </slot>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 bg-white">
+                            <slot name="body" :show="show">
+                                <tr v-for="(item, key) in resourceData" :key="`table-${name}-row-${key}`" class="" :class="{
+                                    'bg-gray-50': striped && key % 2,
+                                    'hover:bg-gray-100': striped,
+                                    'hover:bg-gray-50': !striped
+                                  }"
+                                    @click="rowClicked($event, item, key)">
+                                    <td class="whitespace-nowrap py-4 pl-1 text-sm text-gray-500" v-if="hasCheckboxes">
+                                        <input type="checkbox" :id="`table-${name}-select-${key}`" class="rounded-sm mr-1 border-gray-300" v-model="item.__itSelected" />
+                                    </td>
+
+                                    <td v-for="(column, colIndex) in queryBuilderProps.columns" v-show="show(column.key)"
+                                        :key="`table-${name}-row-${key}-column-${column.key}`"
+                                        class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+
+                                        <slot :name="`cell(${column.key})`" :item="item">
+                                            {{ item[column.key] }}
+                                        </slot>
+                                    </td>
+                                </tr>
+                            </slot>
+                            </tbody>
+                        </table>
+                    </slot>
+
+                    <slot name="pagination" :on-click="visitPageFromUrl" :has-data="hasData" :meta="resourceMeta"
+                          :per-page-options="queryBuilderProps.perPageOptions" :on-per-page-change="onPerPageChange">
+                        <div class="flex justify-between bg-white px-2 py-3 items-center border-t border-gray-200">
+                            <div class="flex items-center">
+                                <span class="italic text-sm pr-2">{{ lineCountLabel }}</span>
+                                <bulk-actions v-if="selectedLineCount">
+                                    <slot name="bulk-actions" />
+                                </bulk-actions>
+                            </div>
+                            <Pagination :on-click="visitPageFromUrl" :has-data="hasData" :meta="resourceMeta"
+                                        :per-page-options="queryBuilderProps.perPageOptions" :on-per-page-change="onPerPageChange"
+                                        :color="color"/>
+                        </div>
+                    </slot>
+                </TableWrapper>
+            </slot>
+        </fieldset>
+    </Transition>
 </template>
 
 <script setup>
@@ -229,7 +139,7 @@ import TableGlobalSearch from "./TableGlobalSearch.vue";
 import TableSearchRows from "./TableSearchRows.vue";
 import TableReset from "./TableReset.vue";
 import TableWrapper from "./TableWrapper.vue";
-import { computed, onMounted, ref, watch, onUnmounted, getCurrentInstance, Transition } from "vue";
+import {computed, onMounted, ref, watch, onUnmounted, getCurrentInstance, Transition} from "vue";
 import qs from "qs";
 import clone from "lodash-es/clone";
 import filter from "lodash-es/filter";
@@ -238,8 +148,9 @@ import forEach from "lodash-es/forEach";
 import isEqual from "lodash-es/isEqual";
 import map from "lodash-es/map";
 import pickBy from "lodash-es/pickBy";
-import { router, usePage } from "@inertiajs/vue3";
+import {router, usePage} from "@inertiajs/vue3";
 import GroupedActions from "./GroupedActions.vue";
+import BulkActions from "./BulkActions.vue";
 
 const emit = defineEmits(["rowClicked"]);
 
@@ -275,7 +186,11 @@ const props = defineProps({
         default: 350,
         required: false,
     },
-
+    hasCheckboxes: {
+        type: Boolean,
+        default: false,
+        required: false,
+    },
     preserveScroll: {
         type: [Boolean, String],
         default: false,
@@ -325,7 +240,7 @@ const updates = ref(0);
 
 const queryBuilderProps = computed(() => {
     let data = usePage().props.queryBuilderProps
-        ? { ...usePage().props.queryBuilderProps[props.name] } || {}
+        ? {...usePage().props.queryBuilderProps[props.name]} || {}
         : {};
 
     data._updates = updates.value;
@@ -335,7 +250,7 @@ const queryBuilderProps = computed(() => {
 
 const queryBuilderData = ref(queryBuilderProps.value);
 
-const pageName = computed(() =>{
+const pageName = computed(() => {
     return queryBuilderProps.value.pageName;
 });
 
@@ -343,33 +258,30 @@ const forcedVisibleSearchInputs = ref([]);
 
 const tableFieldset = ref(null);
 
+const headerCheckboxSelected = ref(false);
+
 const hasOnlyData = computed(() => {
-    if(queryBuilderProps.value.hasToggleableColumns) {
+    if (queryBuilderProps.value.hasToggleableColumns) {
         return false;
     }
 
-    if(queryBuilderProps.value.hasFilters) {
+    if (queryBuilderProps.value.hasFilters) {
         return false;
     }
 
-    if(queryBuilderProps.value.hasSearchInputs) {
+    if (queryBuilderProps.value.hasSearchInputs) {
         return false;
     }
 
-    if(queryBuilderProps.value.globalSearch) {
-        return false;
-    }
-
-    return true;
-
+    return !queryBuilderProps.value.globalSearch;
 });
 
 const resourceData = computed(() => {
-    if(Object.keys(props.resource).length === 0){
+    if (Object.keys(props.resource).length === 0) {
         return props.data;
     }
 
-    if("data" in props.resource) {
+    if ("data" in props.resource) {
         return props.resource.data;
     }
 
@@ -377,14 +289,14 @@ const resourceData = computed(() => {
 });
 
 const resourceMeta = computed(() => {
-    if(Object.keys(props.resource).length === 0){
+    if (Object.keys(props.resource).length === 0) {
         return props.meta;
     }
 
-    if("links" in props.resource && "meta" in props.resource) {
-        if(Object.keys(props.resource.links).length === 4
-          && "next" in props.resource.links
-          && "prev" in props.resource.links) {
+    if ("links" in props.resource && "meta" in props.resource) {
+        if (Object.keys(props.resource.links).length === 4
+            && "next" in props.resource.links
+            && "prev" in props.resource.links) {
             return {
                 ...props.resource.meta,
                 next_page_url: props.resource.links.next,
@@ -393,7 +305,7 @@ const resourceMeta = computed(() => {
         }
     }
 
-    if("meta" in props.resource) {
+    if ("meta" in props.resource) {
         return props.resource.meta;
     }
 
@@ -401,15 +313,11 @@ const resourceMeta = computed(() => {
 });
 
 const hasData = computed(() => {
-    if(resourceData.value.length > 0){
+    if (resourceData.value.length > 0) {
         return true;
     }
 
-    if(resourceMeta.value.total > 0) {
-        return true;
-    }
-
-    return false;
+    return resourceMeta.value.total > 0;
 });
 
 const defaultActions = ref({
@@ -440,7 +348,7 @@ function showSearchInput(key) {
 }
 
 const canBeReset = computed(() => {
-    if(forcedVisibleSearchInputs.value.length > 0){
+    if (forcedVisibleSearchInputs.value.length > 0) {
         return true;
     }
 
@@ -448,7 +356,7 @@ const canBeReset = computed(() => {
 
     const page = queryStringData[pageName.value];
 
-    if(page > 1) {
+    if (page > 1) {
         return true;
     }
 
@@ -458,11 +366,11 @@ const canBeReset = computed(() => {
     forEach(["filter", "columns", "cursor", "sort"], (key) => {
         const value = queryStringData[prefix + key];
 
-        if(key === "sort" && value === queryBuilderProps.value.defaultSort) {
+        if (key === "sort" && value === queryBuilderProps.value.defaultSort) {
             return;
         }
 
-        if(value !== undefined) {
+        if (value !== undefined) {
             dirty = true;
         }
     });
@@ -498,7 +406,7 @@ function changeSearchInputValue(key, value) {
     clearTimeout(debounceTimeouts[key]);
 
     debounceTimeouts[key] = setTimeout(() => {
-        if(visitCancelToken.value && props.preventOverlappingRequests){
+        if (visitCancelToken.value && props.preventOverlappingRequests) {
             visitCancelToken.value.cancel();
         }
 
@@ -572,7 +480,7 @@ function getColumnsForQuery() {
         return column.key;
     }).sort();
 
-    if (isEqual(visibleColumnKeys, queryBuilderProps.value.defaultVisibleToggleableColumns)){
+    if (isEqual(visibleColumnKeys, queryBuilderProps.value.defaultVisibleToggleableColumns)) {
         return {};
     }
 
@@ -585,11 +493,11 @@ function dataForNewQueryString() {
 
     const queryData = {};
 
-    if(Object.keys(filterForQuery).length > 0) {
+    if (Object.keys(filterForQuery).length > 0) {
         queryData.filter = filterForQuery;
     }
 
-    if(Object.keys(columnsForQuery).length > 0) {
+    if (Object.keys(columnsForQuery).length > 0) {
         queryData.columns = columnsForQuery;
     }
 
@@ -598,20 +506,20 @@ function dataForNewQueryString() {
     const sort = queryBuilderData.value.sort;
     const perPage = queryBuilderData.value.perPage;
 
-    if(cursor) {
+    if (cursor) {
         queryData.cursor = cursor;
     }
 
-    if(page > 1) {
+    if (page > 1) {
         queryData.page = page;
     }
 
-    if(perPage > 1) {
+    if (perPage > 1) {
         queryData.perPage = perPage;
     }
 
 
-    if(sort) {
+    if (sort) {
         queryData.sort = sort;
     }
 
@@ -619,13 +527,13 @@ function dataForNewQueryString() {
 }
 
 function visitPageFromUrl(url) {
-    if(!url) {
+    if (!url) {
         return null;
     }
 
     const pageName = usePage().props.queryBuilderProps[props.name].pageName ?? "page";
     const page = new URL(url)?.searchParams?.get(pageName);
-    if(page !== null) {
+    if (page !== null) {
         queryBuilderData.value.page = page;
     } else {
         visit(url);
@@ -643,10 +551,10 @@ function generateNewQueryString() {
 
     delete queryStringData[pageName.value];
 
-    forEach(dataForNewQueryString(), (value, key) =>{
-        if(key === "page") {
+    forEach(dataForNewQueryString(), (value, key) => {
+        if (key === "page") {
             queryStringData[pageName.value] = value;
-        } else if(key === "perPage") {
+        } else if (key === "perPage") {
             queryStringData.perPage = value;
         } else {
             queryStringData[prefix + key] = value;
@@ -677,7 +585,7 @@ const isVisiting = ref(false);
 const visitCancelToken = ref(null);
 
 function visit(url) {
-    if(!url) {
+    if (!url) {
         return;
     }
 
@@ -688,7 +596,7 @@ function visit(url) {
             replace: true,
             preserveState: true,
             preserveScroll: props.preserveScroll !== false,
-            onBefore(){
+            onBefore() {
                 isVisiting.value = true;
             },
             onCancelToken(cancelToken) {
@@ -698,11 +606,11 @@ function visit(url) {
                 isVisiting.value = false;
             },
             onSuccess() {
-                if(props.preserveScroll === "table-top") {
+                if (props.preserveScroll === "table-top") {
                     const offset = -8;
                     const top = tableFieldset.value.getBoundingClientRect().top + window.pageYOffset + offset;
 
-                    window.scrollTo({ top });
+                    window.scrollTo({top});
                 }
 
                 updates.value++;
@@ -711,13 +619,19 @@ function visit(url) {
     );
 }
 
-function  rowClicked(event, item, key) {
+function rowClicked(event, item, key) {
+    if (props.hasCheckboxes && event.target?.parentElement.cellIndex === 0) {
+        return;
+    }
     emit("rowClicked", event, item, key);
 }
 
 watch(queryBuilderData, () => {
-    visit(location.pathname + "?" +  generateNewQueryString());
-}, { deep: true });
+    visit(location.pathname + "?" + generateNewQueryString());
+
+    headerCheckboxSelected.value = false;
+
+}, {deep: true});
 
 const inertiaListener = () => {
     updates.value++;
@@ -734,7 +648,7 @@ onUnmounted(() => {
 //
 
 function sortBy(column) {
-    if(queryBuilderData.value.sort == column) {
+    if (queryBuilderData.value.sort == column) {
         queryBuilderData.value.sort = `-${column}`;
     } else {
         queryBuilderData.value.sort = column;
@@ -758,4 +672,22 @@ function header(key) {
 
     return columnData;
 }
+
+function toggleSelection() {
+    props.resource.data.forEach((item) => {
+        item.__itSelected = headerCheckboxSelected.value;
+    });
+}
+
+const selectedLineCount = computed(() => {
+    return props.resource.data.filter((item) => item.__itSelected).length;
+});
+
+const lineCountLabel = computed(() => {
+    if (selectedLineCount.value === 0) {
+        return "Aucune sélection";
+    }
+    return `${selectedLineCount.value} élément${selectedLineCount.value > 1 ? 's' : ''} sélectionné${selectedLineCount.value > 1 ? 's' : ''}`;
+})
+
 </script>

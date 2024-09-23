@@ -1,7 +1,7 @@
 <template>
   <nav
     v-if="hasPagination"
-    class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6"
+    class="bg-white flex items-center"
   >
     <p v-if="!hasData || pagination.total < 1">
       {{ translations.no_results_found }}
@@ -90,7 +90,7 @@
           :color="color"
         />
 
-        <p class="hidden lg:block text-sm text-gray-700 grow">
+        <p class="hidden lg:block text-sm text-gray-700 grow pr-2">
           <span class="font-medium">{{ pagination.from }}</span>
           {{ translations.to }}
           <span class="font-medium">{{ pagination.to }}</span>

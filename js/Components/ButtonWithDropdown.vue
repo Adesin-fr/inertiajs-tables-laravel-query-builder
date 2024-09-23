@@ -35,7 +35,7 @@ import { ref, watch, onMounted, inject } from "vue";
 import { get_theme_part } from "../helpers.js";
 import { twMerge } from "tailwind-merge";
 
-const emit = defineEmits(["closed"]);
+const emit = defineEmits(["closed", "opened"]);
 
 const props = defineProps({
     placement: {
@@ -90,6 +90,9 @@ watch(opened, () => {
     popper.value.update();
     if (!opened.value) {
         emit("closed");
+    }
+    if (opened.value) {
+        emit("opened");
     }
 });
 
