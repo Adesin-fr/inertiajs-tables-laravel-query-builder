@@ -41,7 +41,9 @@
                 </slot>
 
                 <slot v-if="withGroupedMenu" name="groupedAction" :actions="defaultActions">
-                    <GroupedActions :color="color" :actions="defaultActions"/>
+                    <GroupedActions :color="color" :actions="defaultActions">
+                        <slot name="bulk-actions" />
+                    </GroupedActions>
                 </slot>
 
                 <slot v-if="!withGroupedMenu" name="tableReset" :can-be-reset="canBeReset" :on-click="resetQuery">
@@ -68,10 +70,10 @@
                             <slot name="head" :show="show" :sort-by="sortBy" :header="header">
                                 <tr>
                                     <th v-if="hasCheckboxes"
-                                        class="py-3.5 pl-1 text-left text-sm font-semibold text-gray-900">
+                                        class="text-left text-sm font-semibold text-gray-900">
                                         <input type="checkbox" :id="`table-${name}-select-header`" @change="toggleSelection"
                                                v-model="headerCheckboxSelected"
-                                               class="rounded-sm mr-1 border-gray-300"/>
+                                               class="rounded-sm mr-1 border-gray-300 m-1"/>
                                     </th>
                                     <HeaderCell v-for="column in queryBuilderProps.columns" :key="`table-${name}-header-${column.key}`"
                                                 :cell="header(column.key)">
@@ -89,14 +91,14 @@
                                     'bg-gray-50': striped && key % 2,
                                     'hover:bg-gray-100': striped,
                                     'hover:bg-gray-50': !striped
-                                  }"
-                                    @click="rowClicked($event, item, key)">
-                                    <td class="whitespace-nowrap py-4 pl-1 text-sm text-gray-500" v-if="hasCheckboxes">
-                                        <input type="checkbox" :id="`table-${name}-select-${key}`" class="rounded-sm mr-1 border-gray-300" v-model="item.__itSelected" />
+                                  }">
+                                    <td class="whitespace-nowrap text-sm text-gray-500" v-if="hasCheckboxes">
+                                        <input type="checkbox" :id="`table-${name}-select-${key}`" class="rounded-sm m-1 border-gray-300" v-model="item.__itSelected" />
                                     </td>
 
                                     <td v-for="(column, colIndex) in queryBuilderProps.columns" v-show="show(column.key)"
                                         :key="`table-${name}-row-${key}-column-${column.key}`"
+                                        @click="rowClicked($event, item, key)"
                                         class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
 
                                         <slot :name="`cell(${column.key})`" :item="item">
@@ -112,12 +114,7 @@
                     <slot name="pagination" :on-click="visitPageFromUrl" :has-data="hasData" :meta="resourceMeta"
                           :per-page-options="queryBuilderProps.perPageOptions" :on-per-page-change="onPerPageChange">
                         <div class="flex justify-between bg-white px-2 py-3 items-center border-t border-gray-200">
-                            <div class="flex items-center">
-                                <span class="italic text-sm pr-2">{{ lineCountLabel }}</span>
-                                <bulk-actions v-if="selectedLineCount">
-                                    <slot name="bulk-actions" />
-                                </bulk-actions>
-                            </div>
+                            <span class="italic text-sm px-2">{{ lineCountLabel }}</span>
                             <Pagination :on-click="visitPageFromUrl" :has-data="hasData" :meta="resourceMeta"
                                         :per-page-options="queryBuilderProps.perPageOptions" :on-per-page-change="onPerPageChange"
                                         :color="color"/>
@@ -152,7 +149,7 @@ import {router, usePage} from "@inertiajs/vue3";
 import GroupedActions from "./GroupedActions.vue";
 import BulkActions from "./BulkActions.vue";
 
-const emit = defineEmits(["rowClicked"]);
+const emit = defineEmits(["rowClicked", 'selectionChanged']);
 
 const props = defineProps({
     inertia: {
@@ -631,6 +628,12 @@ watch(queryBuilderData, () => {
 
     headerCheckboxSelected.value = false;
 
+}, {deep: true});
+
+watch(props.resource, () => {
+    const selectedItems = props.resource.data.filter((item) => item.__itSelected);
+
+    emit("selectionChanged", selectedItems);
 }, {deep: true});
 
 const inertiaListener = () => {

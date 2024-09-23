@@ -173,6 +173,9 @@
                     </ul>
                 </div>
             </div>
+            <div v-show="!isToggleColumnsDisplayed && !isSearchFieldsDisplayed">
+                <slot />
+            </div>
         </div>
     </ButtonWithDropdown>
 </template>
