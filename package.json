@@ -3,7 +3,7 @@
   "version": "3.1.1",
   "description": "Inertia.js Front-end Components for Spatie's Laravel Query Builder",
   "private": false,
-  "author": "AdesinFr <AdesinFr@gmail.com>",
+  "author": "AdesinFr <ludovic@adesin.fr>",
   "license": "MIT",
   "type": "module",
   "main": "./dist/inertiajs-tables-laravel-query-builder.umd.js",
