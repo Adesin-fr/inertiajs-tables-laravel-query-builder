@@ -392,6 +392,9 @@ function resetQuery() {
             : false;
     });
 
+    // Reset the columns visibility in the local storage
+    localStorage.removeItem(`columns-${name}`);
+
     queryBuilderData.value.sort = null;
     queryBuilderData.value.cursor = null;
     queryBuilderData.value.page = 1;
@@ -442,6 +445,17 @@ function changeColumnStatus(key, visible) {
     const intKey = findDataKey("columns", key);
 
     queryBuilderData.value.columns[intKey].hidden = !visible;
+
+    // Persist only the column .hidden attribute  in the local storage
+    const columns = queryBuilderData.value.columns.map((column) => {
+        return {
+            key: column.key,
+            hidden: column.hidden,
+        };
+    });
+    localStorage.setItem(`columns-${name}`, JSON.stringify(columns));
+
+
 }
 
 function getFilterForQuery() {
@@ -642,6 +656,18 @@ const inertiaListener = () => {
 
 onMounted(() => {
     document.addEventListener("inertia:success", inertiaListener);
+
+    // Reload the columns visibility from the local storage
+    const columnsVisibility = localStorage.getItem(`columns-${name}`);
+    // Iterate through the columns and set the visibility
+    if (columnsVisibility) {
+        const columnsVisibilityData = JSON.parse(columnsVisibility);
+        forEach(queryBuilderData.value.columns, (column, key) => {
+            queryBuilderData.value.columns[key].hidden = columnsVisibilityData[key].hidden;
+        });
+    }
+
+
 });
 
 onUnmounted(() => {
