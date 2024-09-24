@@ -393,7 +393,7 @@ function resetQuery() {
     });
 
     // Reset the columns visibility in the local storage
-    localStorage.removeItem(`columns-${name}`);
+    localStorage.removeItem(`columns-${props.name}`);
 
     queryBuilderData.value.sort = null;
     queryBuilderData.value.cursor = null;
@@ -453,7 +453,7 @@ function changeColumnStatus(key, visible) {
             hidden: column.hidden,
         };
     });
-    localStorage.setItem(`columns-${name}`, JSON.stringify(columns));
+    localStorage.setItem(`columns-${props.name}`, JSON.stringify(columns));
 
 
 }
@@ -658,7 +658,7 @@ onMounted(() => {
     document.addEventListener("inertia:success", inertiaListener);
 
     // Reload the columns visibility from the local storage
-    const columnsVisibility = localStorage.getItem(`columns-${name}`);
+    const columnsVisibility = localStorage.getItem(`columns-${props.name}`);
     // Iterate through the columns and set the visibility
     if (columnsVisibility) {
         const columnsVisibilityData = JSON.parse(columnsVisibility);

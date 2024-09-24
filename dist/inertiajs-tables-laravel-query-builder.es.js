@@ -2892,7 +2892,7 @@ const ko = /* @__PURE__ */ He(mo, [["render", wo]]), Co = {
         r.value.searchInputs[m].value = null;
       }), X(r.value.columns, (d, m) => {
         r.value.columns[m].hidden = d.can_be_hidden ? !t.value.defaultVisibleToggleableColumns.includes(d.key) : !1;
-      }), localStorage.removeItem(`columns-${name}`), r.value.sort = null, r.value.cursor = null, r.value.page = 1;
+      }), localStorage.removeItem(`columns-${o.name}`), r.value.sort = null, r.value.cursor = null, r.value.page = 1;
     }
     const D = {};
     function K(d, m) {
@@ -2922,7 +2922,7 @@ const ko = /* @__PURE__ */ He(mo, [["render", wo]]), Co = {
         key: S.key,
         hidden: S.hidden
       }));
-      localStorage.setItem(`columns-${name}`, JSON.stringify(C));
+      localStorage.setItem(`columns-${o.name}`, JSON.stringify(C));
     }
     function be() {
       let d = {};
@@ -3010,7 +3010,7 @@ const ko = /* @__PURE__ */ He(mo, [["render", wo]]), Co = {
     };
     je(() => {
       document.addEventListener("inertia:success", ve);
-      const d = localStorage.getItem(`columns-${name}`);
+      const d = localStorage.getItem(`columns-${o.name}`);
       if (d) {
         const m = JSON.parse(d);
         X(r.value.columns, (b, C) => {
