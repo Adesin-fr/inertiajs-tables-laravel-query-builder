@@ -1,36 +1,34 @@
 # Inertia.js Tables for Laravel Query Builder
 
-[![Latest Version on NPM](https://img.shields.io/npm/v/AdesinFr/inertiajs-tables-laravel-query-builder.svg?style=flat-square)](https://npmjs.com/package/AdesinFr/inertiajs-tables-laravel-query-builder)
-[![npm](https://img.shields.io/npm/dt/AdesinFr/inertiajs-tables-laravel-query-builder.svg?style=flat-square)](https://www.npmjs.com/package/AdesinFr/inertiajs-tables-laravel-query-builder)
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/AdesinFr/inertiajs-tables-laravel-query-builder.svg?style=flat-square)](https://packagist.org/packages/AdesinFr/inertiajs-tables-laravel-query-builder)
+[![Latest Version on NPM](https://img.shields.io/npm/v/@adesin-fr/inertiajs-tables-laravel-query-builder.svg?style=flat-square)](https://npmjs.com/package/@adesin-fr/inertiajs-tables-laravel-query-builder)
+[![npm](https://img.shields.io/npm/dt/@adesin-fr/inertiajs-tables-laravel-query-builder.svg?style=flat-square)](https://www.npmjs.com/package/@adesin-fr/inertiajs-tables-laravel-query-builder)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/adesin-fr/inertiajs-tables-laravel-query-builder.svg?style=flat-square)](https://packagist.org/packages/adesin-fr/inertiajs-tables-laravel-query-builder)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
-## [Fork reason](https://github.com/Adesin-Fr/inertiajs-tables-laravel-query-builder/issues/122)
+This package provides a _DataTables-like_ experience for [Inertia.js](https://inertiajs.com/) with support for searching, filtering, sorting, toggling columns, and pagination. It generates URLs that can be consumed by Spatie's excellent [Laravel Query Builder](https://github.com/spatie/laravel-query-builder) package, with no additional logic needed. The components are styled with [Tailwind CSS 3.0](https://tailwindcss.com/), but it's fully customizable with slots. The data refresh logic is based on Inertia's [Ping CRM demo](https://github.com/inertiajs/pingcrm).
 
-This package provides a *DataTables-like* experience for [Inertia.js](https://inertiajs.com/) with support for searching, filtering, sorting, toggling columns, and pagination. It generates URLs that can be consumed by Spatie's excellent [Laravel Query Builder](https://github.com/spatie/laravel-query-builder) package, with no additional logic needed. The components are styled with [Tailwind CSS 3.0](https://tailwindcss.com/), but it's fully customizable with slots. The data refresh logic is based on Inertia's [Ping CRM demo](https://github.com/inertiajs/pingcrm).
-
-This package is a fork of [PonchRobles/inertiajs-tables-laravel-query-builder], which I wasn't satisfied about, because of some quality issues. 
+This package is a fork of [PonchRobles/inertiajs-tables-laravel-query-builder], which I wasn't satisfied about, because of some quality issues.
 
 ![Inertia.js Table for Laravel Query Builder](https://user-images.githubusercontent.com/8403149/177773377-86c32d69-8f86-47e4-8063-ea227e480d10.mp4)
 
 ## Features
 
-* Auto-fill: auto generates `thead` and `tbody` with support for custom cells
-* Global Search
-* Search per field
-* Select filters
-* Toggle columns
-* Sort columns
-* Pagination (support for Eloquent/API Resource/Simple/Cursor)
-* Automatically updates the query string (by using [Inertia's replace](https://inertiajs.com/manual-visits#browser-history) feature)
+-   Auto-fill: auto generates `thead` and `tbody` with support for custom cells
+-   Global Search
+-   Search per field
+-   Select filters
+-   Toggle columns
+-   Sort columns
+-   Pagination (support for Eloquent/API Resource/Simple/Cursor)
+-   Automatically updates the query string (by using [Inertia's replace](https://inertiajs.com/manual-visits#browser-history) feature)
 
 ## Compatibility
 
-* [Vue 3](https://v3.vuejs.org/guide/installation.html)
-* [Laravel 11](https://laravel.com/)
-* [Inertia.js](https://inertiajs.com/)
-* [Tailwind CSS v3](https://tailwindcss.com/) + [Forms plugin](https://github.com/tailwindlabs/tailwindcss-forms)
-* PHP 8.2+
+-   [Vue 3](https://v3.vuejs.org/guide/installation.html)
+-   [Laravel 11](https://laravel.com/)
+-   [Inertia.js](https://inertiajs.com/)
+-   [Tailwind CSS v3](https://tailwindcss.com/) + [Forms plugin](https://github.com/tailwindlabs/tailwindcss-forms)
+-   PHP 8.2+
 
 ## Installation
 
@@ -41,7 +39,7 @@ You need to install both the server-side package and the client-side package. No
 You can install the package via composer:
 
 ```bash
-composer require AdesinFr/inertiajs-tables-laravel-query-builder
+composer require adesin-fr/inertiajs-tables-laravel-query-builder
 ```
 
 The package will automatically register the Service Provider which provides a `table` method you can use on an Interia Response.
@@ -49,7 +47,6 @@ The package will automatically register the Service Provider which provides a `t
 #### Search fields
 
 With the `searchInput` method, you can specify which attributes are searchable. Search queries are passed to the URL query as a `filter`. This integrates seamlessly with the [filtering feature](https://spatie.be/docs/laravel-query-builder/v5/features/filtering) of the Laravel Query Builder package.
-
 
 Though it's enough to pass in the column key, you may specify a custom label and default value.
 
@@ -82,7 +79,7 @@ Inertia::render('Page/Index')->table(function (InertiaTable $table) {
 });
 ```
 
-The `selectFilter` will, by default, add a *no filter* option to the array. You may disable this or specify a custom label for it.
+The `selectFilter` will, by default, add a _no filter_ option to the array. You may disable this or specify a custom label for it.
 
 ```php
 Inertia::render('Page/Index')->table(function (InertiaTable $table) {
@@ -134,6 +131,7 @@ Inertia::render('Page/Index')->table(function (InertiaTable $table) {
 ```
 
 You can specify a some other params.
+
 ```php
 Inertia::render('Page/Index')->table(function (InertiaTable $table) {
 	$table->toggleFilter(
@@ -150,6 +148,7 @@ Inertia::render('Page/Index')->table(function (InertiaTable $table) {
 ```
 
 You need to use a custom allowed filter for this filter.
+
 ```php
 $users = QueryBuilder::for(/*...*/)
 			->allowedFilters([NumberRangeFilter::getQueryBuilderFilter('invoice_recall_count')]);
@@ -254,19 +253,19 @@ class UserIndexController
 You can install the package via either `npm` or `yarn`:
 
 ```bash
-npm install AdesinFr/inertiajs-tables-laravel-query-builder --save
+npm install @adesin-fr/inertiajs-tables-laravel-query-builder --save
 
-yarn add AdesinFr/inertiajs-tables-laravel-query-builder
+yarn add @adesin-fr/inertiajs-tables-laravel-query-builder
 ```
 
 Add the repository path to the `content` array of your [Tailwind configuration file](https://tailwindcss.com/docs/content-configuration). This ensures that the styling also works on production builds.
 
 ```js
 module.exports = {
-  content: [
-	'./node_modules/AdesinFr/inertiajs-tables-laravel-query-builder/**/*.{js,vue}',
-  ]
-}
+    content: [
+        "./node_modules/@adesin-fr/inertiajs-tables-laravel-query-builder/**/*.{js,vue}",
+    ],
+};
 ```
 
 #### Table component
@@ -275,13 +274,13 @@ To use the `Table` component and all its related features, you must import the `
 
 ```vue
 <script setup>
-import { Table } from "AdesinFr/inertiajs-tables-laravel-query-builder";
+import { Table } from "@adesin-fr/inertiajs-tables-laravel-query-builder";
 
-defineProps(["users"])
+defineProps(["users"]);
 </script>
 
 <template>
-  <Table :resource="users" />
+    <Table :resource="users" />
 </template>
 ```
 
@@ -289,7 +288,7 @@ The `resource` property automatically detects the data and additional pagination
 
 ```vue
 <template>
-  <Table :data="users.data" :meta="users.meta" />
+    <Table :data="users.data" :meta="users.meta" />
 </template>
 ```
 
@@ -297,22 +296,19 @@ If you want to manually render the table, like in v1 of this package, you may us
 
 ```vue
 <template>
-  <Table :meta="users">
-	<template #head>
-	  <tr>
-		<th>User</th>
-	  </tr>
-	</template>
+    <Table :meta="users">
+        <template #head>
+            <tr>
+                <th>User</th>
+            </tr>
+        </template>
 
-	<template #body>
-	  <tr
-		v-for="(user, key) in users.data"
-		:key="key"
-	  >
-		<td>{{ user.name }}</td>
-	  </tr>
-	</template>
-  </Table>
+        <template #body>
+            <tr v-for="(user, key) in users.data" :key="key">
+                <td>{{ user.name }}</td>
+            </tr>
+        </template>
+    </Table>
 </template>
 ```
 
@@ -320,59 +316,57 @@ The `Table` has some additional properties to tweak its front-end behaviour.
 
 ```vue
 <template>
-  <Table
-	:striped="true"
-	:prevent-overlapping-requests="false"
-	:input-debounce-ms="1000"
-	:preserve-scroll="true"
-  />
+    <Table
+        :striped="true"
+        :prevent-overlapping-requests="false"
+        :input-debounce-ms="1000"
+        :preserve-scroll="true"
+    />
 </template>
 ```
 
 | Property                   | Description                                                                                                                                                                                               | Default |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| striped                    | Adds a *striped* layout to the table.                                                                                                                                                                     | `false` |
+| striped                    | Adds a _striped_ layout to the table.                                                                                                                                                                     | `false` |
 | preventOverlappingRequests | Cancels a previous visit on new user input to prevent an inconsistent state.                                                                                                                              | `true`  |
 | inputDebounceMs            | Number of ms to wait before refreshing the table on user input.                                                                                                                                           | 350     |
 | preserveScroll             | Configures the [Scroll preservation](https://inertiajs.com/scroll-management#scroll-preservation) behavior. You may also pass `table-top` to this property to scroll to the top of the table on new data. | false   |
 
 The `Table` has some events that you can use
 
-* rowClicked: this event is fired when the user click on the row. The event give you this informations: event, item, key. Be careful if you use this event with a clickable element inside the row like an action button. Don't forget to use `event.stopPropagation()` for all other clickable elements
+-   rowClicked: this event is fired when the user click on the row. The event give you this informations: event, item, key. Be careful if you use this event with a clickable element inside the row like an action button. Don't forget to use `event.stopPropagation()` for all other clickable elements
 
 #### Custom column cells
 
-When using *auto-fill*, you may want to transform the presented data for a specific column while leaving the other columns untouched. For this, you may use a cell template. This example is taken from the [Example Controller](#example-controller) above.
+When using _auto-fill_, you may want to transform the presented data for a specific column while leaving the other columns untouched. For this, you may use a cell template. This example is taken from the [Example Controller](#example-controller) above.
 
 ```vue
 <template>
-  <Table :resource="users">
-	<template #cell(actions)="{ item: user }">
-	  <a :href="`/users/${user.id}/edit`">
-		Edit
-	  </a>
-	</template>
-  </Table>
+    <Table :resource="users">
+        <template #cell(actions)="{ item: user }">
+            <a :href="`/users/${user.id}/edit`"> Edit </a>
+        </template>
+    </Table>
 </template>
 ```
 
 #### Custom header cells
 
-When using *auto-fill*, you may want to transform the presented data for a specific header while leaving the other columns untouched. For this, you may use a header template. This example is taken from the [Example Controller](#example-controller) above.
+When using _auto-fill_, you may want to transform the presented data for a specific header while leaving the other columns untouched. For this, you may use a header template. This example is taken from the [Example Controller](#example-controller) above.
 
 ```vue
 <template>
-  <Table :resource="users">
-	<template #header(email)="{ label: label, column: column }">
-	  <span class="lowercase">{{ label }}</span>
-	</template>
-  </Table>
+    <Table :resource="users">
+        <template #header(email)="{ label: label, column: column }">
+            <span class="lowercase">{{ label }}</span>
+        </template>
+    </Table>
 </template>
 ```
 
 #### Multiple tables per page
 
-You may want to use more than one table component per page. Displaying the data is easy, but using features like filtering, sorting, and pagination requires a slightly different setup. For example, by default, the `page` query key is used for paginating the data set, but now you want two different keys for each table. Luckily, this package takes care of that and even provides a helper method to support Spatie's query package. To get this to work, you need to *name* your tables.
+You may want to use more than one table component per page. Displaying the data is easy, but using features like filtering, sorting, and pagination requires a slightly different setup. For example, by default, the `page` query key is used for paginating the data set, but now you want two different keys for each table. Luckily, this package takes care of that and even provides a helper method to support Spatie's query package. To get this to work, you need to _name_ your tables.
 
 Let's take a look at Spatie's `QueryBuilder`. In this example, there's a table for the companies and a table for the users. We name the tables accordingly. So first, call the static `updateQueryBuilderParameters` method to tell the package to use a different set of query parameters. Now, `filter` becomes `companies_filter`, `column` becomes `companies_column`, and so forth. Secondly, change the `pageName` of the database paginator.
 
@@ -419,27 +413,19 @@ return Inertia::render('TwoTables', [
 });
 ```
 
-Lastly, pass the correct `name` property to each table in the Vue template. Optionally, you may set the `preserve-scroll` property to `table-top`. This makes sure to scroll to the top of the table on new data. For example, when changing the page of the *second* table, you want to scroll to the top of the table, instead of the top of the page.
+Lastly, pass the correct `name` property to each table in the Vue template. Optionally, you may set the `preserve-scroll` property to `table-top`. This makes sure to scroll to the top of the table on new data. For example, when changing the page of the _second_ table, you want to scroll to the top of the table, instead of the top of the page.
 
 ```vue
 <script setup>
-import { Table } from "AdesinFr/inertiajs-tables-laravel-query-builder";
+import { Table } from "@adesin-fr/inertiajs-tables-laravel-query-builder";
 
-defineProps(["companies", "users"])
+defineProps(["companies", "users"]);
 </script>
 
 <template>
-  <Table
-	:resource="companies"
-	name="companies"
-	preserve-scroll="table-top"
-  />
+    <Table :resource="companies" name="companies" preserve-scroll="table-top" />
 
-  <Table
-	:resource="users"
-	name="users"
-	preserve-scroll="table-top"
-  />
+    <Table :resource="users" name="users" preserve-scroll="table-top" />
 </template>
 ```
 
@@ -448,21 +434,21 @@ defineProps(["companies", "users"])
 You can override the default pagination translations with the `setTranslations` method. You can do this in your main JavaScript file:
 
 ```js
-import { setTranslations } from "AdesinFr/inertiajs-tables-laravel-query-builder";
+import { setTranslations } from "@adesin-fr/inertiajs-tables-laravel-query-builder";
 
 setTranslations({
-  next: "Next",
-  no_results_found: "No results found",
-  of: "of",
-  per_page: "per page",
-  previous: "Previous",
-  results: "results",
-  to: "to",
-  search: "Search",
-  reset: "Reset",
-  grouped_reset: "Reset",
-  add_search_fields: "Add search field",
-  show_hide_columns: "Show / Hide columns",
+    next: "Next",
+    no_results_found: "No results found",
+    of: "of",
+    per_page: "per page",
+    previous: "Previous",
+    results: "results",
+    to: "to",
+    search: "Search",
+    reset: "Reset",
+    grouped_reset: "Reset",
+    add_search_fields: "Add search field",
+    show_hide_columns: "Show / Hide columns",
 });
 ```
 
@@ -479,7 +465,7 @@ The `Table.vue` has several slots that you can use to inject your own implementa
 | tableReset        | The location of the button that resets the table.                                      |
 | tableAddSearchRow | The location of the button + dropdown to add additional search rows.                   |
 | tableSearchRows   | The location of the input elements that handle the additional search rows.             |
-| tableWrapper      | The component that *wraps* the table element, handling overflow, shadow, padding, etc. |
+| tableWrapper      | The component that _wraps_ the table element, handling overflow, shadow, padding, etc. |
 | head              | The location of the table header.                                                      |
 | body              | The location of the table body.                                                        |
 | with-grouped-menu | Use the grouped menu instead of multiple buttons                                       |
@@ -490,14 +476,14 @@ Each slot is provided with props to interact with the parent `Table` component.
 
 ```vue
 <template>
-  <Table>
-	<template v-slot:tableGlobalSearch="slotProps">
-	  <input
-		placeholder="Custom Global Search Component..."
-		@input="slotProps.onChange($event.target.value)"
-	  />
-	</template>
-  </Table>
+    <Table>
+        <template v-slot:tableGlobalSearch="slotProps">
+            <input
+                placeholder="Custom Global Search Component..."
+                @input="slotProps.onChange($event.target.value)"
+            />
+        </template>
+    </Table>
 </template>
 ```
 
@@ -506,66 +492,82 @@ Each slot is provided with props to interact with the parent `Table` component.
 You can customize some parts of the table.
 
 Provide an object with the desired customizations in `app.js` file like this:
+
 ```javascript
 const themeVariables = {
-	inertia_table: {
-		per_page_selector: {
-			select: {
-				primary: 'your classes',
-			},
-		},
-	},
-}
+    inertia_table: {
+        per_page_selector: {
+            select: {
+                primary: "your classes",
+            },
+        },
+    },
+};
 
 createInertiaApp({
-	progress: {
-		color: '#4B5563',
-	},
-	title: (title) => `${title} - ${appName}`,
-	resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
-	setup({ el, App, props, plugin }) {
-		return createApp({ render: () => h(App, props) })
-			// ...
-			.provide('themeVariables', themeVariables)
-			// ...
-			.mount(el);
-	},
-})
+    progress: {
+        color: "#4B5563",
+    },
+    title: (title) => `${title} - ${appName}`,
+    resolve: (name) =>
+        resolvePageComponent(
+            `./Pages/${name}.vue`,
+            import.meta.glob("./Pages/**/*.vue"),
+        ),
+    setup({ el, App, props, plugin }) {
+        return (
+            createApp({ render: () => h(App, props) })
+                // ...
+                .provide("themeVariables", themeVariables)
+                // ...
+                .mount(el)
+        );
+    },
+});
 ```
+
 You can customize the default style by overiding the default style like that:
+
 ```javascript
 const themeVariables = {
-	inertia_table: {
-		per_page_selector: {
-			select: {
-				base: "block min-w-max shadow-sm text-sm rounded-md",
-				color: {
-					primary: "border-gray-300 focus:ring-yellow-500 focus:border-yellow-500",
-				},
-			},
-		},
-	},
-}
+    inertia_table: {
+        per_page_selector: {
+            select: {
+                base: "block min-w-max shadow-sm text-sm rounded-md",
+                color: {
+                    primary:
+                        "border-gray-300 focus:ring-yellow-500 focus:border-yellow-500",
+                },
+            },
+        },
+    },
+};
 ```
+
 Or you can create a new style and using the `color` prop on the `Table.vue`
+
 ```javascript
 const themeVariables = {
-	inertia_table: {
-		 select: {
-			  base: "block min-w-max shadow-sm text-sm rounded-md",
-			  color: {
-				  red_style: 'border-gray-300 focus:ring-red-500 focus:border-red-500',
-			  },
-		  },
-	},
-}
+    inertia_table: {
+        select: {
+            base: "block min-w-max shadow-sm text-sm rounded-md",
+            color: {
+                red_style:
+                    "border-gray-300 focus:ring-red-500 focus:border-red-500",
+            },
+        },
+    },
+};
 ```
+
 ```vue
 <template>
-  <Table color="red_style" />
+    <Table color="red_style" />
 </template>
 ```
+
 Available customizations
+
 ```javascript
 const themeVariables = {
 	inertia_table: {
@@ -709,21 +711,21 @@ php artisan dusk
 
 ### Server-side
 
-* The `addColumn` method has been renamed to `column`.
-* The `addFilter` method has been renamed to `selectFilter`.
-* The `addSearch` method has been renamed to `searchInput`.
-* For all renamed methods, check out the arguments as some have been changed.
-* The `addColumns` and `addSearchRows` methods have been removed.
-* Global Search is not enabled by default anymore.
+-   The `addColumn` method has been renamed to `column`.
+-   The `addFilter` method has been renamed to `selectFilter`.
+-   The `addSearch` method has been renamed to `searchInput`.
+-   For all renamed methods, check out the arguments as some have been changed.
+-   The `addColumns` and `addSearchRows` methods have been removed.
+-   Global Search is not enabled by default anymore.
 
 ### Client-side
 
-* The `InteractsWithQueryBuilder` mixin has been removed and is no longer needed.
-* The `Table` component no longer needs the `filters`, `search`, `columns`, and `on-update` properties.
-* When using a custom `thead` or `tbody` slot, you need to provide [the styling](https://github.com/Adesin-Fr/inertiajs-tables-laravel-query-builder/blob/c8e21649ad372d309eeb62a8f771aa4c7cd0089e/js/Tailwind2/Table.vue#L1) manually.
-* When using a custom `thead`, the `showColumn` method has been renamed to `show`.
-* The `setTranslations` method is no longer part of the `Pagination` component, but should be imported.
-* The templates and logic of the components are not separated anymore. Use slots to inject your own implementations.
+-   The `InteractsWithQueryBuilder` mixin has been removed and is no longer needed.
+-   The `Table` component no longer needs the `filters`, `search`, `columns`, and `on-update` properties.
+-   When using a custom `thead` or `tbody` slot, you need to provide [the styling](https://github.com/Adesin-Fr/inertiajs-tables-laravel-query-builder/blob/c8e21649ad372d309eeb62a8f771aa4c7cd0089e/js/Tailwind2/Table.vue#L1) manually.
+-   When using a custom `thead`, the `showColumn` method has been renamed to `show`.
+-   The `setTranslations` method is no longer part of the `Pagination` component, but should be imported.
+-   The templates and logic of the components are not separated anymore. Use slots to inject your own implementations.
 
 ## Changelog
 
@@ -739,9 +741,9 @@ If you discover any security related issues, please email alfonsorodriguez@live.
 
 ## Credits
 
-- [Pascal Baljet](https://github.com/Adesin-Fr)
-- [All Contributors](../../contributors)
-- [Alfonso Rodríguez](https://github.com/Adesin-Fr)
+-   [Pascal Baljet](https://github.com/Adesin-Fr)
+-   [All Contributors](../../contributors)
+-   [Alfonso Rodríguez](https://github.com/Adesin-Fr)
 
 ## License
 
