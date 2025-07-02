@@ -727,10 +727,6 @@ php artisan dusk
 -   The `setTranslations` method is no longer part of the `Pagination` component, but should be imported.
 -   The templates and logic of the components are not separated anymore. Use slots to inject your own implementations.
 
-## Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
-
 ## Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
@@ -741,10 +737,10 @@ If you discover any security related issues, please email alfonsorodriguez@live.
 
 ## Credits
 
--   [Pascal Baljet](https://github.com/Adesin-Fr)
+-   [Pascal Baljet](https://github.com/protonemedia)
 -   [All Contributors](../../contributors)
--   [Alfonso Rodríguez](https://github.com/Adesin-Fr)
+-   [Ludovic LEMARINEL](https://github.com/Adesin-Fr)
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The MIT License (MIT). Please see [License File](LICENSE) for more information.
