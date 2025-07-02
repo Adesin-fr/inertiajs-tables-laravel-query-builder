@@ -7,7 +7,7 @@
 
 This package provides a _DataTables-like_ experience for [Inertia.js](https://inertiajs.com/) with support for searching, filtering, sorting, toggling columns, and pagination. It generates URLs that can be consumed by Spatie's excellent [Laravel Query Builder](https://github.com/spatie/laravel-query-builder) package, with no additional logic needed. The components are styled with [Tailwind CSS 3.0](https://tailwindcss.com/), but it's fully customizable with slots. The data refresh logic is based on Inertia's [Ping CRM demo](https://github.com/inertiajs/pingcrm).
 
-This package is a fork of [PonchRobles/inertiajs-tables-laravel-query-builder], which I wasn't satisfied about, because of some quality issues.
+This package is a fork of [protonemedia/inertiajs-tables-laravel-query-builder], Since it has been abandonned in favor of a commercial project.
 
 ![Inertia.js Table for Laravel Query Builder](https://user-images.githubusercontent.com/8403149/177773377-86c32d69-8f86-47e4-8063-ea227e480d10.mp4)
 
@@ -21,6 +21,15 @@ This package is a fork of [PonchRobles/inertiajs-tables-laravel-query-builder], 
 -   Sort columns
 -   Pagination (support for Eloquent/API Resource/Simple/Cursor)
 -   Automatically updates the query string (by using [Inertia's replace](https://inertiajs.com/manual-visits#browser-history) feature)
+
+## To-do list :
+
+-   [ ] Add filters to the columns headers
+-   [ ] Allow to resize columns
+-   [ ] Allow to reorder columns
+-   [ ] Allow to pin columns (similar to AG Grid)
+-   [ ] Export the table data to CSV
+-   [ ] Export the table data usign a custom callback
 
 ## Compatibility
 
