@@ -9,6 +9,8 @@ const translationsObject = {
         to: "to",
         reset: "Reset",
         search: "Search...",
+        noLineSelected: "No line selected",
+        lineSelected: "line(s) selected",
     }
 };
 
