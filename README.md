@@ -21,10 +21,10 @@ This package is a fork of [protonemedia/inertiajs-tables-laravel-query-builder],
 -   Sort columns
 -   Pagination (support for Eloquent/API Resource/Simple/Cursor)
 -   Automatically updates the query string (by using [Inertia's replace](https://inertiajs.com/manual-visits#browser-history) feature)
+-   Customizable header and body cells classes
 
 ## To-do list :
 
--   [ ] Add CSS classes to the columns (so we can make the table responsive by hiding some columns on small screens)
 -   [ ] Add filters to the columns headers
 -   [ ] Allow to resize columns
 -   [ ] Allow to reorder columns
@@ -179,6 +179,8 @@ Inertia::render('Page/Index')->table(function (InertiaTable $table) {
 		hidden: false,
 		sortable: true,
 		searchable: true
+		headerClass: 'hidden md:table-cell', // This cell will be hidden on small screens
+		bodyClass: 'hidden md:table-cell', // This cell will be hidden on small screens
 	);
 });
 ```
