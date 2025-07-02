@@ -24,6 +24,7 @@ This package is a fork of [protonemedia/inertiajs-tables-laravel-query-builder],
 
 ## To-do list :
 
+-   [ ] Add CSS classes to the columns (so we can make the table responsive by hiding some columns on small screens)
 -   [ ] Add filters to the columns headers
 -   [ ] Allow to resize columns
 -   [ ] Allow to reorder columns

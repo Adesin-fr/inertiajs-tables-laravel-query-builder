@@ -38,7 +38,7 @@ class UserTableView
                 ->withGlobalSearch()
                 ->defaultSort('name')
                 ->column(key: 'name', searchable: true, sortable: true, canBeHidden: false)
-                ->column(key: 'email', searchable: true, sortable: true)
+                ->column(key: 'email', searchable: true, sortable: true, headerClass: 'hidden md:table-cell', bodyClass: 'hidden md:table-cell')
                 ->column(key: 'language_code', label: 'Language')
                 ->column(label: 'Actions')
                 ->selectFilter(key: 'language_code', options: [

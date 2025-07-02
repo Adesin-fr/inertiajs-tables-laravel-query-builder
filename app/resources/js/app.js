@@ -13,6 +13,7 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         return createApp({ render: () => h(App, props) })
             .use(plugin)
+            .provide("themeVariables", {})
             .mixin({ methods: { route } })
             .mount(el);
     },

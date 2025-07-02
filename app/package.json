@@ -5,7 +5,7 @@
         "build": "vite build"
     },
     "devDependencies": {
-        "AdesinFr/inertiajs-tables-laravel-query-builder": "file:../AdesinFr_-inertiajs-tables-laravel-query-builder-2.2.0.tgz",
+        "@adesin-fr/inertiajs-tables-laravel-query-builder": "file:../.",
         "@tailwindcss/forms": "^0.5.0",
         "@vitejs/plugin-vue": "^3.0",
         "autoprefixer": "^10.4.2",
