@@ -12,9 +12,10 @@ class Column implements Arrayable
         public bool $canBeHidden,
         public bool $hidden,
         public bool $sortable,
-        public bool|string $sorted
-    ) {
-    }
+        public bool|string $sorted,
+        public string $headerClass = '',
+        public string $bodyClass = '',
+    ) {}
 
     public function toArray()
     {
@@ -25,6 +26,8 @@ class Column implements Arrayable
             'hidden'        => $this->hidden,
             'sortable'      => $this->sortable,
             'sorted'        => $this->sorted,
+            'header_class'  => $this->headerClass,
+            'body_class'    => $this->bodyClass,
         ];
     }
 }

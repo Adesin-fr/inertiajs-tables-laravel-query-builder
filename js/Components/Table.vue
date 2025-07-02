@@ -1,43 +1,46 @@
 <template>
     <Transition>
         <fieldset ref="tableFieldset" :key="`table-${name}`" :dusk="`table-${name}`" class="min-w-0"
-                  :class="{ 'opacity-75': isVisiting }">
+            :class="{ 'opacity-75': isVisiting }">
             <div class="flex flex-row flex-wrap sm:flex-nowrap justify-start px-4 sm:px-0">
-                <div v-if="queryBuilderProps.globalSearch" class="flex flex-row w-full sm:w-auto sm:grow mb-2 sm:mb-0 sm:mr-4">
+                <div v-if="queryBuilderProps.globalSearch"
+                    class="flex flex-row w-full sm:w-auto sm:grow mb-2 sm:mb-0 sm:mr-4">
                     <slot name="tableGlobalSearch" :has-global-search="queryBuilderProps.globalSearch"
-                          :label="queryBuilderProps.globalSearch ? queryBuilderProps.globalSearch.label : null"
-                          :value="queryBuilderProps.globalSearch ? queryBuilderProps.globalSearch.value : null"
-                          :on-change="changeGlobalSearchValue">
+                        :label="queryBuilderProps.globalSearch ? queryBuilderProps.globalSearch.label : null"
+                        :value="queryBuilderProps.globalSearch ? queryBuilderProps.globalSearch.value : null"
+                        :on-change="changeGlobalSearchValue">
                         <TableGlobalSearch v-if="queryBuilderProps.globalSearch" class="grow"
-                                           :label="queryBuilderProps.globalSearch.label" :value="queryBuilderProps.globalSearch.value"
-                                           :on-change="changeGlobalSearchValue" :color="color"/>
+                            :label="queryBuilderProps.globalSearch.label" :value="queryBuilderProps.globalSearch.value"
+                            :on-change="changeGlobalSearchValue" :color="color" />
                     </slot>
                 </div>
 
                 <div class="mr-2 sm:mr-4">
                     <slot name="tableFilter" :has-filters="queryBuilderProps.hasFilters"
-                          :has-enabled-filters="queryBuilderProps.hasEnabledFilters" :filters="queryBuilderProps.filters"
-                          :on-filter-change="changeFilterValue">
-                        <TableFilter v-if="queryBuilderProps.hasFilters" :has-enabled-filters="queryBuilderProps.hasEnabledFilters"
-                                     :filters="queryBuilderProps.filters" :on-filter-change="changeFilterValue" :color="color"/>
+                        :has-enabled-filters="queryBuilderProps.hasEnabledFilters" :filters="queryBuilderProps.filters"
+                        :on-filter-change="changeFilterValue">
+                        <TableFilter v-if="queryBuilderProps.hasFilters"
+                            :has-enabled-filters="queryBuilderProps.hasEnabledFilters"
+                            :filters="queryBuilderProps.filters" :on-filter-change="changeFilterValue" :color="color" />
                     </slot>
                 </div>
 
-                <slot v-if="!withGroupedMenu" name="tableAddSearchRow" :has-search-inputs="queryBuilderProps.hasSearchInputs"
-                      :has-search-inputs-without-value="queryBuilderProps.hasSearchInputsWithoutValue"
-                      :search-inputs="queryBuilderProps.searchInputsWithoutGlobal" :on-add="showSearchInput">
+                <slot v-if="!withGroupedMenu" name="tableAddSearchRow"
+                    :has-search-inputs="queryBuilderProps.hasSearchInputs"
+                    :has-search-inputs-without-value="queryBuilderProps.hasSearchInputsWithoutValue"
+                    :search-inputs="queryBuilderProps.searchInputsWithoutGlobal" :on-add="showSearchInput">
                     <TableAddSearchRow v-if="queryBuilderProps.hasSearchInputs" class="mr-2 sm:mr-4"
-                                       :search-inputs="queryBuilderProps.searchInputsWithoutGlobal"
-                                       :has-search-inputs-without-value="queryBuilderProps.hasSearchInputsWithoutValue" :on-add="showSearchInput"
-                                       :color="color"/>
+                        :search-inputs="queryBuilderProps.searchInputsWithoutGlobal"
+                        :has-search-inputs-without-value="queryBuilderProps.hasSearchInputsWithoutValue"
+                        :on-add="showSearchInput" :color="color" />
                 </slot>
 
                 <slot v-if="!withGroupedMenu" name="tableColumns" :has-columns="queryBuilderProps.hasToggleableColumns"
-                      :columns="queryBuilderProps.columns" :has-hidden-columns="queryBuilderProps.hasHiddenColumns"
-                      :on-change="changeColumnStatus">
+                    :columns="queryBuilderProps.columns" :has-hidden-columns="queryBuilderProps.hasHiddenColumns"
+                    :on-change="changeColumnStatus">
                     <TableColumns v-if="queryBuilderProps.hasToggleableColumns" :class="{ 'mr-2 sm:mr-4': canBeReset }"
-                                  :columns="queryBuilderProps.columns" :has-hidden-columns="queryBuilderProps.hasHiddenColumns"
-                                  :on-change="changeColumnStatus" :color="color"/>
+                        :columns="queryBuilderProps.columns" :has-hidden-columns="queryBuilderProps.hasHiddenColumns"
+                        :on-change="changeColumnStatus" :color="color" />
                 </slot>
 
                 <slot v-if="withGroupedMenu" name="groupedAction" :actions="defaultActions">
@@ -48,18 +51,19 @@
 
                 <slot v-if="!withGroupedMenu" name="tableReset" :can-be-reset="canBeReset" :on-click="resetQuery">
                     <div v-if="canBeReset" class="mr-4 sm:mr-0">
-                        <TableReset :on-click="resetQuery" :color="color"/>
+                        <TableReset :on-click="resetQuery" :color="color" />
                     </div>
                 </slot>
             </div>
 
             <slot name="tableSearchRows" :has-search-rows-with-value="queryBuilderProps.hasSearchInputsWithValue"
-                  :search-inputs="queryBuilderProps.searchInputsWithoutGlobal"
-                  :forced-visible-search-inputs="forcedVisibleSearchInputs" :on-change="changeSearchInputValue">
-                <TableSearchRows v-if="queryBuilderProps.hasSearchInputsWithValue || forcedVisibleSearchInputs.length > 0"
-                                 :search-inputs="queryBuilderProps.searchInputsWithoutGlobal"
-                                 :forced-visible-search-inputs="forcedVisibleSearchInputs" :on-change="changeSearchInputValue"
-                                 :on-remove="disableSearchInput" :color="color"/>
+                :search-inputs="queryBuilderProps.searchInputsWithoutGlobal"
+                :forced-visible-search-inputs="forcedVisibleSearchInputs" :on-change="changeSearchInputValue">
+                <TableSearchRows
+                    v-if="queryBuilderProps.hasSearchInputsWithValue || forcedVisibleSearchInputs.length > 0"
+                    :search-inputs="queryBuilderProps.searchInputsWithoutGlobal"
+                    :forced-visible-search-inputs="forcedVisibleSearchInputs" :on-change="changeSearchInputValue"
+                    :on-remove="disableSearchInput" :color="color" />
             </slot>
 
             <slot name="tableWrapper" :meta="resourceMeta">
@@ -67,57 +71,60 @@
                     <slot name="table">
                         <table class="min-w-full divide-y divide-gray-300">
                             <thead class="bg-gray-50">
-                            <slot name="head" :show="show" :sort-by="sortBy" :header="header">
-                                <tr>
-                                    <th v-if="hasCheckboxes"
-                                        class="text-left text-sm font-semibold text-gray-900">
-                                        <input type="checkbox" :id="`table-${name}-select-header`" @change="toggleSelection"
-                                               v-model="headerCheckboxSelected"
-                                               class="rounded-sm mr-1 border-gray-300 m-1"/>
-                                    </th>
-                                    <HeaderCell v-for="column in queryBuilderProps.columns" :key="`table-${name}-header-${column.key}`"
-                                                :cell="header(column.key)">
-                                        <template #label>
-                                            <slot :name="`header(${column.key})`" :label="header(column.key).label"
-                                                  :column="header(column.key)"/>
-                                        </template>
-                                    </HeaderCell>
-                                </tr>
-                            </slot>
+                                <slot name="head" :show="show" :sort-by="sortBy" :header="header">
+                                    <tr>
+                                        <th v-if="hasCheckboxes" class="text-left text-sm font-semibold text-gray-900">
+                                            <input type="checkbox" :id="`table-${name}-select-header`"
+                                                @change="toggleSelection" v-model="headerCheckboxSelected"
+                                                class="rounded-sm mr-1 border-gray-300 m-1" />
+                                        </th>
+                                        <HeaderCell v-for="column in queryBuilderProps.columns"
+                                            :key="`table-${name}-header-${column.key}`" :cell="header(column.key)">
+                                            <template #label>
+                                                <slot :name="`header(${column.key})`" :label="header(column.key).label"
+                                                    :column="header(column.key)" />
+                                            </template>
+                                        </HeaderCell>
+                                    </tr>
+                                </slot>
                             </thead>
                             <tbody class="divide-y divide-gray-200 bg-white">
-                            <slot name="body" :show="show">
-                                <tr v-for="(item, key) in resourceData" :key="`table-${name}-row-${key}`" class="" :class="{
-                                    'bg-gray-50': striped && key % 2,
-                                    'hover:bg-gray-100': striped,
-                                    'hover:bg-gray-50': !striped
-                                  }">
-                                    <td class="whitespace-nowrap text-sm text-gray-500" v-if="hasCheckboxes">
-                                        <input type="checkbox" :id="`table-${name}-select-${key}`" class="rounded-sm m-1 border-gray-300" v-model="item.__itSelected" />
-                                    </td>
+                                <slot name="body" :show="show">
+                                    <tr v-for="(item, key) in resourceData" :key="`table-${name}-row-${key}`" class=""
+                                        :class="{
+                                            'bg-gray-50': striped && key % 2,
+                                            'hover:bg-gray-100': striped,
+                                            'hover:bg-gray-50': !striped
+                                        }">
+                                        <td class="whitespace-nowrap text-sm text-gray-500" v-if="hasCheckboxes">
+                                            <input type="checkbox" :id="`table-${name}-select-${key}`"
+                                                class="rounded-sm m-1 border-gray-300" v-model="item.__itSelected" />
+                                        </td>
 
-                                    <td v-for="(column, colIndex) in queryBuilderProps.columns" v-show="show(column.key)"
-                                        :key="`table-${name}-row-${key}-column-${column.key}`"
-                                        @click="rowClicked($event, item, key)"
-                                        class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                        <td v-for="(column, colIndex) in queryBuilderProps.columns"
+                                            v-show="show(column.key)"
+                                            :key="`table-${name}-row-${key}-column-${column.key}`"
+                                            @click="rowClicked($event, item, key)"
+                                            class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+                                            :class="column.body_class">
 
-                                        <slot :name="`cell(${column.key})`" :item="item">
-                                            {{ item[column.key] }}
-                                        </slot>
-                                    </td>
-                                </tr>
-                            </slot>
+                                            <slot :name="`cell(${column.key})`" :item="item">
+                                                {{ item[column.key] }}
+                                            </slot>
+                                        </td>
+                                    </tr>
+                                </slot>
                             </tbody>
                         </table>
                     </slot>
 
                     <slot name="pagination" :on-click="visitPageFromUrl" :has-data="hasData" :meta="resourceMeta"
-                          :per-page-options="queryBuilderProps.perPageOptions" :on-per-page-change="onPerPageChange">
+                        :per-page-options="queryBuilderProps.perPageOptions" :on-per-page-change="onPerPageChange">
                         <div class="flex justify-between bg-white px-2 py-3 items-center border-t border-gray-200">
-                            <span class="italic text-sm px-2">{{ lineCountLabel }}</span>
+                            <span class="italic text-sm px-2" v-if="hasCheckboxes">{{ lineCountLabel }}</span>
                             <Pagination :on-click="visitPageFromUrl" :has-data="hasData" :meta="resourceMeta"
-                                        :per-page-options="queryBuilderProps.perPageOptions" :on-per-page-change="onPerPageChange"
-                                        :color="color"/>
+                                :per-page-options="queryBuilderProps.perPageOptions"
+                                :on-per-page-change="onPerPageChange" :color="color" />
                         </div>
                     </slot>
                 </TableWrapper>
@@ -136,7 +143,7 @@ import TableGlobalSearch from "./TableGlobalSearch.vue";
 import TableSearchRows from "./TableSearchRows.vue";
 import TableReset from "./TableReset.vue";
 import TableWrapper from "./TableWrapper.vue";
-import {computed, onMounted, ref, watch, onUnmounted, getCurrentInstance, Transition} from "vue";
+import { computed, onMounted, ref, watch, onUnmounted, getCurrentInstance, Transition } from "vue";
 import qs from "qs";
 import clone from "lodash-es/clone";
 import filter from "lodash-es/filter";
@@ -145,9 +152,12 @@ import forEach from "lodash-es/forEach";
 import isEqual from "lodash-es/isEqual";
 import map from "lodash-es/map";
 import pickBy from "lodash-es/pickBy";
-import {router, usePage} from "@inertiajs/vue3";
+import { router, usePage } from "@inertiajs/vue3";
 import GroupedActions from "./GroupedActions.vue";
 import BulkActions from "./BulkActions.vue";
+import { getTranslations } from "../translations.js";
+
+const translations = getTranslations();
 
 const emit = defineEmits(["rowClicked", 'selectionChanged']);
 
@@ -237,7 +247,7 @@ const updates = ref(0);
 
 const queryBuilderProps = computed(() => {
     let data = usePage().props.queryBuilderProps
-        ? {...usePage().props.queryBuilderProps[props.name]} || {}
+        ? { ...usePage().props.queryBuilderProps[props.name] } || {}
         : {};
 
     data._updates = updates.value;
@@ -621,7 +631,7 @@ function visit(url) {
                     const offset = -8;
                     const top = tableFieldset.value.getBoundingClientRect().top + window.pageYOffset + offset;
 
-                    window.scrollTo({top});
+                    window.scrollTo({ top });
                 }
 
                 updates.value++;
@@ -642,13 +652,13 @@ watch(queryBuilderData, () => {
 
     headerCheckboxSelected.value = false;
 
-}, {deep: true});
+}, { deep: true });
 
 watch(props.resource, () => {
     const selectedItems = props.resource.data.filter((item) => item.__itSelected);
 
     emit("selectionChanged", selectedItems);
-}, {deep: true});
+}, { deep: true });
 
 const inertiaListener = () => {
     updates.value++;
@@ -714,9 +724,9 @@ const selectedLineCount = computed(() => {
 
 const lineCountLabel = computed(() => {
     if (selectedLineCount.value === 0) {
-        return "Aucune sélection";
+        return translations.noLineSelected;
     }
-    return `${selectedLineCount.value} élément${selectedLineCount.value > 1 ? 's' : ''} sélectionné${selectedLineCount.value > 1 ? 's' : ''}`;
+    return `${selectedLineCount.value} ${translations.lineSelected}`;
 })
 
 </script>
