@@ -15,10 +15,10 @@ class ToggleFilter implements Arrayable, Filterable
     public function toArray(): array
     {
         return [
-            'key'     => $this->key,
-            'label'   => $this->label,
-            'value'   => $this->value,
-            'type'    => self::TYPE,
+            'key'   => $this->key,
+            'label' => $this->label,
+            'value' => $this->value,
+            'type'  => self::TYPE,
         ];
     }
 }

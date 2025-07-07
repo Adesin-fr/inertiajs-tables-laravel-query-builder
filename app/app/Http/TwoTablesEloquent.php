@@ -2,10 +2,10 @@
 
 namespace App\Http;
 
+use AdesinFr\LaravelQueryBuilderInertiaJs\InertiaTable;
 use App\Models\Company;
 use App\Models\User;
 use Inertia\Inertia;
-use AdesinFr\LaravelQueryBuilderInertiaJs\InertiaTable;
 
 class TwoTablesEloquent
 {

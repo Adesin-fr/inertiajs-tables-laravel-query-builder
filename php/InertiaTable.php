@@ -2,15 +2,15 @@
 
 namespace AdesinFr\LaravelQueryBuilderInertiaJs;
 
+use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\Filter;
+use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\Filterable;
+use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\NumberRangeFilter;
+use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\ToggleFilter;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Inertia\Response;
-use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\Filter;
-use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\Filterable;
-use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\ToggleFilter;
-use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\NumberRangeFilter;
 
 class InertiaTable
 {

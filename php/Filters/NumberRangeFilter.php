@@ -2,8 +2,8 @@
 
 namespace AdesinFr\LaravelQueryBuilderInertiaJs\Filters;
 
-use Illuminate\Contracts\Support\Arrayable;
 use AdesinFr\LaravelQueryBuilderInertiaJs\QueryBuilderFilters\FiltersNumberRange;
+use Illuminate\Contracts\Support\Arrayable;
 use Spatie\QueryBuilder\AllowedFilter;
 
 class NumberRangeFilter implements Arrayable, Filterable
@@ -25,15 +25,15 @@ class NumberRangeFilter implements Arrayable, Filterable
     public function toArray(): array
     {
         return [
-            'key' => $this->key,
-            'label' => $this->label,
-            'max' => $this->max,
-            'min' => $this->min,
+            'key'    => $this->key,
+            'label'  => $this->label,
+            'max'    => $this->max,
+            'min'    => $this->min,
             'prefix' => $this->prefix,
             'suffix' => $this->suffix,
-            'step' => $this->step,
-            'value' => $this->value ?? [$this->min, $this->max],
-            'type' => self::TYPE,
+            'step'   => $this->step,
+            'value'  => $this->value ?? [$this->min, $this->max],
+            'type'   => self::TYPE,
         ];
     }
 

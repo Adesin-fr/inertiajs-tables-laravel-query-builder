@@ -2,11 +2,11 @@
 
 namespace App\Http;
 
+use AdesinFr\LaravelQueryBuilderInertiaJs\InertiaTable;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
-use AdesinFr\LaravelQueryBuilderInertiaJs\InertiaTable;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 

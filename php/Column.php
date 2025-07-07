@@ -15,7 +15,8 @@ class Column implements Arrayable
         public bool|string $sorted,
         public string $headerClass = '',
         public string $bodyClass = '',
-    ) {}
+    ) {
+    }
 
     public function toArray()
     {
