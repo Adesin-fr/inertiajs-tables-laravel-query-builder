@@ -104,9 +104,7 @@
                                         <td v-for="(column, colIndex) in queryBuilderProps.columns"
                                             v-show="show(column.key)"
                                             :key="`table-${name}-row-${key}-column-${column.key}`"
-                                            @click="rowClicked($event, item, key)"
-                                            class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
-                                            :class="column.body_class">
+                                            @click="rowClicked($event, item, key)" :class="column.body_class">
 
                                             <slot :name="`cell(${column.key})`" :item="item">
                                                 {{ item[column.key] }}
