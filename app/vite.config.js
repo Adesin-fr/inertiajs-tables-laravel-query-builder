@@ -25,7 +25,7 @@ export default defineConfig({
     },
     server: {
         watch: {
-            // Exclure les dossiers qui peuvent causer des problèmes de mémoire
+            // Exclude folders that can cause memory issues
             ignored: [
                 '**/node_modules/**',
                 '**/vendor/**',
@@ -37,7 +37,7 @@ export default defineConfig({
             ]
         },
         fs: {
-            // Limiter l'accès aux dossiers pour éviter les inclusions récursives
+            // Limit folder access to avoid recursive inclusions
             allow: [
                 // Dossier courant
                 '.',
@@ -47,7 +47,7 @@ export default defineConfig({
         }
     },
     optimizeDeps: {
-        // Limiter les dépendances à optimiser pour réduire l'usage mémoire
+        // Limit dependencies to optimize to reduce memory usage
         include: [
             'vue',
             '@inertiajs/vue3',

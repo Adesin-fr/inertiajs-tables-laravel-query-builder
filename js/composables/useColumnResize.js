@@ -7,9 +7,9 @@ export function useColumnResize(tableName) {
     const startWidth = ref(0);
     const columnWidths = reactive({});
 
-    // Charger les largeurs sauvegardées depuis localStorage
+    // Load saved widths from localStorage
     const loadColumnWidths = () => {
-        // Ne pas charger les largeurs si le nom de la table est "default"
+        // Don't load widths if table name is "default"
         if (tableName === 'default') {
             return;
         }
@@ -20,14 +20,14 @@ export function useColumnResize(tableName) {
                 const parsed = JSON.parse(saved);
                 Object.assign(columnWidths, parsed);
             } catch (e) {
-                console.warn('Impossible de charger les largeurs de colonnes:', e);
+                console.warn('Unable to load column widths:', e);
             }
         }
     };
 
-    // Sauvegarder les largeurs dans localStorage
+    // Save widths to localStorage
     const saveColumnWidths = () => {
-        // Ne pas sauvegarder les largeurs si le nom de la table est "default"
+        // Don't save widths if table name is "default"
         if (tableName === 'default') {
             return;
         }
@@ -35,7 +35,7 @@ export function useColumnResize(tableName) {
         localStorage.setItem(`table-column-widths-${tableName}`, JSON.stringify(columnWidths));
     };
 
-    // Initialiser le redimensionnement
+    // Initialize resize
     const startResize = (event, columnKey) => {
         event.preventDefault();
         event.stopPropagation();
@@ -44,11 +44,11 @@ export function useColumnResize(tableName) {
         resizingColumn.value = columnKey;
         startX.value = event.clientX;
 
-        // Obtenir la largeur actuelle de la colonne
+        // Get current column width
         const th = event.target.closest('th');
         startWidth.value = th.offsetWidth;
 
-        // Fixer les largeurs de toutes les colonnes visibles pour éviter la redistribution automatique
+        // Fix widths of all visible columns to avoid automatic redistribution
         const table = th.closest('table');
         if (table) {
             const allHeaders = table.querySelectorAll('thead th[data-column-key]');
@@ -56,15 +56,15 @@ export function useColumnResize(tableName) {
                 const colKey = header.getAttribute('data-column-key');
                 const currentWidth = header.offsetWidth;
 
-                // Ne pas écraser les largeurs déjà définies dans columnWidths
+                // Don't overwrite widths already defined in columnWidths
                 if (!columnWidths[colKey]) {
                     columnWidths[colKey] = currentWidth;
                 }
 
-                // Appliquer la largeur immédiatement au DOM
+                // Apply width immediately to DOM
                 header.style.width = `${columnWidths[colKey]}px`;
 
-                // Appliquer aussi aux cellules du body
+                // Also apply to body cells
                 const columnIndex = Array.from(header.parentNode.children).indexOf(header);
                 const bodyRows = table.querySelectorAll('tbody tr');
                 bodyRows.forEach(row => {
@@ -76,33 +76,33 @@ export function useColumnResize(tableName) {
             });
         }
 
-        // Ajouter les event listeners pour le mousemove et mouseup
+        // Add event listeners for mousemove and mouseup
         document.addEventListener('mousemove', handleMouseMove);
         document.addEventListener('mouseup', handleMouseUp);
 
-        // Empêcher la sélection de texte pendant le redimensionnement
+        // Prevent text selection during resize
         document.body.style.userSelect = 'none';
         document.body.style.cursor = 'col-resize';
 
-        // Ajouter une classe pour indiquer le redimensionnement en cours
+        // Add a class to indicate resizing in progress
         document.body.classList.add('is-resizing-columns');
     };
 
-    // Gérer le mouvement de la souris pendant le redimensionnement
+    // Handle mouse movement during resize
     const handleMouseMove = (event) => {
         if (!isResizing.value || !resizingColumn.value) return;
 
         const deltaX = event.clientX - startX.value;
-        const newWidth = Math.max(50, startWidth.value + deltaX); // Largeur minimale de 50px
+        const newWidth = Math.max(50, startWidth.value + deltaX); // Minimum width of 50px
 
         columnWidths[resizingColumn.value] = newWidth;
 
-        // Mettre à jour immédiatement la largeur de la colonne dans le DOM
+        // Update column width immediately in DOM
         const th = document.querySelector(`th[data-column-key="${resizingColumn.value}"]`);
         if (th) {
             th.style.width = `${newWidth}px`;
 
-            // Mettre à jour aussi les cellules du body correspondantes
+            // Also update corresponding body cells
             const table = th.closest('table');
             if (table) {
                 const columnIndex = Array.from(th.parentNode.children).indexOf(th);
@@ -117,38 +117,38 @@ export function useColumnResize(tableName) {
         }
     };
 
-    // Terminer le redimensionnement
+    // Finish resizing
     const handleMouseUp = () => {
         if (isResizing.value) {
             isResizing.value = false;
             resizingColumn.value = null;
 
-            // Sauvegarder les nouvelles largeurs
+            // Save new widths
             saveColumnWidths();
 
-            // Nettoyer les event listeners
+            // Clean up event listeners
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('mouseup', handleMouseUp);
 
-            // Restaurer les styles par défaut
+            // Restore default styles
             document.body.style.userSelect = '';
             document.body.style.cursor = '';
             document.body.classList.remove('is-resizing-columns');
         }
     };
 
-    // Obtenir la largeur d'une colonne
+    // Get column width
     const getColumnWidth = (columnKey) => {
         return columnWidths[columnKey] || 'auto';
     };
 
-    // Définir la largeur d'une colonne
+    // Set column width
     const setColumnWidth = (columnKey, width) => {
         columnWidths[columnKey] = width;
         saveColumnWidths();
     };
 
-    // Initialiser les largeurs des colonnes visibles
+    // Initialize widths for visible columns
     const initializeColumnWidths = (tableElement) => {
         if (!tableElement) return;
 
@@ -156,16 +156,16 @@ export function useColumnResize(tableName) {
         allHeaders.forEach(header => {
             const colKey = header.getAttribute('data-column-key');
 
-            // Si la largeur n'est pas encore définie, utiliser la largeur actuelle
+            // If width is not yet defined, use current width
             if (!columnWidths[colKey]) {
                 const currentWidth = header.offsetWidth;
-                columnWidths[colKey] = Math.max(currentWidth, 100); // Largeur minimale de 100px
+                columnWidths[colKey] = Math.max(currentWidth, 100); // Minimum width of 100px
             }
 
-            // Appliquer la largeur au DOM
+            // Apply width to the DOM
             header.style.width = `${columnWidths[colKey]}px`;
 
-            // Appliquer aussi aux cellules du body
+            // Also apply to body cells
             const columnIndex = Array.from(header.parentNode.children).indexOf(header);
             const bodyRows = tableElement.querySelectorAll('tbody tr');
             bodyRows.forEach(row => {
@@ -177,19 +177,19 @@ export function useColumnResize(tableName) {
         });
     };
 
-    // Réinitialiser toutes les largeurs de colonnes
+    // Reset all column widths
     const resetColumnWidths = () => {
         Object.keys(columnWidths).forEach(key => {
             delete columnWidths[key];
         });
 
-        // Ne supprimer du localStorage que si le nom de la table n'est pas "default"
+        // Only remove from localStorage if the table name is not "default"
         if (tableName !== 'default') {
             localStorage.removeItem(`table-column-widths-${tableName}`);
         }
     };
 
-    // Nettoyer les event listeners si le composant est détruit pendant le redimensionnement
+    // Clean up event listeners if component is destroyed during resize
     const cleanup = () => {
         if (isResizing.value) {
             document.removeEventListener('mousemove', handleMouseMove);
@@ -200,12 +200,12 @@ export function useColumnResize(tableName) {
         }
     };
 
-    // Charger les largeurs au montage
+    // Load widths on mount
     onMounted(() => {
         loadColumnWidths();
     });
 
-    // Nettoyer au démontage
+    // Clean up on unmount
     onUnmounted(() => {
         cleanup();
     });

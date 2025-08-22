@@ -1,12 +1,12 @@
 import { useColumnResize } from '../js/composables/useColumnResize.js';
 
-// Test du composable useColumnResize
+// Tests for useColumnResize composable
 describe('useColumnResize', () => {
     const tableName = 'test-table';
     let columnResize;
 
     beforeEach(() => {
-        // Nettoyer localStorage
+        // Clear localStorage
         localStorage.clear();
         columnResize = useColumnResize(tableName);
     });
@@ -15,13 +15,13 @@ describe('useColumnResize', () => {
         localStorage.clear();
     });
 
-    test('initialise avec des valeurs par défaut', () => {
+    test('initializes with default values', () => {
         expect(columnResize.isResizing.value).toBe(false);
         expect(columnResize.resizingColumn.value).toBeNull();
         expect(Object.keys(columnResize.columnWidths)).toHaveLength(0);
     });
 
-    test('définit et récupère la largeur d\'une colonne', () => {
+    test('sets and gets a column width', () => {
         const columnKey = 'test-column';
         const width = 200;
 
@@ -30,57 +30,57 @@ describe('useColumnResize', () => {
         expect(columnResize.getColumnWidth(columnKey)).toBe(width);
     });
 
-    test('retourne "auto" pour une colonne sans largeur définie', () => {
+    test('returns "auto" for a column without a defined width', () => {
         const columnKey = 'undefined-column';
 
         expect(columnResize.getColumnWidth(columnKey)).toBe('auto');
     });
 
-    test('sauvegarde et charge les largeurs depuis localStorage', () => {
+    test('saves and loads widths from localStorage', () => {
         const columnKey = 'test-column';
         const width = 150;
 
-        // Définir une largeur
+        // Set a width
         columnResize.setColumnWidth(columnKey, width);
 
-        // Vérifier que c'est sauvegardé dans localStorage
+        // Verify it's saved in localStorage
         const saved = JSON.parse(localStorage.getItem(`table-column-widths-${tableName}`));
         expect(saved[columnKey]).toBe(width);
 
-        // Créer une nouvelle instance pour tester le chargement
+        // Create a new instance to test loading
         const newColumnResize = useColumnResize(tableName);
         newColumnResize.loadColumnWidths();
 
         expect(newColumnResize.getColumnWidth(columnKey)).toBe(width);
     });
 
-    test('réinitialise toutes les largeurs', () => {
+    test('resets all widths', () => {
         const column1 = 'column1';
         const column2 = 'column2';
 
-        // Définir des largeurs
+        // Set widths
         columnResize.setColumnWidth(column1, 100);
         columnResize.setColumnWidth(column2, 200);
 
-        // Vérifier qu'elles sont définies
+        // Verify they are set
         expect(columnResize.getColumnWidth(column1)).toBe(100);
         expect(columnResize.getColumnWidth(column2)).toBe(200);
 
-        // Réinitialiser
+        // Reset
         columnResize.resetColumnWidths();
 
-        // Vérifier qu'elles sont réinitialisées
+        // Verify they are reset
         expect(columnResize.getColumnWidth(column1)).toBe('auto');
         expect(columnResize.getColumnWidth(column2)).toBe('auto');
         expect(localStorage.getItem(`table-column-widths-${tableName}`)).toBeNull();
     });
 
-    test('gère la largeur minimale lors du redimensionnement', () => {
-        // Ce test nécessiterait une simulation d'événements DOM
-        // Pour l'instant, nous testons juste la logique de largeur minimale
+    test('handles minimum width during resize', () => {
+        // This test would require DOM event simulation
+        // For now, we just test the minimum width logic
         const minimumWidth = 50;
         const startWidth = 100;
-        const deltaX = -60; // Tentative de réduire à 40px
+        const deltaX = -60; // Attempt to reduce to 40px
 
         const newWidth = Math.max(minimumWidth, startWidth + deltaX);
 
@@ -88,21 +88,21 @@ describe('useColumnResize', () => {
     });
 });
 
-// Test du composant ColumnResizeHandle
+// Tests for ColumnResizeHandle component
 describe('ColumnResizeHandle', () => {
-    test('émet l\'événement de début de redimensionnement', () => {
-        // Ce test nécessiterait Vue Test Utils pour tester le composant
-        // Mock test pour la documentation
+    test('emits resize start event', () => {
+        // This test would require Vue Test Utils to test the component
+        // Mock test for documentation
         const mockOnResize = jest.fn();
         const columnKey = 'test-column';
         const mockEvent = new MouseEvent('mousedown');
 
-        // Simuler l'appel de la fonction
+        // Simulate function call
         mockOnResize(mockEvent, columnKey);
 
         expect(mockOnResize).toHaveBeenCalledWith(mockEvent, columnKey);
     });
 });
 
-console.log('Tests de redimensionnement des colonnes - OK');
-console.log('Pour exécuter les vrais tests, utilisez Jest avec Vue Test Utils');
+console.log('Column resize tests - OK');
+console.log('To run real tests, use Jest with Vue Test Utils');

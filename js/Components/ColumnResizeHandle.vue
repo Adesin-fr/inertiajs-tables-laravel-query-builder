@@ -4,10 +4,10 @@
         'visible': isActive
     }" @mousedown="startResize">
 
-        <!-- Indicateur principal (ligne de séparation) -->
+        <!-- Main indicator (separator line) -->
         <div class="resize-separator"></div>
 
-        <!-- Indicateur de redimensionnement (poignée) -->
+        <!-- Resize indicator (handle) -->
         <div class="resize-grip">
             <div class="grip-dots">
                 <div class="grip-dot"></div>
@@ -43,7 +43,7 @@ const startResize = (event) => {
 .column-resize-handle {
     position: absolute;
     right: -4px;
-    /* Centré sur le bord */
+    /* Centered on the edge */
     top: 0;
     bottom: 0;
     width: 8px;
@@ -66,7 +66,7 @@ const startResize = (event) => {
     transform: scaleX(1.2);
 }
 
-/* Ligne de séparation entre les colonnes */
+/* Separator line between columns */
 .resize-separator {
     position: absolute;
     top: 0;
@@ -93,7 +93,7 @@ const startResize = (event) => {
     opacity: 0.8;
 }
 
-/* Poignée de redimensionnement */
+/* Resize handle */
 .resize-grip {
     position: absolute;
     top: 50%;
@@ -125,7 +125,7 @@ const startResize = (event) => {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Petits points sur la poignée */
+/* Small dots on the handle */
 .grip-dots {
     display: flex;
     flex-direction: column;
@@ -141,12 +141,12 @@ const startResize = (event) => {
     opacity: 0.8;
 }
 
-/* Afficher l'indicateur quand on survole l'en-tête de colonne */
+/* Show indicator when hovering column header */
 th:hover .column-resize-handle {
     opacity: 1;
 }
 
-/* Animation d'apparition lors du survol */
+/* Fade-in animation on hover */
 @keyframes fadeInResize {
     from {
         opacity: 0;
@@ -163,7 +163,7 @@ th:hover .column-resize-handle {
     animation: fadeInResize 0.15s ease-out;
 }
 
-/* Indicateur permanent mais subtil */
+/* Permanent but subtle indicator */
 .resize-separator::after {
     content: '';
     position: absolute;
@@ -182,7 +182,7 @@ th:hover .resize-separator::after {
     opacity: 0;
 }
 
-/* Styles pour afficher les indicateurs sur survol de la table */
+/* Styles to display indicators on table hover */
 :global(.show-resize-indicators) th .column-resize-handle {
     opacity: 1;
 }
@@ -195,7 +195,7 @@ th:hover .resize-separator::after {
     opacity: 0.6;
 }
 
-/* Indicateur de zone de redimensionnement au repos */
+/* Resize zone indicator at rest */
 .column-resize-handle::before {
     content: '';
     position: absolute;
@@ -217,12 +217,12 @@ th:hover .resize-separator::after {
     background: rgba(59, 130, 246, 0.1);
 }
 
-/* Afficher la poignée quand on survole l'en-tête de colonne */
+/* Show handle when hovering column header */
 th:hover .column-resize-handle {
     opacity: 1;
 }
 
-/* Styles globaux pour le redimensionnement avec débordement */
+/* Global styles for resizing with overflow */
 :global(body.is-resizing-columns) {
     cursor: col-resize !important;
 }
@@ -232,7 +232,7 @@ th:hover .column-resize-handle {
     user-select: none !important;
 }
 
-/* Améliorer l'apparence du scroll horizontal */
+/* Improve horizontal scroll appearance */
 :global(.overflow-x-auto::-webkit-scrollbar) {
     height: 8px;
 }

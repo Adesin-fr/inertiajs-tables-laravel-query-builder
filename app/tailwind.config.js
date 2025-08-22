@@ -9,7 +9,7 @@ module.exports = {
         './resources/js/**/*.vue',
         '../js/Components/**/*.vue',
         '../js/*.js',
-        // Exclusions explicites pour éviter les boucles
+        // Explicit exclusions to avoid loops
         '!./node_modules/**/*',
         '!../node_modules/**/*',
         '!../**/node_modules/**/*',

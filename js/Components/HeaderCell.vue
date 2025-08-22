@@ -25,7 +25,7 @@
       </span>
     </component>
 
-    <!-- Poignée de redimensionnement -->
+    <!-- Resize handle -->
     <ColumnResizeHandle v-if="cell.resizable !== false && columnResizeContext" :column-key="cell.key"
       :on-resize="startResize" :is-active="isResizing && resizingColumn === cell.key" />
   </th>
@@ -42,7 +42,7 @@ const props = defineProps({
   },
 });
 
-// Injecter les fonctions de redimensionnement depuis le composant Table parent
+// Inject resize functions from parent Table component
 const columnResizeContext = inject('columnResize', null);
 
 const columnWidth = computed(() => {

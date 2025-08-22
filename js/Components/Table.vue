@@ -265,13 +265,13 @@ const props = defineProps({
 
 const app = getCurrentInstance();
 
-// Initialiser le redimensionnement des colonnes seulement si activé
+// Initialize column resizing only if enabled
 const columnResize = props.resizeableColumns ? useColumnResize(props.name) : null;
 
-// Fournir le contexte de redimensionnement aux composants enfants
+// Provide resize context to child components
 provide('columnResize', columnResize);
 
-// État pour afficher les indicateurs de redimensionnement
+// State for displaying resize indicators
 const showIndicators = ref(false);
 
 const updates = ref(0);
@@ -436,7 +436,7 @@ function resetQuery() {
     // Reset the columns visibility in the local storage
     localStorage.removeItem(`columns-${props.name}`);
 
-    // Réinitialiser les largeurs de colonnes
+    // Reset column widths
     if (props.resizeableColumns && columnResize) {
         columnResize.resetColumnWidths();
     }
@@ -699,7 +699,7 @@ watch(props.resource, () => {
 const inertiaListener = () => {
     updates.value++;
 
-    // Réinitialiser les largeurs de colonnes après le chargement des données
+    // Reset column widths after data loading
     if (props.resizeableColumns && columnResize) {
         setTimeout(() => {
             const tableElement = tableFieldset.value?.querySelector('table');
@@ -721,7 +721,7 @@ const inertiaListener = () => {
         });
     }
 
-    // Initialiser les largeurs de colonnes après le montage
+    // Initialize column widths after mounting
     if (props.resizeableColumns && columnResize) {
         setTimeout(() => {
             const tableElement = tableFieldset.value?.querySelector('table');
@@ -780,7 +780,7 @@ function getColumnWidthForBody(columnKey) {
 
 // Calculer la largeur totale de la table
 const totalTableWidth = computed(() => {
-    // Si le redimensionnement n'est pas activé, utiliser la largeur par défaut
+    // If resizing is not enabled, use default width
     if (!props.resizeableColumns || !columnResize) {
         return '100%';
     }
@@ -788,14 +788,14 @@ const totalTableWidth = computed(() => {
     let totalWidth = 0;
     let hasAutoColumns = false;
 
-    // Ajouter la largeur de la colonne de checkbox si présente
+    // Add checkbox column width if present
     if (props.hasCheckboxes) {
-        totalWidth += 60; // 60px pour la colonne checkbox
+        totalWidth += 60; // 60px for checkbox column
     }
 
     // Calculer la largeur totale des colonnes
     queryBuilderProps.value.columns.forEach(column => {
-        if (!show(column.key)) return; // Ignorer les colonnes masquées
+        if (!show(column.key)) return; // Ignore hidden columns
 
         const width = columnResize.getColumnWidth(column.key);
         if (width === 'auto') {
@@ -805,8 +805,8 @@ const totalTableWidth = computed(() => {
         }
     });
 
-    // Si toutes les colonnes ont une largeur définie et que le total est plus grand que 100%,
-    // utiliser la largeur calculée, sinon utiliser au minimum 100%
+    // If all columns have a defined width and the total is greater than 100%,
+    // use the calculated width, otherwise use at least 100%
     if (!hasAutoColumns && totalWidth > 0) {
         return `${totalWidth}px`;
     }
@@ -825,7 +825,7 @@ const lineCountLabel = computed(() => {
     return `${selectedLineCount.value} ${translations.lineSelected}`;
 })
 
-// Fonctions pour gérer l'affichage des indicateurs de redimensionnement
+// Functions to handle display of resize indicators
 function showResizeIndicators() {
     if (props.resizeableColumns) {
         showIndicators.value = true;
@@ -834,7 +834,7 @@ function showResizeIndicators() {
 
 function hideResizeIndicators() {
     if (props.resizeableColumns) {
-        // Délai pour éviter le clignotement lors du survol des cellules
+        // Delay to prevent flicker when hovering cells
         setTimeout(() => {
             showIndicators.value = false;
         }, 100);
