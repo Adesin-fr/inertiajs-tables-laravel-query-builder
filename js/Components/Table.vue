@@ -71,14 +71,15 @@
                     <slot name="table">
                         <div class="overflow-x-auto">
                             <table class="divide-y divide-gray-300" style="table-layout: fixed; min-width: 100%;"
-                                :style="{ width: totalTableWidth }" @mouseenter="showResizeIndicators"
-                                @mouseleave="hideResizeIndicators"
-                                :class="{ 'show-resize-indicators': showIndicators }">
+                                :style="{ width: totalTableWidth }"
+                                @mouseenter="resizeableColumns ? showResizeIndicators : null"
+                                @mouseleave="resizeableColumns ? hideResizeIndicators : null"
+                                :class="{ 'show-resize-indicators': resizeableColumns && showIndicators }">
                                 <thead class="bg-gray-50">
                                     <slot name="head" :show="show" :sort-by="sortBy" :header="header">
                                         <tr>
                                             <th v-if="hasCheckboxes"
-                                                class="text-left text-sm font-semibold text-gray-900 border-r-2 "
+                                                class="text-left text-sm font-semibold text-gray-900 relative resize-border"
                                                 style="width: 60px;">
                                                 <input type="checkbox" :id="`table-${name}-select-header`"
                                                     @change="toggleSelection" v-model="headerCheckboxSelected"
@@ -254,12 +255,18 @@ const props = defineProps({
         default: "primary",
         required: false,
     },
+
+    resizeableColumns: {
+        type: Boolean,
+        default: true,
+        required: false,
+    },
 });
 
 const app = getCurrentInstance();
 
-// Initialiser le redimensionnement des colonnes
-const columnResize = useColumnResize(props.name);
+// Initialiser le redimensionnement des colonnes seulement si activé
+const columnResize = props.resizeableColumns ? useColumnResize(props.name) : null;
 
 // Fournir le contexte de redimensionnement aux composants enfants
 provide('columnResize', columnResize);
@@ -430,7 +437,9 @@ function resetQuery() {
     localStorage.removeItem(`columns-${props.name}`);
 
     // Réinitialiser les largeurs de colonnes
-    columnResize.resetColumnWidths();
+    if (props.resizeableColumns && columnResize) {
+        columnResize.resetColumnWidths();
+    }
 
     queryBuilderData.value.sort = null;
     queryBuilderData.value.cursor = null;
@@ -691,15 +700,15 @@ const inertiaListener = () => {
     updates.value++;
 
     // Réinitialiser les largeurs de colonnes après le chargement des données
-    setTimeout(() => {
-        const tableElement = tableFieldset.value?.querySelector('table');
-        if (tableElement) {
-            columnResize.initializeColumnWidths(tableElement);
-        }
-    }, 0);
-};
-
-onMounted(() => {
+    if (props.resizeableColumns && columnResize) {
+        setTimeout(() => {
+            const tableElement = tableFieldset.value?.querySelector('table');
+            if (tableElement) {
+                columnResize.initializeColumnWidths(tableElement);
+            }
+        }, 0);
+    }
+}; onMounted(() => {
     document.addEventListener("inertia:success", inertiaListener);
 
     // Reload the columns visibility from the local storage
@@ -713,12 +722,14 @@ onMounted(() => {
     }
 
     // Initialiser les largeurs de colonnes après le montage
-    setTimeout(() => {
-        const tableElement = tableFieldset.value?.querySelector('table');
-        if (tableElement) {
-            columnResize.initializeColumnWidths(tableElement);
-        }
-    }, 0);
+    if (props.resizeableColumns && columnResize) {
+        setTimeout(() => {
+            const tableElement = tableFieldset.value?.querySelector('table');
+            if (tableElement) {
+                columnResize.initializeColumnWidths(tableElement);
+            }
+        }, 0);
+    }
 });
 
 onUnmounted(() => {
@@ -760,12 +771,20 @@ function toggleSelection() {
 }
 
 function getColumnWidthForBody(columnKey) {
+    if (!props.resizeableColumns || !columnResize) {
+        return 'auto';
+    }
     const width = columnResize.getColumnWidth(columnKey);
     return width === 'auto' ? width : `${width}px`;
 }
 
 // Calculer la largeur totale de la table
 const totalTableWidth = computed(() => {
+    // Si le redimensionnement n'est pas activé, utiliser la largeur par défaut
+    if (!props.resizeableColumns || !columnResize) {
+        return '100%';
+    }
+
     let totalWidth = 0;
     let hasAutoColumns = false;
 
@@ -808,14 +827,37 @@ const lineCountLabel = computed(() => {
 
 // Fonctions pour gérer l'affichage des indicateurs de redimensionnement
 function showResizeIndicators() {
-    showIndicators.value = true;
+    if (props.resizeableColumns) {
+        showIndicators.value = true;
+    }
 }
 
 function hideResizeIndicators() {
-    // Délai pour éviter le clignotement lors du survol des cellules
-    setTimeout(() => {
-        showIndicators.value = false;
-    }, 100);
+    if (props.resizeableColumns) {
+        // Délai pour éviter le clignotement lors du survol des cellules
+        setTimeout(() => {
+            showIndicators.value = false;
+        }, 100);
+    }
 }
 
 </script>
+
+<style scoped>
+.resize-border::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 25%;
+    height: 50%;
+    width: 2px;
+    background-color: #e5e7eb;
+    /* border-gray-200 */
+    transition: background-color 0.15s ease-in-out;
+}
+
+.resize-border:hover::after {
+    background-color: #9ca3af;
+    /* border-gray-400 */
+}
+</style>

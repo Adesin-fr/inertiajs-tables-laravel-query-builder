@@ -1,5 +1,6 @@
 <template>
-  <th v-show="!cell.hidden" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 relative"
+  <th v-show="!cell.hidden"
+    class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 relative resize-border"
     :class="cell.header_class" :style="{ width: columnWidth }" :data-column-key="cell.key">
     <component :is="cell.sortable ? 'button' : 'div'" class="w-full" :dusk="cell.sortable ? `sort-${cell.key}` : null"
       @click.prevent="onClick">
@@ -25,8 +26,8 @@
     </component>
 
     <!-- Poignée de redimensionnement -->
-    <ColumnResizeHandle v-if="cell.resizable !== false" :column-key="cell.key" :on-resize="startResize"
-      :is-active="isResizing && resizingColumn === cell.key" />
+    <ColumnResizeHandle v-if="cell.resizable !== false && columnResizeContext" :column-key="cell.key"
+      :on-resize="startResize" :is-active="isResizing && resizingColumn === cell.key" />
   </th>
 </template>
 
@@ -65,3 +66,22 @@ function startResize(event, columnKey) {
   }
 }
 </script>
+
+<style scoped>
+.resize-border::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 25%;
+  height: 50%;
+  width: 2px;
+  background-color: #e5e7eb;
+  /* border-gray-200 */
+  transition: background-color 0.15s ease-in-out;
+}
+
+.resize-border:hover::after {
+  background-color: #9ca3af;
+  /* border-gray-400 */
+}
+</style>

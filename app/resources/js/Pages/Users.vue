@@ -8,7 +8,7 @@ defineProps(["users"]);
 <template>
     <div class="hidden md:table-cell"></div>
     <BreezeGuestLayout>
-        <Table :resource="users" :input-debounce-ms="50">
+        <Table :resource="users" :input-debounce-ms="50" :resizeable-columns="true">
             <template #cell(actions)="{ item: user }">
                 <a :href="`/users/${user.id}/edit`">
                     Edit
