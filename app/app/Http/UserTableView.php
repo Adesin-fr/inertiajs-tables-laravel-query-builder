@@ -27,7 +27,7 @@ class UserTableView
 
         $users = QueryBuilder::for(User::query())
             ->defaultSort('name')
-            ->allowedSorts(['name', 'email', 'language_code'])
+            ->allowedSorts(['name', 'email', 'language_code', 'created_at'])
             ->allowedFilters(['name', 'email', 'language_code', $globalSearch, AllowedFilter::custom('created_at', new FiltersDate())])
             ->{$paginateMethod}(request()->query('perPage', 10))
             ->withQueryString();
@@ -41,7 +41,7 @@ class UserTableView
                 ->column(key: 'name', searchable: true, sortable: true, canBeHidden: false)
                 ->column(key: 'email', searchable: true, sortable: true, headerClass: 'hidden md:table-cell', bodyClass: 'hidden md:table-cell')
                 ->column(key: 'language_code', label: 'Language')
-                ->column(key: 'created_at', label: 'Created at')
+                ->column(key: 'created_at',  searchable: true, sortable: true, label: 'Created at')
                 ->column(label: 'Actions')
                 ->dateFilter(key: 'created_at', label: 'Date de création', format: 'Y-m-d')
                 ->selectFilter(key: 'language_code', options: [

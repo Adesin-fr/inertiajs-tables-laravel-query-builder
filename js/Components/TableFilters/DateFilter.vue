@@ -3,14 +3,14 @@
         <!-- Type Selector -->
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
-                Type de filtre
+                {{ translations.filter_type }}
             </label>
             <select v-model="filterType" :class="getTheme('select')" @change="onTypeChange">
-                <option value="">Aucun filtre</option>
-                <option value="exact">Date exacte</option>
-                <option value="before">Avant le</option>
-                <option value="after">Après le</option>
-                <option value="between">Plage de dates</option>
+                <option value="">{{ translations.no_filter }}</option>
+                <option value="exact">{{ translations.exact_date }}</option>
+                <option value="before">{{ translations.before_date }}</option>
+                <option value="after">{{ translations.after_date }}</option>
+                <option value="between">{{ translations.date_range }}</option>
             </select>
         </div>
 
@@ -28,13 +28,13 @@
             <div v-if="filterType === 'between'" class="space-y-3">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Date de début
+                        {{ translations.start_date }}
                     </label>
                     <input type="date" v-model="startDate" :class="getTheme('input')" @change="onDateChange" />
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Date de fin
+                        {{ translations.end_date }}
                     </label>
                     <input type="date" v-model="endDate" :class="getTheme('input')" @change="onDateChange" />
                 </div>
@@ -44,7 +44,7 @@
         <!-- Reset Button -->
         <div v-if="hasValue" class="flex justify-end">
             <button type="button" :class="getTheme('reset_button')" @click="resetFilter">
-                <span class="sr-only">Réinitialiser le filtre</span>
+                <span class="sr-only">{{ translations.reset_filter }}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -58,6 +58,7 @@
 import { ref, computed, watch, inject, onMounted } from "vue";
 import { twMerge } from "tailwind-merge";
 import { get_theme_part } from "../../helpers.js";
+import translations from "../../translations.js";
 
 const props = defineProps({
     filter: {
@@ -98,11 +99,11 @@ const hasValue = computed(() => {
 function getDateLabel() {
     switch (filterType.value) {
         case 'exact':
-            return 'Date exacte';
+            return translations.exact_date;
         case 'before':
-            return 'Avant le';
+            return translations.before_date;
         case 'after':
-            return 'Après le';
+            return translations.after_date;
         default:
             return 'Date';
     }
