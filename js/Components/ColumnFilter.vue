@@ -1,6 +1,6 @@
 <template>
     <div class="relative inline-block">
-        <button @click="toggleDropdown" :class="[
+        <button ref="buttonRef" @click="toggleDropdown" :class="[
             'p-1 rounded hover:bg-gray-100 transition-colors duration-150',
             {
                 'text-blue-500': hasActiveFilter,
@@ -14,41 +14,49 @@
             </svg>
         </button>
 
-        <!-- Dropdown -->
-        <div v-if="isDropdownOpen" ref="dropdown"
-            class="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-max"
-            @click.stop>
-            <div v-for="filter in columnFilters" :key="filter.key">
-                <h3 class="text-xs uppercase tracking-wide bg-gray-100 p-3">
-                    {{ filter.label }}
-                </h3>
-                <div class="p-2">
-                    <select v-if="filter.type === 'select'" :name="filter.key" :value="filter.value"
-                        :class="getTheme('select')" @change="onFilterChange(filter.key, $event.target.value)">
-                        <option v-for="(option, optionKey) in filter.options" :key="optionKey" :value="optionKey">
-                            {{ option }}
-                        </option>
-                    </select>
-                    <ToggleFilter v-if="filter.type === 'toggle'" :filter="filter" :on-filter-change="onFilterChange"
-                        :color="color" />
-                    <div v-if="filter.type === 'number_range'" class="py-4 px-8" style="min-width: 250px;">
-                        <NumberRangeFilter v-model="filter.value" :max="filter.max" :min="filter.min"
-                            :prefix="filter.prefix" :suffix="filter.suffix" :step="filter.step" :color="color"
-                            @update:model-value="updateNumberRangeFilter(filter)" />
+        <!-- Teleported Dropdown -->
+        <Teleport to="body">
+            <div v-if="isDropdownOpen" ref="dropdown"
+                class="fixed bg-white border border-gray-200 rounded-md shadow-lg z-[9999] min-w-max"
+                :style="dropdownStyle" @click.stop>
+                <div v-for="filter in columnFilters" :key="filter.key">
+                    <h3 class="text-xs uppercase tracking-wide bg-gray-100 p-3">
+                        {{ filter.label }}
+                    </h3>
+                    <div class="p-2">
+                        <select v-if="filter.type === 'select'" :name="filter.key" :value="filter.value"
+                            :class="getTheme('select')" @change="onFilterChange(filter.key, $event.target.value)">
+                            <option v-for="(option, optionKey) in filter.options" :key="optionKey" :value="optionKey">
+                                {{ option }}
+                            </option>
+                        </select>
+                        <ToggleFilter v-if="filter.type === 'toggle'" :filter="filter"
+                            :on-filter-change="onFilterChange" :color="color" />
+                        <div v-if="filter.type === 'number_range'" class="py-4 px-8" style="min-width: 250px;">
+                            <NumberRangeFilter v-model="filter.value" :max="filter.max" :min="filter.min"
+                                :prefix="filter.prefix" :suffix="filter.suffix" :step="filter.step" :color="color"
+                                @update:model-value="updateNumberRangeFilter(filter)" />
+                        </div>
+                        <div v-if="filter.type === 'date'" class="py-4 px-8" style="min-width: 300px;">
+                            <DateFilter :filter="filter" :on-filter-change="onFilterChange" :color="color" />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </Teleport>
 
         <!-- Backdrop -->
-        <div v-if="isDropdownOpen" class="fixed inset-0 z-40" @click="closeDropdown" />
+        <Teleport to="body">
+            <div v-if="isDropdownOpen" class="fixed inset-0 z-[9998]" @click="closeDropdown" />
+        </Teleport>
     </div>
 </template>
 
 <script setup>
-import { computed, ref, inject, onMounted, onUnmounted } from "vue";
+import { computed, ref, inject, onMounted, onUnmounted, Teleport } from "vue";
 import ToggleFilter from "./TableFilters/ToggleFilter.vue";
 import NumberRangeFilter from "./TableFilters/NumberRangeFilter.vue";
+import DateFilter from "./TableFilters/DateFilter.vue";
 import { twMerge } from "tailwind-merge";
 import { get_theme_part } from "../helpers.js";
 
@@ -79,6 +87,8 @@ const props = defineProps({
 
 const isDropdownOpen = ref(false);
 const dropdown = ref(null);
+const buttonRef = ref(null);
+const dropdownPosition = ref({ top: 0, left: 0 });
 
 // Filter les filtres pour cette colonne uniquement
 const columnFilters = computed(() => {
@@ -98,9 +108,30 @@ const hasActiveFilter = computed(() => {
     return columnFilters.value.some(filter => !filterIsNull(filter));
 });
 
+// Style calculé pour le dropdown
+const dropdownStyle = computed(() => {
+    return {
+        top: dropdownPosition.value.top + 'px',
+        left: dropdownPosition.value.left + 'px'
+    };
+});
+
 function toggleDropdown() {
     if (columnFilters.value.length > 0) {
+        if (!isDropdownOpen.value) {
+            calculateDropdownPosition();
+        }
         isDropdownOpen.value = !isDropdownOpen.value;
+    }
+}
+
+function calculateDropdownPosition() {
+    if (buttonRef.value) {
+        const rect = buttonRef.value.getBoundingClientRect();
+        dropdownPosition.value = {
+            top: rect.bottom + window.scrollY + 4,
+            left: rect.right + window.scrollX - 300 // Aligner à droite en supposant une largeur de 300px
+        };
     }
 }
 
@@ -117,6 +148,8 @@ function filterIsNull(filter) {
             return filter.value === "";
         case "toggle":
             return false;
+        case "date":
+            return !filter.value || (typeof filter.value === 'object' && !filter.value.type);
         default:
             return !filter.value;
     }

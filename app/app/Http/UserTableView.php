@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use AdesinFr\LaravelQueryBuilderInertiaJs\InertiaTable;
+use AdesinFr\LaravelQueryBuilderInertiaJs\QueryBuilderFilters\FiltersDate;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Support\Collection;
@@ -27,7 +28,7 @@ class UserTableView
         $users = QueryBuilder::for(User::query())
             ->defaultSort('name')
             ->allowedSorts(['name', 'email', 'language_code'])
-            ->allowedFilters(['name', 'email', 'language_code', $globalSearch])
+            ->allowedFilters(['name', 'email', 'language_code', $globalSearch, AllowedFilter::custom('created_at', new FiltersDate())])
             ->{$paginateMethod}(request()->query('perPage', 10))
             ->withQueryString();
 
@@ -40,11 +41,14 @@ class UserTableView
                 ->column(key: 'name', searchable: true, sortable: true, canBeHidden: false)
                 ->column(key: 'email', searchable: true, sortable: true, headerClass: 'hidden md:table-cell', bodyClass: 'hidden md:table-cell')
                 ->column(key: 'language_code', label: 'Language')
+                ->column(key: 'created_at', label: 'Created at')
                 ->column(label: 'Actions')
+                ->dateFilter(key: 'created_at', label: 'Date de création', format: 'Y-m-d')
                 ->selectFilter(key: 'language_code', options: [
                     'en' => 'English',
                     'nl' => 'Dutch',
-                ], label: 'Language');
+                ], label: 'Language')
+                ->dateFilter(key: 'created_at', label: 'Date de création', format: 'Y-m-d');
         });
     }
 }

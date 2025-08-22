@@ -6,6 +6,7 @@ use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\Filter;
 use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\Filterable;
 use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\NumberRangeFilter;
 use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\ToggleFilter;
+use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\DateFilter;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
@@ -221,6 +222,8 @@ class InertiaTable
                         $queryFilters[$filter->key][0] ?? $filter->min,
                         $queryFilters[$filter->key][1] ?? $filter->max,
                     ];
+                } elseif ($filter instanceof DateFilter) {
+                    $filter->value = $queryFilters[$filter->key];
                 } else {
                     $filter->value = $queryFilters[$filter->key];
                 }
@@ -398,6 +401,29 @@ class InertiaTable
             suffix: $suffix,
             step: $step,
             value: $defaultValue
+        ))->values();
+
+        return $this;
+    }
+
+    /**
+     * Add a date filter to the query builder.
+     *
+     * @param string $key
+     * @param string|null $label
+     * @param array|null $defaultValue
+     * @param string $format
+     * @return self
+     */
+    public function dateFilter(string $key, string $label = null, array $defaultValue = null, string $format = 'Y-m-d'): self
+    {
+        $this->filters = $this->filters->reject(function (Filterable $filter) use ($key) {
+            return $filter->key === $key;
+        })->push(new DateFilter(
+            key: $key,
+            label: $label ?: Str::headline($key),
+            value: $defaultValue,
+            format: $format
         ))->values();
 
         return $this;
