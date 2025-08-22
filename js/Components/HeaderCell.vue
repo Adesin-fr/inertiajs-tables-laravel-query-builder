@@ -24,17 +24,11 @@
             </svg>
           </slot>
         </span>
-        
+
         <!-- Column Filter -->
         <slot name="filter">
-          <ColumnFilter
-            v-if="cell.filters && cell.filters.length > 0"
-            :column-key="cell.key"
-            :filters="cell.filters"
-            :on-filter-change="cell.onFilterChange"
-            :color="cell.color"
-            @click.stop
-          />
+          <ColumnFilter v-if="cell.filters && cell.filters.length > 0" :column-key="cell.key" :filters="cell.filters"
+            :on-filter-change="cell.onFilterChange" :color="cell.color" @click.stop />
         </slot>
       </span>
     </component>

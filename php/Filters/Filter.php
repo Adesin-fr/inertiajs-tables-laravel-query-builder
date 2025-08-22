@@ -15,8 +15,7 @@ class Filter implements Arrayable, Filterable
         public bool $noFilterOption = true,
         public string $noFilterOptionLabel = '-',
         public string $type = 'select'
-    ) {
-    }
+    ) {}
 
     public function toArray()
     {

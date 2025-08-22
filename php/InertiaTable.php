@@ -415,9 +415,9 @@ class InertiaTable
         if (!isset($this->columnFilters[$columnKey])) {
             $this->columnFilters[$columnKey] = [];
         }
-        
+
         $this->columnFilters[$columnKey][] = $filterKey;
-        
+
         return $this;
     }
 
