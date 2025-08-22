@@ -7,7 +7,12 @@ module.exports = {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
         './resources/js/**/*.vue',
-        './../js/**/*.{js,vue}',
+        '../js/Components/**/*.vue',
+        '../js/*.js',
+        // Exclusions explicites pour éviter les boucles
+        '!./node_modules/**/*',
+        '!../node_modules/**/*',
+        '!../**/node_modules/**/*',
     ],
 
     plugins: [require('@tailwindcss/forms')],

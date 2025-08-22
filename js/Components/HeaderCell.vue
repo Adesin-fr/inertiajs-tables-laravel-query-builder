@@ -1,6 +1,6 @@
 <template>
-  <th v-show="!cell.hidden" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900"
-    :class="cell.header_class">
+  <th v-show="!cell.hidden" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 relative"
+    :class="cell.header_class" :style="{ width: columnWidth }" :data-column-key="cell.key">
     <component :is="cell.sortable ? 'button' : 'div'" class="w-full" :dusk="cell.sortable ? `sort-${cell.key}` : null"
       @click.prevent="onClick">
       <span class="flex flex-row items-center">
@@ -23,10 +23,17 @@
         </slot>
       </span>
     </component>
+
+    <!-- Poignée de redimensionnement -->
+    <ColumnResizeHandle v-if="cell.resizable !== false" :column-key="cell.key" :on-resize="startResize"
+      :is-active="isResizing && resizingColumn === cell.key" />
   </th>
 </template>
 
 <script setup>
+import { computed, inject } from 'vue';
+import ColumnResizeHandle from './ColumnResizeHandle.vue';
+
 const props = defineProps({
   cell: {
     type: Object,
@@ -34,9 +41,27 @@ const props = defineProps({
   },
 });
 
+// Injecter les fonctions de redimensionnement depuis le composant Table parent
+const columnResizeContext = inject('columnResize', null);
+
+const columnWidth = computed(() => {
+  if (!columnResizeContext) return 'auto';
+  const width = columnResizeContext.getColumnWidth(props.cell.key);
+  return width === 'auto' ? width : `${width}px`;
+});
+
+const isResizing = computed(() => columnResizeContext?.isResizing || false);
+const resizingColumn = computed(() => columnResizeContext?.resizingColumn || null);
+
 function onClick() {
   if (props.cell.sortable) {
     props.cell.onSort(props.cell.key);
+  }
+}
+
+function startResize(event, columnKey) {
+  if (columnResizeContext) {
+    columnResizeContext.startResize(event, columnKey);
   }
 }
 </script>

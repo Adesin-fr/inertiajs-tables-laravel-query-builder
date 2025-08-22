@@ -69,51 +69,66 @@
             <slot name="tableWrapper" :meta="resourceMeta">
                 <TableWrapper :class="{ 'mt-3': !hasOnlyData }">
                     <slot name="table">
-                        <table class="min-w-full divide-y divide-gray-300">
-                            <thead class="bg-gray-50">
-                                <slot name="head" :show="show" :sort-by="sortBy" :header="header">
-                                    <tr>
-                                        <th v-if="hasCheckboxes" class="text-left text-sm font-semibold text-gray-900">
-                                            <input type="checkbox" :id="`table-${name}-select-header`"
-                                                @change="toggleSelection" v-model="headerCheckboxSelected"
-                                                class="rounded-sm mr-1 border-gray-300 m-1" />
-                                        </th>
-                                        <HeaderCell v-for="column in queryBuilderProps.columns"
-                                            :key="`table-${name}-header-${column.key}`" :cell="header(column.key)">
-                                            <template #label>
-                                                <slot :name="`header(${column.key})`" :label="header(column.key).label"
-                                                    :column="header(column.key)" />
-                                            </template>
-                                        </HeaderCell>
-                                    </tr>
-                                </slot>
-                            </thead>
-                            <tbody class="divide-y divide-gray-200 bg-white">
-                                <slot name="body" :show="show">
-                                    <tr v-for="(item, key) in resourceData" :key="`table-${name}-row-${key}`" class=""
-                                        :class="{
-                                            'bg-gray-50': striped && key % 2,
-                                            'hover:bg-gray-100': striped,
-                                            'hover:bg-gray-50': !striped
-                                        }">
-                                        <td class="whitespace-nowrap text-sm text-gray-500" v-if="hasCheckboxes">
-                                            <input type="checkbox" :id="`table-${name}-select-${key}`"
-                                                class="rounded-sm m-1 border-gray-300" v-model="item.__itSelected" />
-                                        </td>
+                        <div class="overflow-x-auto">
+                            <table class="divide-y divide-gray-300" style="table-layout: fixed; min-width: 100%;"
+                                :style="{ width: totalTableWidth }" @mouseenter="showResizeIndicators"
+                                @mouseleave="hideResizeIndicators"
+                                :class="{ 'show-resize-indicators': showIndicators }">
+                                <thead class="bg-gray-50">
+                                    <slot name="head" :show="show" :sort-by="sortBy" :header="header">
+                                        <tr>
+                                            <th v-if="hasCheckboxes"
+                                                class="text-left text-sm font-semibold text-gray-900 border-r-2 "
+                                                style="width: 60px;">
+                                                <input type="checkbox" :id="`table-${name}-select-header`"
+                                                    @change="toggleSelection" v-model="headerCheckboxSelected"
+                                                    class="rounded-sm mr-1 border-gray-300 m-1" />
+                                            </th>
+                                            <HeaderCell v-for="column in queryBuilderProps.columns"
+                                                :key="`table-${name}-header-${column.key}`" :cell="header(column.key)">
+                                                <template #label>
+                                                    <slot :name="`header(${column.key})`"
+                                                        :label="header(column.key).label"
+                                                        :column="header(column.key)" />
+                                                </template>
+                                            </HeaderCell>
+                                        </tr>
+                                    </slot>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 bg-white">
+                                    <slot name="body" :show="show">
+                                        <tr v-for="(item, key) in resourceData" :key="`table-${name}-row-${key}`"
+                                            class="" :class="{
+                                                'bg-gray-50': striped && key % 2,
+                                                'hover:bg-gray-100': striped,
+                                                'hover:bg-gray-50': !striped
+                                            }">
+                                            <td class="whitespace-nowrap text-sm text-gray-500" v-if="hasCheckboxes"
+                                                style="width: 60px;">
+                                                <input type="checkbox" :id="`table-${name}-select-${key}`"
+                                                    class="rounded-sm m-1 border-gray-300"
+                                                    v-model="item.__itSelected" />
+                                            </td>
 
-                                        <td v-for="(column, colIndex) in queryBuilderProps.columns"
-                                            v-show="show(column.key)"
-                                            :key="`table-${name}-row-${key}-column-${column.key}`"
-                                            @click="rowClicked($event, item, key)" :class="column.body_class">
+                                            <td v-for="(column, colIndex) in queryBuilderProps.columns"
+                                                v-show="show(column.key)"
+                                                :key="`table-${name}-row-${key}-column-${column.key}`"
+                                                @click="rowClicked($event, item, key)" :class="column.body_class"
+                                                :data-column-key="column.key" :style="{
+                                                    width: getColumnWidthForBody(column.key),
+                                                    overflow: 'hidden',
+                                                    textOverflow: 'ellipsis'
+                                                }">
 
-                                            <slot :name="`cell(${column.key})`" :item="item">
-                                                {{ item[column.key] }}
-                                            </slot>
-                                        </td>
-                                    </tr>
-                                </slot>
-                            </tbody>
-                        </table>
+                                                <slot :name="`cell(${column.key})`" :item="item">
+                                                    {{ item[column.key] }}
+                                                </slot>
+                                            </td>
+                                        </tr>
+                                    </slot>
+                                </tbody>
+                            </table>
+                        </div>
                     </slot>
 
                     <slot name="pagination" :on-click="visitPageFromUrl" :has-data="hasData" :meta="resourceMeta"
@@ -141,7 +156,7 @@ import TableGlobalSearch from "./TableGlobalSearch.vue";
 import TableSearchRows from "./TableSearchRows.vue";
 import TableReset from "./TableReset.vue";
 import TableWrapper from "./TableWrapper.vue";
-import { computed, onMounted, ref, watch, onUnmounted, getCurrentInstance, Transition } from "vue";
+import { computed, onMounted, ref, watch, onUnmounted, getCurrentInstance, Transition, provide } from "vue";
 import qs from "qs";
 import clone from "lodash-es/clone";
 import filter from "lodash-es/filter";
@@ -154,6 +169,8 @@ import { router, usePage } from "@inertiajs/vue3";
 import GroupedActions from "./GroupedActions.vue";
 import BulkActions from "./BulkActions.vue";
 import { getTranslations } from "../translations.js";
+import { useColumnResize } from "../composables/useColumnResize.js";
+
 
 const translations = getTranslations();
 
@@ -240,6 +257,15 @@ const props = defineProps({
 });
 
 const app = getCurrentInstance();
+
+// Initialiser le redimensionnement des colonnes
+const columnResize = useColumnResize(props.name);
+
+// Fournir le contexte de redimensionnement aux composants enfants
+provide('columnResize', columnResize);
+
+// État pour afficher les indicateurs de redimensionnement
+const showIndicators = ref(false);
 
 const updates = ref(0);
 
@@ -402,6 +428,9 @@ function resetQuery() {
 
     // Reset the columns visibility in the local storage
     localStorage.removeItem(`columns-${props.name}`);
+
+    // Réinitialiser les largeurs de colonnes
+    columnResize.resetColumnWidths();
 
     queryBuilderData.value.sort = null;
     queryBuilderData.value.cursor = null;
@@ -660,6 +689,14 @@ watch(props.resource, () => {
 
 const inertiaListener = () => {
     updates.value++;
+
+    // Réinitialiser les largeurs de colonnes après le chargement des données
+    setTimeout(() => {
+        const tableElement = tableFieldset.value?.querySelector('table');
+        if (tableElement) {
+            columnResize.initializeColumnWidths(tableElement);
+        }
+    }, 0);
 };
 
 onMounted(() => {
@@ -675,7 +712,13 @@ onMounted(() => {
         });
     }
 
-
+    // Initialiser les largeurs de colonnes après le montage
+    setTimeout(() => {
+        const tableElement = tableFieldset.value?.querySelector('table');
+        if (tableElement) {
+            columnResize.initializeColumnWidths(tableElement);
+        }
+    }, 0);
 });
 
 onUnmounted(() => {
@@ -716,6 +759,42 @@ function toggleSelection() {
     });
 }
 
+function getColumnWidthForBody(columnKey) {
+    const width = columnResize.getColumnWidth(columnKey);
+    return width === 'auto' ? width : `${width}px`;
+}
+
+// Calculer la largeur totale de la table
+const totalTableWidth = computed(() => {
+    let totalWidth = 0;
+    let hasAutoColumns = false;
+
+    // Ajouter la largeur de la colonne de checkbox si présente
+    if (props.hasCheckboxes) {
+        totalWidth += 60; // 60px pour la colonne checkbox
+    }
+
+    // Calculer la largeur totale des colonnes
+    queryBuilderProps.value.columns.forEach(column => {
+        if (!show(column.key)) return; // Ignorer les colonnes masquées
+
+        const width = columnResize.getColumnWidth(column.key);
+        if (width === 'auto') {
+            hasAutoColumns = true;
+        } else {
+            totalWidth += width;
+        }
+    });
+
+    // Si toutes les colonnes ont une largeur définie et que le total est plus grand que 100%,
+    // utiliser la largeur calculée, sinon utiliser au minimum 100%
+    if (!hasAutoColumns && totalWidth > 0) {
+        return `${totalWidth}px`;
+    }
+
+    return 'max(100%, ' + (totalWidth > 0 ? totalWidth + 'px' : '800px') + ')';
+});
+
 const selectedLineCount = computed(() => {
     return props.resource.data.filter((item) => item.__itSelected).length;
 });
@@ -726,5 +805,17 @@ const lineCountLabel = computed(() => {
     }
     return `${selectedLineCount.value} ${translations.lineSelected}`;
 })
+
+// Fonctions pour gérer l'affichage des indicateurs de redimensionnement
+function showResizeIndicators() {
+    showIndicators.value = true;
+}
+
+function hideResizeIndicators() {
+    // Délai pour éviter le clignotement lors du survol des cellules
+    setTimeout(() => {
+        showIndicators.value = false;
+    }, 100);
+}
 
 </script>
