@@ -17,17 +17,17 @@ This package is a fork of [protonemedia/inertiajs-tables-laravel-query-builder],
 -   Global Search
 -   Search per field
 -   Select filters
+-   **Column Filters**: Add filter icons directly in column headers for intuitive filtering
 -   Toggle columns
 -   Sort columns
 -   Pagination (support for Eloquent/API Resource/Simple/Cursor)
 -   Automatically updates the query string (by using [Inertia's replace](https://inertiajs.com/manual-visits#browser-history) feature)
 -   Customizable header and body cells classes
+-   Resizeable columns ✅ **NEW!**
 
 ## To-do list :
 
--   [ ] Add filters to the columns headers
--   [ ] Allow to resize columns
--   [ ] Allow to reorder columns
+-   [x] Add filters to the columns headers ✅ **NEW!**
 -   [ ] Allow to pin columns (similar to AG Grid)
 -   [ ] Export the table data to CSV
 -   [ ] Export the table data usign a custom callback
@@ -163,6 +163,63 @@ You need to use a custom allowed filter for this filter.
 $users = QueryBuilder::for(/*...*/)
 			->allowedFilters([NumberRangeFilter::getQueryBuilderFilter('invoice_recall_count')]);
 ```
+
+#### Column Filters ✨ **NEW!**
+
+You can now place filter icons directly in column headers for a more intuitive user experience. Each filter can be associated with a specific column using the `column_key` parameter.
+
+```php
+Inertia::render('Page/Index')->table(function (InertiaTable $table) {
+	$table->column('name', 'Name')
+		  ->column('status', 'Status')
+		  ->column('email', 'Email')
+		  ->column('created_at', 'Created');
+
+	// Associate a select filter with the 'status' column
+	$table->selectFilter(
+		key: 'status',
+		options: [
+			'active' => 'Active',
+			'inactive' => 'Inactive',
+			'pending' => 'Pending'
+		],
+		label: 'Status',
+		column_key: 'status' // 🎯 Associates the filter with the status column
+	);
+
+	// Associate a toggle filter with the 'email' column
+	$table->toggleFilter(
+		key: 'email_verified',
+		label: 'Email Verified',
+		column_key: 'email'
+	);
+
+	// Associate a number range filter with the 'created_at' column
+	$table->numberRangeFilter(
+		key: 'days_since_creation',
+		max: 365,
+		min: 0,
+		label: 'Days Since Creation',
+		column_key: 'created_at'
+	);
+});
+```
+
+**Features:**
+
+-   🎯 **Visual Association**: Filter icons appear directly in column headers
+-   🎨 **Active State Indicator**: Icons change color when filters are applied
+-   📱 **Responsive Dropdown**: Clean dropdown interface for filter options
+-   🔄 **Backward Compatible**: Existing filters without `column_key` still work in the global filter bar
+
+**Benefits:**
+
+-   More intuitive user experience
+-   Better visual organization
+-   Space-efficient interface
+-   Clear association between filters and data columns
+
+For detailed examples and usage, see [COLUMN_FILTERS.md](COLUMN_FILTERS.md).
 
 #### Columns
 

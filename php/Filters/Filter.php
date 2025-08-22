@@ -12,9 +12,9 @@ class Filter implements Arrayable, Filterable
         public string $label,
         public array $options,
         public ?string $value = null,
-        public bool $noFilterOption,
-        public string $noFilterOptionLabel,
-        public string $type
+        public bool $noFilterOption = true,
+        public string $noFilterOptionLabel = '-',
+        public string $type = 'select'
     ) {
     }
 

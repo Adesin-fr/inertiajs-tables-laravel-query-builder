@@ -760,6 +760,20 @@ function header(key) {
     const columnData = clone(queryBuilderProps.value.columns[intKey]);
 
     columnData.onSort = sortBy;
+    
+    // Ajouter les filtres pour cette colonne uniquement
+    // Logique simple : associer les filtres dont la key correspond ou contient la key de la colonne
+    columnData.filters = queryBuilderProps.value.filters.filter(filter => 
+        filter.key === key || 
+        filter.key.startsWith(key + '_') ||
+        filter.key.includes(key)
+    );
+    
+    // Ajouter la fonction de changement de filtre
+    columnData.onFilterChange = changeFilterValue;
+    
+    // Ajouter la couleur pour le thème
+    columnData.color = props.color;
 
     return columnData;
 }

@@ -19,8 +19,7 @@ class NumberRangeFilter implements Arrayable, Filterable
         public string $suffix = '',
         public float $step = 1,
         public ?array $value = null
-    ) {
-    }
+    ) {}
 
     public function toArray(): array
     {

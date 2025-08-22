@@ -4,23 +4,37 @@
     :class="cell.header_class" :style="{ width: columnWidth }" :data-column-key="cell.key">
     <component :is="cell.sortable ? 'button' : 'div'" class="w-full" :dusk="cell.sortable ? `sort-${cell.key}` : null"
       @click.prevent="onClick">
-      <span class="flex flex-row items-center">
-        <slot name="label"><span class="uppercase">{{ cell.label }}</span></slot>
+      <span class="flex flex-row items-center justify-between w-full">
+        <span class="flex flex-row items-center">
+          <slot name="label"><span class="uppercase">{{ cell.label }}</span></slot>
 
-        <slot name="sort">
-          <svg v-if="cell.sortable" aria-hidden="true" class="w-3 h-3 ml-2" :class="{
-            'text-gray-400': !cell.sorted,
-            'text-green-500': cell.sorted,
-          }" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" :sorted="cell.sorted">
-            <path v-if="!cell.sorted" fill="currentColor"
-              d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41zm255-105L177 64c-9.4-9.4-24.6-9.4-33.9 0L24 183c-15.1 15.1-4.4 41 17 41h238c21.4 0 32.1-25.9 17-41z" />
+          <slot name="sort">
+            <svg v-if="cell.sortable" aria-hidden="true" class="w-3 h-3 ml-2" :class="{
+              'text-gray-400': !cell.sorted,
+              'text-green-500': cell.sorted,
+            }" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" :sorted="cell.sorted">
+              <path v-if="!cell.sorted" fill="currentColor"
+                d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41zm255-105L177 64c-9.4-9.4-24.6-9.4-33.9 0L24 183c-15.1 15.1-4.4 41 17 41h238c21.4 0 32.1-25.9 17-41z" />
 
-            <path v-if="cell.sorted === 'asc'" fill="currentColor"
-              d="M279 224H41c-21.4 0-32.1-25.9-17-41L143 64c9.4-9.4 24.6-9.4 33.9 0l119 119c15.2 15.1 4.5 41-16.9 41z" />
+              <path v-if="cell.sorted === 'asc'" fill="currentColor"
+                d="M279 224H41c-21.4 0-32.1-25.9-17-41L143 64c9.4-9.4 24.6-9.4 33.9 0l119 119c15.2 15.1 4.5 41-16.9 41z" />
 
-            <path v-if="cell.sorted === 'desc'" fill="currentColor"
-              d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41z" />
-          </svg>
+              <path v-if="cell.sorted === 'desc'" fill="currentColor"
+                d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41z" />
+            </svg>
+          </slot>
+        </span>
+        
+        <!-- Column Filter -->
+        <slot name="filter">
+          <ColumnFilter
+            v-if="cell.filters && cell.filters.length > 0"
+            :column-key="cell.key"
+            :filters="cell.filters"
+            :on-filter-change="cell.onFilterChange"
+            :color="cell.color"
+            @click.stop
+          />
         </slot>
       </span>
     </component>
@@ -34,6 +48,7 @@
 <script setup>
 import { computed, inject } from 'vue';
 import ColumnResizeHandle from './ColumnResizeHandle.vue';
+import ColumnFilter from './ColumnFilter.vue';
 
 const props = defineProps({
   cell: {

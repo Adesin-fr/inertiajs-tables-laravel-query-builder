@@ -8,8 +8,11 @@ class ToggleFilter implements Arrayable, Filterable
 {
     protected const TYPE = 'toggle';
 
-    public function __construct(public string $key, public string $label, public ?bool $value = null)
-    {
+    public function __construct(
+        public string $key, 
+        public string $label, 
+        public ?bool $value = null
+    ) {
     }
 
     public function toArray(): array

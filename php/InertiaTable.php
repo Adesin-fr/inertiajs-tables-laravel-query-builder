@@ -21,6 +21,7 @@ class InertiaTable
     private Collection $columns;
     private Collection $searchInputs;
     private Collection $filters;
+    private array $columnFilters = []; // Nouveau : Association colonne -> filtres
     private string $defaultSort = '';
 
     private static bool|string $defaultGlobalSearch = false;
@@ -328,6 +329,7 @@ class InertiaTable
      * @param string|null $defaultValue
      * @param bool $noFilterOption
      * @param string|null $noFilterOptionLabel
+     * @param string|null $column_key
      * @return self
      */
     public function selectFilter(string $key, array $options, string $label = null, string $defaultValue = null, bool $noFilterOption = true, string $noFilterOptionLabel = null): self
@@ -353,6 +355,7 @@ class InertiaTable
      * @param string $key
      * @param string|null $label
      * @param bool|null $defaultValue
+     * @param string|null $column_key
      * @return self
      */
     public function toggleFilter(string $key, string $label = null, bool $defaultValue = null): self
@@ -362,7 +365,7 @@ class InertiaTable
         })->push(new ToggleFilter(
             key: $key,
             label: $label ?: Str::headline($key),
-            value: $defaultValue,
+            value: $defaultValue
         ))->values();
 
         return $this;
@@ -372,11 +375,17 @@ class InertiaTable
      * Add a number range filter to the query builder.
      *
      * @param string $key
+     * @param float $max
+     * @param float $min
+     * @param string $prefix
+     * @param string $suffix
+     * @param float $step
      * @param string|null $label
-     * @param bool|null $defaultValue
+     * @param array|null $defaultValue
+     * @param string|null $column_key
      * @return self
      */
-    public function numberRangeFilter(string $key, float $max, float $min = 0, string $prefix = '', string $suffix = '', float $step = 1, string $label = null, bool $defaultValue = null): self
+    public function numberRangeFilter(string $key, float $max, float $min = 0, string $prefix = '', string $suffix = '', float $step = 1, string $label = null, array $defaultValue = null): self
     {
         $this->filters = $this->filters->reject(function (Filterable $filter) use ($key) {
             //return $filter->key === $key;
@@ -388,9 +397,27 @@ class InertiaTable
             prefix: $prefix,
             suffix: $suffix,
             step: $step,
-            value: $defaultValue,
+            value: $defaultValue
         ))->values();
 
+        return $this;
+    }
+
+    /**
+     * Associate an existing filter with a column.
+     *
+     * @param string $columnKey
+     * @param string $filterKey
+     * @return self
+     */
+    public function addFilterToColumn(string $columnKey, string $filterKey): self
+    {
+        if (!isset($this->columnFilters[$columnKey])) {
+            $this->columnFilters[$columnKey] = [];
+        }
+        
+        $this->columnFilters[$columnKey][] = $filterKey;
+        
         return $this;
     }
 
