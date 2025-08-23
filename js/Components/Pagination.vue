@@ -1,94 +1,44 @@
 <template>
-  <nav
-    v-if="hasPagination"
-    class="bg-white flex items-center"
-  >
+  <nav v-if="hasPagination" class="bg-white flex items-center">
     <p v-if="!hasData || pagination.total < 1">
       {{ translations.no_results_found }}
     </p>
 
     <!-- simple and mobile -->
-    <div
-      v-if="hasData"
-      class="flex-1 flex justify-between"
-      :class="{'sm:hidden': hasLinks}"
-    >
-      <component
-        :is="previousPageUrl ? 'a' : 'div'"
-        :class="{
-          'cursor-not-allowed text-gray-400': !previousPageUrl,
-          'text-gray-700 hover:text-gray-500': previousPageUrl
-        }"
-        :href="previousPageUrl"
-        :dusk="previousPageUrl ? 'pagination-simple-previous' : null"
+    <div v-if="hasData" class="flex-1 flex justify-between" :class="{ 'sm:hidden': hasLinks }">
+      <component :is="previousPageUrl ? 'a' : 'div'" :class="{
+        'cursor-not-allowed text-gray-400': !previousPageUrl,
+        'text-gray-700 hover:text-gray-500': previousPageUrl
+      }" :href="previousPageUrl" :dusk="previousPageUrl ? 'pagination-simple-previous' : null"
         class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md bg-white"
-        @click.prevent="onClick(previousPageUrl)"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 text-gray-400"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M7 16l-4-4m0 0l4-4m-4 4h18"
-          />
+        @click.prevent="onClick(previousPageUrl)">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
         </svg>
         <span class="hidden sm:inline ml-2">{{ translations.previous }}</span>
       </component>
-      <PerPageSelector
-        dusk="per-page-mobile"
-        :value="perPage"
-        :options="perPageOptions"
-        :on-change="onPerPageChange"
-        :color="color"
-      />
-      <component
-        :is="nextPageUrl ? 'a' : 'div'"
-        :class="{
-          'cursor-not-allowed text-gray-400': !nextPageUrl,
-          'text-gray-700 hover:text-gray-500': nextPageUrl
-        }"
-        :href="nextPageUrl"
-        :dusk="nextPageUrl ? 'pagination-simple-next' : null"
+      <PerPageSelector dusk="per-page-mobile" :value="perPage" :options="perPageOptions" :on-change="onPerPageChange"
+        :color="color" />
+      <component :is="nextPageUrl ? 'a' : 'div'" :class="{
+        'cursor-not-allowed text-gray-400': !nextPageUrl,
+        'text-gray-700 hover:text-gray-500': nextPageUrl
+      }" :href="nextPageUrl" :dusk="nextPageUrl ? 'pagination-simple-next' : null"
         class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md bg-white"
-        @click.prevent="onClick(nextPageUrl)"
-      >
+        @click.prevent="onClick(nextPageUrl)">
         <span class="hidden sm:inline mr-2">{{ translations.next }}</span>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 text-gray-400"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M17 8l4 4m0 0l-4 4m4-4H3"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
         </svg>
       </component>
     </div>
 
     <!-- full pagination -->
-    <div
-      v-if="hasData && hasLinks"
-      class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between"
-    >
+    <div v-if="hasData && hasLinks" class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
       <div class="flex flex-row space-x-4 items-center grow">
-        <PerPageSelector
-          dusk="per-page-full"
-          :value="perPage"
-          :options="perPageOptions"
-          :on-change="onPerPageChange"
-          :color="color"
-        />
+        <PerPageSelector dusk="per-page-full" :value="perPage" :options="perPageOptions" :on-change="onPerPageChange"
+          :color="color" />
 
         <p class="hidden lg:block text-sm text-gray-700 grow pr-2">
           <span class="font-medium">{{ pagination.from }}</span>
@@ -100,108 +50,61 @@
         </p>
       </div>
       <div>
-        <nav
-          class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
-          aria-label="Pagination"
-        >
-          <component
-            :is="previousPageUrl ? 'a' : 'div'"
-            :class="{
-              'cursor-not-allowed text-gray-400': !previousPageUrl,
-              'text-gray-500 hover:bg-gray-50': previousPageUrl
-            }"
-            :href="previousPageUrl"
-            :dusk="previousPageUrl ? 'pagination-previous' : null"
+        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+          <component :is="previousPageUrl ? 'a' : 'div'" :class="{
+            'cursor-not-allowed text-gray-400': !previousPageUrl,
+            'text-gray-500 hover:bg-gray-50': previousPageUrl
+          }" :href="previousPageUrl" :dusk="previousPageUrl ? 'pagination-previous' : null"
             class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium"
-            @click.prevent="onClick(previousPageUrl)"
-          >
+            @click.prevent="onClick(previousPageUrl)">
             <span class="sr-only">{{ translations.previous }}</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
                 d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                clip-rule="evenodd"
-              />
+                clip-rule="evenodd" />
             </svg>
           </component>
 
-          <div
-            v-for="(link, key) in pagination.links"
-            :key="key"
-          >
+          <div v-for="(link, key) in pagination.links" :key="key">
             <slot name="link">
-              <component
-                :is="link.url ? 'a' : 'div'"
-                v-if="
-                  !isNaN(link.label) || link.label === '...'
-                "
-                :href="link.url"
-                :dusk="link.url ? `pagination-${link.label}` : null"
+              <component :is="link.url ? 'a' : 'div'" v-if="
+                !isNaN(link.label) || link.label === '...'
+              " :href="link.url" :dusk="link.url ? `pagination-${link.label}` : null"
                 class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium text-gray-700"
                 :class="{
                   'cursor-not-allowed': !link.url,
                   'hover:bg-gray-50': link.url,
                   'bg-white': !link.active,
                   'bg-gray-100': link.active,
-                }"
-                @click.prevent="onClick(link.url)"
-              >
+                }" @click.prevent="onClick(link.url)">
                 {{ link.label }}
               </component>
             </slot>
           </div>
 
-          <component
-            :is="nextPageUrl ? 'a' : 'div'"
-            :class="{
-              'cursor-not-allowed text-gray-400': !nextPageUrl,
-              'text-gray-500 hover:bg-gray-50': nextPageUrl
-            }"
-            :href="nextPageUrl"
-            :dusk="nextPageUrl ? 'pagination-next' : null"
+          <component :is="nextPageUrl ? 'a' : 'div'" :class="{
+            'cursor-not-allowed text-gray-400': !nextPageUrl,
+            'text-gray-500 hover:bg-gray-50': nextPageUrl
+          }" :href="nextPageUrl" :dusk="nextPageUrl ? 'pagination-next' : null"
             class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium"
-            @click.prevent="onClick(nextPageUrl)"
-          >
+            @click.prevent="onClick(nextPageUrl)">
             <span class="sr-only">{{ translations.next }}</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
                 d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                clip-rule="evenodd"
-              />
+                clip-rule="evenodd" />
             </svg>
           </component>
         </nav>
       </div>
-      
+
       <!-- Export CSV Button -->
       <div v-if="showExportButton" class="ml-4">
-        <a
-          :href="exportUrl"
-          class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-        >
-          <svg
-            class="h-4 w-4 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-            />
+        <a :href="exportUrl"
+          class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+          <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
           {{ translations.export_csv }}
         </a>
@@ -218,81 +121,81 @@ import { getTranslations } from "../translations.js";
 const translations = getTranslations();
 
 const props = defineProps({
-    onClick: {
-        type: Function,
-        required: false,
+  onClick: {
+    type: Function,
+    required: false,
+  },
+  perPageOptions: {
+    type: Array,
+    default() {
+      return () => [15, 30, 50, 100];
     },
-    perPageOptions: {
-        type: Array,
-        default() {
-            return () => [15, 30, 50, 100];
-        },
-        required: false
+    required: false
+  },
+  onPerPageChange: {
+    type: Function,
+    default() {
+      return () => { };
     },
-    onPerPageChange: {
-        type: Function,
-        default() {
-            return () => {};
-        },
-        required: false,
-    },
-    hasData: {
-        type: Boolean,
-        required: true,
-    },
-    meta: {
-        type: Object,
-        required: false,
-    },
-    color: {
-        type: String,
-        default: "primary",
-        required: false,
-    },
-    showExportButton: {
-        type: Boolean,
-        default: false,
-        required: false,
-    },
-    exportUrl: {
-        type: String,
-        required: false,
-    },
+    required: false,
+  },
+  hasData: {
+    type: Boolean,
+    required: true,
+  },
+  meta: {
+    type: Object,
+    required: false,
+  },
+  color: {
+    type: String,
+    default: "primary",
+    required: false,
+  },
+  showExportButton: {
+    type: Boolean,
+    default: false,
+    required: false,
+  },
+  exportUrl: {
+    type: String,
+    required: false,
+  },
 });
 
 const hasLinks = computed(() => {
-    if(!("links" in pagination.value)) {
-        return false;
-    }
+  if (!("links" in pagination.value)) {
+    return false;
+  }
 
-    return pagination.value.links.length > 0;
+  return pagination.value.links.length > 0;
 });
 
 const hasPagination = computed(() => {
-    return Object.keys(pagination.value).length > 0;
+  return Object.keys(pagination.value).length > 0;
 });
 
 const pagination = computed(() => {
-    return props.meta;
+  return props.meta;
 });
 
 const previousPageUrl = computed(() => {
-    if ("prev_page_url" in pagination.value) {
-        return pagination.value.prev_page_url;
-    }
+  if ("prev_page_url" in pagination.value) {
+    return pagination.value.prev_page_url;
+  }
 
-    return null;
+  return null;
 });
 
 const nextPageUrl = computed(() => {
-    if ("next_page_url" in pagination.value) {
-        return pagination.value.next_page_url;
-    }
+  if ("next_page_url" in pagination.value) {
+    return pagination.value.next_page_url;
+  }
 
-    return null;
+  return null;
 });
 
 const perPage = computed(() => {
-    return parseInt(pagination.value.per_page);
+  return parseInt(pagination.value.per_page);
 });
 </script>

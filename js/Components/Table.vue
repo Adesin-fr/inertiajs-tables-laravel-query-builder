@@ -140,7 +140,7 @@
                             <span class="italic text-sm px-2" v-if="hasCheckboxes">{{ lineCountLabel }}</span>
                             <Pagination :on-click="visitPageFromUrl" :has-data="hasData" :meta="resourceMeta"
                                 :per-page-options="queryBuilderProps.perPageOptions"
-                                :on-per-page-change="onPerPageChange" :color="color" 
+                                :on-per-page-change="onPerPageChange" :color="color"
                                 :show-export-button="showExportButton" :export-url="exportUrlWithParams" />
                         </div>
                     </slot>
@@ -435,11 +435,90 @@ const exportUrlWithParams = computed(() => {
         return null;
     }
 
+    // Start with the current URL base
     const currentUrl = new URL(window.location.href);
-    
-    // Add the export parameter
-    currentUrl.searchParams.set('do_export', '1');
-    
+
+    // Clear existing query parameters to rebuild them from current state
+    currentUrl.search = '';
+
+    // Add current query parameters from the component state
+    const params = new URLSearchParams();
+
+    // Add page name if not default
+    if (queryBuilderProps.value.page && queryBuilderProps.value.page > 1) {
+        params.set(pageName.value, queryBuilderProps.value.page);
+    }
+
+    // Add sorting
+    if (queryBuilderProps.value.sort) {
+        const sortKey = props.name === "default" ? "sort" : `${props.name}_sort`;
+        params.set(sortKey, queryBuilderProps.value.sort);
+    }
+
+    // Add filters
+    const activeFilters = {};
+    queryBuilderData.value.filters.forEach(filter => {
+        if (filter.value !== null && filter.value !== undefined && filter.value !== '') {
+            activeFilters[filter.key] = filter.value;
+        }
+    });
+
+    // Add search inputs (including global search)
+    queryBuilderData.value.searchInputs.forEach(searchInput => {
+        if (searchInput.value !== null && searchInput.value !== undefined && searchInput.value !== '') {
+            activeFilters[searchInput.key] = searchInput.value;
+        }
+    });
+
+    if (Object.keys(activeFilters).length > 0) {
+        const filterKey = props.name === "default" ? "filter" : `${props.name}_filter`;
+        // For complex filter structure, we need to serialize it properly
+        Object.keys(activeFilters).forEach(key => {
+            const value = activeFilters[key];
+            if (Array.isArray(value)) {
+                // Handle array values (like NumberFilter)
+                value.forEach((val, index) => {
+                    params.set(`${filterKey}[${key}][${index}]`, val);
+                });
+            } else if (typeof value === 'object' && value !== null) {
+                // Handle object values
+                Object.keys(value).forEach(subKey => {
+                    params.set(`${filterKey}[${key}][${subKey}]`, value[subKey]);
+                });
+            } else {
+                // Handle simple values
+                params.set(`${filterKey}[${key}]`, value);
+            }
+        });
+    }
+
+    // Add column visibility
+    const visibleColumns = queryBuilderData.value.columns
+        .filter(column => !column.hidden)
+        .map(column => column.key);
+
+    if (visibleColumns.length !== queryBuilderData.value.columns.length) {
+        const columnsKey = props.name === "default" ? "columns" : `${props.name}_columns`;
+        visibleColumns.forEach(columnKey => {
+            params.append(`${columnsKey}[]`, columnKey);
+        });
+    }
+
+    // Add per page
+    if (queryBuilderProps.value.perPageOptions && queryBuilderProps.value.perPageOptions.length > 0) {
+        const currentPerPage = new URLSearchParams(window.location.search).get('perPage') || queryBuilderProps.value.perPageOptions[0];
+        if (currentPerPage && currentPerPage !== queryBuilderProps.value.perPageOptions[0]) {
+            params.set('perPage', currentPerPage);
+        }
+    }
+
+    // Add the export parameter and table name
+    params.set('do_export', '1');
+    params.set('table', props.name || 'default');
+
+    // Set the final query string
+    currentUrl.search = params.toString();
+
     return currentUrl.toString();
 });
 

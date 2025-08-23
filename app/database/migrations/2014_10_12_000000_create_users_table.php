@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->tinyInteger('score');
             $table->string('email')->unique();
             $table->string('language_code', 2);
+            $table->boolean('is_admin')->default(false);
             $table->timestamps();
         });
     }

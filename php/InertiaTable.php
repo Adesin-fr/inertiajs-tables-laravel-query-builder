@@ -13,6 +13,8 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Inertia\Response;
+use Inertia\Inertia;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class InertiaTable
 {
@@ -26,8 +28,120 @@ class InertiaTable
     private array $columnFilters = []; // Nouveau : Association colonne -> filtres
     private string $defaultSort = '';
 
+    // Nouvelles propriétés pour l'API fluide
+    private array $data = [];
+    private bool $handleExport = true;
+    private ?\Spatie\QueryBuilder\QueryBuilder $queryBuilder = null;
+    private $queryBuilderCallback = null;
+    private string $paginateMethod = 'paginate';
+    private ?string $resourceClass = null;
+
     private static bool|string $defaultGlobalSearch = false;
     private static array $defaultQueryBuilderConfig = [];
+
+    /**
+     * Create a new fluent InertiaTable instance.
+     *
+     * @param Request|null $request
+     * @return self
+     */
+    public static function make(?Request $request = null): self
+    {
+        return new self($request ?: request());
+    }
+
+    /**
+     * Create multiple InertiaTable instances for a single view.
+     *
+     * @param string $view
+     * @param array $props
+     * @param Request|null $request
+     * @return InertiaTableCollection
+     */
+    public static function view(string $view, array $props = [], ?Request $request = null): InertiaTableCollection
+    {
+        return new InertiaTableCollection($view, $props, $request ?: request());
+    }
+
+    /**
+     * Add data to the Inertia response.
+     *
+     * @param array $data
+     * @return self
+     */
+    public function with(array $data): self
+    {
+        $this->data = array_merge($this->data, $data);
+
+        return $this;
+    }
+
+    /**
+     * Enable or disable automatic export handling.
+     *
+     * @param bool $handle
+     * @return self
+     */
+    public function handleExport(bool $handle = true): self
+    {
+        $this->handleExport = $handle;
+
+        return $this;
+    }
+
+    /**
+     * Set the QueryBuilder for export purposes.
+     *
+     * @param \Spatie\QueryBuilder\QueryBuilder $queryBuilder
+     * @return self
+     */
+    public function withQueryBuilder(QueryBuilder $queryBuilder): self
+    {
+        $this->queryBuilder = $queryBuilder;
+
+        return $this;
+    }
+
+    /**
+     * Set a callback to create the QueryBuilder when needed.
+     * This is useful for multi-table setups where QueryBuilder parameters 
+     * need to be configured before creating the QueryBuilder.
+     *
+     * @param callable $callback
+     * @return self
+     */
+    public function withQueryBuilderCallback(callable $callback): self
+    {
+        $this->queryBuilderCallback = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Set the pagination method.
+     *
+     * @param string $method
+     * @return self
+     */
+    public function paginateMethod(string $method): self
+    {
+        $this->paginateMethod = $method;
+
+        return $this;
+    }
+
+    /**
+     * Set the resource class for data transformation.
+     *
+     * @param string|null $resourceClass
+     * @return self
+     */
+    public function withResource(?string $resourceClass): self
+    {
+        $this->resourceClass = $resourceClass;
+
+        return $this;
+    }
 
     public function __construct(Request $request)
     {
@@ -95,6 +209,12 @@ class InertiaTable
     public function name(string $name): self
     {
         $this->name = $name;
+
+        // Automatically set a unique pageName for this table to avoid conflicts
+        // when multiple tables are used on the same page
+        if ($name !== 'default') {
+            $this->pageName = $name . 'Page';
+        }
 
         return $this;
     }
@@ -491,5 +611,272 @@ class InertiaTable
         ]);
 
         return $response->with('queryBuilderProps', $props);
+    }
+
+    /**
+     * Generate the final Inertia response with export handling.
+     *
+     * @param string $view
+     * @param array $props
+     * @return \Inertia\Response|\Symfony\Component\HttpFoundation\Response
+     */
+    public function render(string $view, array $props = [])
+    {
+        // Get the QueryBuilder (creating it if needed)
+        $queryBuilder = $this->getQueryBuilder();
+
+        // If we have a QueryBuilder, handle pagination internally
+        if ($queryBuilder) {
+            // Check if this is an export request BEFORE applying pagination
+            if ($this->handleExport && $this->request->get('do_export') === '1') {
+                return $this->handleCsvExport();
+            }
+
+            $paginatedData = $queryBuilder
+                ->{$this->paginateMethod}(
+                    $this->request->query('perPage', 15),
+                    ['*'],
+                    $this->pageName
+                )
+                ->withQueryString();
+
+            // Handle resource transformation if requested
+            if ($this->resourceClass) {
+                $props['users'] = $this->resourceClass::collection($paginatedData);
+            } elseif (isset($props['resource']) && $props['resource'] === true) {
+                // Fallback for backward compatibility
+                $resourceClass = '\\App\\Http\\Resources\\UserResource';
+                if (class_exists($resourceClass)) {
+                    $props['users'] = $resourceClass::collection($paginatedData);
+                } else {
+                    $props['users'] = $paginatedData;
+                }
+                unset($props['resource']);
+            } else {
+                $props['users'] = $paginatedData;
+            }
+        } else {
+            // Check if this is an export request
+            if ($this->handleExport && $this->request->get('do_export') === '1') {
+                return $this->handleCsvExport();
+            }
+        }
+
+        $this->data = array_merge($this->data, $props);
+
+        // Create the standard Inertia response
+        $response = Inertia::render($view, $this->data);
+
+        return $this->applyTo($response);
+    }
+
+    /**
+     * Check if this table should handle export based on request parameters.
+     *
+     * @param string $tableName
+     * @return bool
+     */
+    public function shouldHandleExport(string $tableName): bool
+    {
+        return $this->handleExport &&
+            $this->request->get('do_export') === '1' &&
+            $this->request->get('table') === $tableName;
+    }
+
+    /**
+     * Get the QueryBuilder, creating it from callback if necessary.
+     *
+     * @return \Spatie\QueryBuilder\QueryBuilder|null
+     */
+    private function getQueryBuilder(): ?QueryBuilder
+    {
+        if ($this->queryBuilder) {
+            return $this->queryBuilder;
+        }
+
+        if ($this->queryBuilderCallback) {
+            $this->queryBuilder = call_user_func($this->queryBuilderCallback);
+            return $this->queryBuilder;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get table data for rendering.
+     *
+     * @return array
+     */
+    public function getTableData(): array
+    {
+        $queryBuilder = $this->getQueryBuilder();
+
+        if ($queryBuilder) {
+            $paginatedData = $queryBuilder
+                ->{$this->paginateMethod}(
+                    $this->request->query('perPage', 15),
+                    ['*'],
+                    $this->pageName
+                )
+                ->withQueryString();
+
+            // Handle resource transformation if requested
+            if ($this->resourceClass) {
+                return ['data' => $this->resourceClass::collection($paginatedData)];
+            } else {
+                return ['data' => $paginatedData];
+            }
+        }
+
+        return [];
+    }
+
+    /**
+     * Make handleCsvExport public for InertiaTableCollection.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function handleCsvExport()
+    {
+        $queryBuilder = $this->getQueryBuilder();
+
+        if (!$queryBuilder) {
+            return response('No query builder available for export', 400);
+        }
+
+        // Create a fresh query builder with the same base query but apply current request filters
+        $exportQueryBuilder = clone $queryBuilder;
+
+        // The QueryBuilder should automatically apply filters from the current request
+        // But we need to make sure it's using the current request parameters
+        $data = collect($exportQueryBuilder->get());
+
+        if ($data->isEmpty()) {
+            return response('No data to export', 204);
+        }
+
+        // Generate CSV
+        $csv = $this->generateCsv($data);
+        $filename = $this->name . '-export-' . now()->format('Y-m-d-H-i-s') . '.csv';
+
+        return response($csv)
+            ->header('Content-Type', 'text/csv; charset=utf-8')
+            ->header('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
+    }
+
+    /**
+     * Generate CSV content from data collection.
+     *
+     * @param \Illuminate\Support\Collection $data
+     * @return string
+     */
+    protected function generateCsv(Collection $data): string
+    {
+        if ($data->isEmpty()) {
+            return '';
+        }
+
+        $csv = "\xEF\xBB\xBF"; // UTF-8 BOM
+
+        // Get headers from visible columns or first data item
+        $visibleColumns = $this->columns->reject->hidden;
+
+        if ($visibleColumns->isNotEmpty()) {
+            $headers = $visibleColumns->map(function ($column) {
+                return $column->label ?: Str::headline($column->key);
+            });
+        } else {
+            // Fallback to first item keys
+            $firstItem = $data->first();
+            if (is_array($firstItem)) {
+                $headers = collect(array_keys($firstItem));
+            } elseif (is_object($firstItem)) {
+                $headers = collect(array_keys((array) $firstItem));
+            } else {
+                $headers = collect(['Value']);
+            }
+        }
+
+        // Add headers
+        $csv .= $headers->map(function ($header) {
+            return '"' . str_replace('"', '""', $header) . '"';
+        })->join(',') . "\n";
+
+        // Add data rows
+        foreach ($data as $item) {
+            $row = [];
+
+            if ($visibleColumns->isNotEmpty()) {
+                foreach ($visibleColumns as $column) {
+                    $value = $this->getColumnValue($item, $column->key);
+                    $row[] = '"' . str_replace('"', '""', $this->formatCsvValue($value)) . '"';
+                }
+            } else {
+                // Fallback to all values
+                $itemArray = is_array($item) ? $item : (array) $item;
+                foreach ($itemArray as $value) {
+                    $row[] = '"' . str_replace('"', '""', $this->formatCsvValue($value)) . '"';
+                }
+            }
+
+            $csv .= implode(',', $row) . "\n";
+        }
+
+        return $csv;
+    }
+
+    /**
+     * Get column value from item with dot notation support.
+     *
+     * @param mixed $item
+     * @param string $key
+     * @return mixed
+     */
+    protected function getColumnValue($item, string $key)
+    {
+        if (is_array($item)) {
+            return data_get($item, $key);
+        }
+
+        if (is_object($item)) {
+            // Try property access first, then array access
+            if (isset($item->$key)) {
+                return $item->$key;
+            }
+
+            return data_get($item, $key);
+        }
+
+        return $item;
+    }
+
+    /**
+     * Format value for CSV output.
+     *
+     * @param mixed $value
+     * @return string
+     */
+    protected function formatCsvValue($value): string
+    {
+        if ($value === null) {
+            return '';
+        }
+
+        if (is_bool($value)) {
+            return $value ? 'Yes' : 'No';
+        }
+
+        if ($value instanceof \DateTime) {
+            return $value->format('Y-m-d H:i:s');
+        }
+
+        if (is_string($value) && (strtotime($value) !== false) && preg_match('/^\d{4}-\d{2}-\d{2}/', $value)) {
+            return date('Y-m-d H:i:s', strtotime($value));
+        }
+
+        return (string) $value;
     }
 }

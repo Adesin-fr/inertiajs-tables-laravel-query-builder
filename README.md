@@ -13,6 +13,10 @@ This package is a fork of [protonemedia/inertiajs-tables-laravel-query-builder],
 
 ## Features
 
+-   **Fluent API**: New intuitive API for single and multiple tables ✅ **NEW!**
+-   **CSV Export**: Automatic CSV export with all filtered data ✅ **NEW!**
+-   **Number Filters**: Advanced number filtering with multiple comparison operators ✅ **NEW!**
+-   **Multiple Tables**: Support for multiple independent tables in a single view ✅ **NEW!**
 -   Auto-fill: auto generates `thead` and `tbody` with support for custom cells
 -   Global Search
 -   Search per field
@@ -23,14 +27,7 @@ This package is a fork of [protonemedia/inertiajs-tables-laravel-query-builder],
 -   Pagination (support for Eloquent/API Resource/Simple/Cursor)
 -   Automatically updates the query string (by using [Inertia's replace](https://inertiajs.com/manual-visits#browser-history) feature)
 -   Customizable header and body cells classes
--   Resizeable columns ✅ **NEW!**
-
-## To-do list :
-
--   [x] Add filters to the columns headers ✅ **NEW!**
--   [ ] Allow to pin columns (similar to AG Grid)
--   [ ] Export the table data to CSV
--   [ ] Export the table data usign a custom callback
+-   Resizeable columns ✅
 
 ## Compatibility
 
@@ -52,7 +49,151 @@ You can install the package via composer:
 composer require adesin-fr/inertiajs-tables-laravel-query-builder
 ```
 
+## Fluent API ✨ **NEW!**
+
+The package now provides a modern fluent API that makes table configuration more intuitive and powerful.
+
+### Single Table
+
+For single table views, use the `InertiaTable::make()` method with a fluent syntax:
+
+```php
+use AdesinFr\LaravelQueryBuilderInertiaJs\InertiaTable;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
+
+// Method 1: Direct QueryBuilder with callback
+return InertiaTable::make()
+    ->withQueryBuilder(
+        QueryBuilder::for(User::class)
+            ->allowedFilters([
+                AllowedFilter::partial('name'),
+                AllowedFilter::exact('status'),
+                NumberFilter::getQueryBuilderFilter('age'),
+            ])
+            ->allowedSorts(['name', 'email', 'created_at'])
+            ->defaultSort('name')
+    )
+    ->column('name', 'Name', sortable: true, searchable: true)
+    ->column('email', 'Email', sortable: true, searchable: true)
+    ->column('status', 'Status')
+    ->column('age', 'Age', sortable: true)
+    ->withGlobalSearch()
+    ->selectFilter('status', [
+        'active' => 'Active',
+        'inactive' => 'Inactive',
+    ])
+    ->numberFilter('age', 'Age')
+    ->render('Users/Index');
+
+// Method 2: QueryBuilder callback (useful for multi-table setups)
+return InertiaTable::make()
+    ->withQueryBuilderCallback(function () {
+        return QueryBuilder::for(User::class)
+            ->allowedFilters([
+                AllowedFilter::partial('name'),
+                AllowedFilter::exact('status'),
+                NumberFilter::getQueryBuilderFilter('age'),
+            ])
+            ->allowedSorts(['name', 'email', 'created_at'])
+            ->defaultSort('name');
+    })
+    ->column('name', 'Name', sortable: true, searchable: true)
+    ->column('email', 'Email', sortable: true, searchable: true)
+    ->withResource(\App\Http\Resources\UserResource::class) // Optional resource transformation
+    ->render('Users/Index');
+```
+
+### Multiple Tables
+
+For views with multiple tables, use the `InertiaTable::view()` method:
+
+```php
+use AdesinFr\LaravelQueryBuilderInertiaJs\InertiaTable;
+
+return InertiaTable::view('Dashboard/Index')
+    ->table('users', function (InertiaTable $table) {
+        $table->withQueryBuilderCallback(function () {
+            // Configure query parameters for this table
+            InertiaTable::updateQueryBuilderParameters('users');
+
+            return QueryBuilder::for(User::class)
+                ->allowedFilters([AllowedFilter::partial('name')])
+                ->allowedSorts(['name', 'email'])
+                ->defaultSort('name');
+        })
+        ->column('name', 'Name', sortable: true, searchable: true)
+        ->column('email', 'Email', sortable: true)
+        ->withGlobalSearch()
+        ->paginateMethod('paginate');
+    })
+    ->table('products', function (InertiaTable $table) {
+        $table->withQueryBuilderCallback(function () {
+            // Configure query parameters for this table
+            InertiaTable::updateQueryBuilderParameters('products');
+
+            return QueryBuilder::for(Product::class)
+                ->allowedFilters([
+                    AllowedFilter::partial('title'),
+                    NumberFilter::getQueryBuilderFilter('price')
+                ])
+                ->allowedSorts(['title', 'price'])
+                ->defaultSort('title');
+        })
+        ->column('title', 'Title', sortable: true, searchable: true)
+        ->column('price', 'Price', sortable: true)
+        ->numberFilter('price', 'Price')
+        ->paginateMethod('simplePaginate');
+    })
+    ->with(['customData' => 'Additional data for the view'])
+    ->render();
+```
+
+### Additional Fluent API Methods
+
+The fluent API provides many configuration options:
+
+```php
+return InertiaTable::make()
+    ->name('custom-table')              // Table name for multi-table setups
+    ->pageName('customPage')            // Custom pagination parameter name
+    ->perPageOptions([10, 25, 50])     // Available per-page options
+    ->defaultSort('created_at')         // Default sorting column
+    ->handleExport(true)                // Enable/disable CSV export (default: true)
+    ->paginateMethod('simplePaginate')  // Pagination method
+    ->withResource(\App\Http\Resources\UserResource::class) // Resource transformation
+    ->with(['additional' => 'data'])    // Additional data for the view
+    ->render('Users/Index');
+```
+
+## Traditional API (Legacy)
+
+You can still use the traditional callback-based API if needed:
+
+```php
+return Inertia::render('Users/Index')->table(function (InertiaTable $table) {
+    $table->searchInput('name');
+    $table->selectFilter('status', ['active' => 'Active']);
+});
+```
+
+## Configuration
+
 The package will automatically register the Service Provider which provides a `table` method you can use on an Interia Response.
+
+### Getting started with Traditional API
+
+By default, the package will search for the `routes/web.php` file and check for a route with the "search" name. If you have different setup, you can define the route in your configuration file.
+
+As described above, the package will detect if you use [Spatie's Query Builder](https://github.com/spatie/laravel-query-builder). This usually means the root you're using looks somewhat like this:
+
+```php
+$users = QueryBuilder::for(User::class)->paginate($request->perPage ?: 10);
+
+return Inertia::render('Users/Index', [
+    'users' => $users
+]);
+```
 
 #### Search fields
 
@@ -144,7 +285,7 @@ You can specify a some other params.
 
 ```php
 Inertia::render('Page/Index')->table(function (InertiaTable $table) {
-	$table->toggleFilter(
+	$table->numberRangeFilter(
 		key: 'invoice_recall_count',
 		max: 5,
 		min: 0,
@@ -158,6 +299,55 @@ Inertia::render('Page/Index')->table(function (InertiaTable $table) {
 ```
 
 You need to use a custom allowed filter for this filter.
+
+```php
+$users = QueryBuilder::for(/*...*/)
+			->allowedFilters([NumberRangeFilter::getQueryBuilderFilter('invoice_recall_count')]);
+```
+
+#### Number Filters ✨ **NEW!**
+
+The `numberFilter` provides advanced comparison operations similar to date filters. You can filter by exact match, greater than, less than, between ranges, and more.
+
+```php
+Inertia::render('Page/Index')->table(function (InertiaTable $table) {
+	$table->numberFilter('age');
+});
+```
+
+The Number Filter supports 6 different comparison operations:
+
+-   **Exact**: Find records with exact value
+-   **Greater than**: Find records greater than specified value
+-   **Greater than or equal**: Find records greater than or equal to specified value
+-   **Less than**: Find records less than specified value
+-   **Less than or equal**: Find records less than or equal to specified value
+-   **Between**: Find records within a specified range
+
+You can customize the filter with additional parameters:
+
+```php
+Inertia::render('Page/Index')->table(function (InertiaTable $table) {
+	$table->numberFilter(
+		key: 'age',
+		label: 'Filter by age',
+		defaultOperation: 'greater_than',
+		defaultValue: 18,
+		column_key: 'age' // Associate with a specific column
+	);
+});
+```
+
+You need to use the custom NumberFilter for this filter:
+
+```php
+use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\NumberFilter;
+
+$users = QueryBuilder::for(User::class)
+		->allowedFilters([
+			NumberFilter::getQueryBuilderFilter('age')
+		]);
+```
 
 ```php
 $users = QueryBuilder::for(/*...*/)
@@ -266,6 +456,72 @@ InertiaTable::defaultGlobalSearch(false); // disable
 
 #### Example controller
 
+Here are examples using both the new fluent API and the traditional API:
+
+#### Fluent API Example (Recommended)
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use App\Http\Resources\UserResource;
+use AdesinFr\LaravelQueryBuilderInertiaJs\InertiaTable;
+use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\NumberFilter;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
+
+class UserIndexController
+{
+    public function __invoke()
+    {
+        $globalSearch = AllowedFilter::callback('global', function ($query, $value) {
+            $query->where(function ($query) use ($value) {
+                Collection::wrap($value)->each(function ($value) use ($query) {
+                    $query
+                        ->orWhere('name', 'LIKE', "%{$value}%")
+                        ->orWhere('email', 'LIKE', "%{$value}%");
+                });
+            });
+        });
+
+        return InertiaTable::make()
+            ->withQueryBuilder(
+                QueryBuilder::for(User::class)
+                    ->defaultSort('name')
+                    ->allowedSorts(['name', 'email', 'created_at'])
+                    ->allowedFilters([
+                        'name',
+                        'email',
+                        'status',
+                        NumberFilter::getQueryBuilderFilter('age'),
+                        $globalSearch
+                    ])
+            )
+            ->withGlobalSearch()
+            ->defaultSort('name')
+            ->column('name', 'User Name', canBeHidden: false, sortable: true, searchable: true)
+            ->column('email', 'Email Address', sortable: true, searchable: true)
+            ->column('status', 'Status')
+            ->column('age', 'Age', sortable: true)
+            ->column('created_at', 'Created', sortable: true)
+            ->column('actions', 'Actions', canBeHidden: false, sortable: false)
+            ->selectFilter('status', [
+                'active' => 'Active',
+                'inactive' => 'Inactive',
+                'pending' => 'Pending'
+            ])
+            ->numberFilter('age', 'Filter by Age')
+            ->withResource(UserResource::class)
+            ->handleExport(true)
+            ->render('Users/Index');
+    }
+}
+```
+
+#### Traditional API Example (Legacy)
+
 ```php
 <?php
 
@@ -313,6 +569,7 @@ class UserIndexController
 				  'en' => 'English',
 				  'nl' => 'Dutch',
 			  ]);
+		});
 	}
 }
 ```
@@ -434,6 +691,54 @@ When using _auto-fill_, you may want to transform the presented data for a speci
 ```
 
 #### Multiple tables per page
+
+You may want to use more than one table component per page. The new fluent API makes this much easier with the `InertiaTable::view()` method.
+
+#### Using the New Fluent API (Recommended)
+
+```php
+use AdesinFr\LaravelQueryBuilderInertiaJs\InertiaTable;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
+
+return InertiaTable::view('TwoTables')
+    ->table('companies', function (InertiaTable $table) {
+        $table->withQueryBuilderCallback(function () {
+            // Update query parameters for this table
+            InertiaTable::updateQueryBuilderParameters('companies');
+
+            return QueryBuilder::for(Company::class)
+                ->defaultSort('name')
+                ->allowedSorts(['name', 'email'])
+                ->allowedFilters(['name', 'email']);
+        })
+        ->pageName('companiesPage')
+        ->column('name', 'Company Name', searchable: true, sortable: true)
+        ->column('email', 'Contact Email', searchable: true, sortable: true)
+        ->column('address', 'Address', searchable: true)
+        ->withGlobalSearch()
+        ->defaultSort('name');
+    })
+    ->table('users', function (InertiaTable $table) {
+        $table->withQueryBuilderCallback(function () {
+            // Update query parameters for this table
+            InertiaTable::updateQueryBuilderParameters('users');
+
+            return QueryBuilder::for(User::class)
+                ->defaultSort('name')
+                ->allowedSorts(['name', 'email'])
+                ->allowedFilters(['name', 'email']);
+        })
+        ->pageName('usersPage')
+        ->column('name', 'User Name', searchable: true, sortable: true)
+        ->column('email', 'User Email', searchable: true, sortable: true)
+        ->withGlobalSearch()
+        ->defaultSort('name');
+    })
+    ->render();
+```
+
+#### Using the Traditional API (Legacy)
 
 You may want to use more than one table component per page. Displaying the data is easy, but using features like filtering, sorting, and pagination requires a slightly different setup. For example, by default, the `page` query key is used for paginating the data set, but now you want two different keys for each table. Luckily, this package takes care of that and even provides a helper method to support Spatie's query package. To get this to work, you need to _name_ your tables.
 
@@ -758,6 +1063,121 @@ const themeVariables = {
 	},
 }
 ```
+
+## CSV Export ✨ **NEW!**
+
+The package now includes a powerful CSV export feature that automatically exports all filtered data, not just the current page.
+
+### Automatic CSV Export
+
+CSV export is automatically enabled for all tables. An export button will appear in the table interface, and the export URL automatically includes all current filters and search parameters.
+
+#### Single Table Export
+
+```php
+// Fluent API - CSV export is automatically enabled
+return InertiaTable::make()
+    ->withQueryBuilder(
+        QueryBuilder::for(User::class)
+            ->allowedFilters([AllowedFilter::partial('name')])
+            ->allowedSorts(['name', 'email', 'created_at'])
+            ->defaultSort('name')
+    )
+    ->column('name', 'Name', sortable: true, searchable: true)
+    ->column('email', 'Email', sortable: true, searchable: true)
+    ->column('created_at', 'Created At', sortable: true)
+    ->withGlobalSearch()
+    ->selectFilter('status', ['active' => 'Active', 'inactive' => 'Inactive'])
+    ->handleExport(true) // Explicitly enable (default: true)
+    ->render('Users/Index');
+
+// Traditional API - CSV export is automatically enabled
+return Inertia::render('Users/Index', ['users' => $users])
+    ->table(function (InertiaTable $table) {
+        $table->column('name', 'Name')
+              ->column('email', 'Email')
+              ->searchInput('name')
+              ->handleExport(true); // Explicitly enable (default: true)
+    });
+```
+
+#### Multiple Table Export
+
+When using multiple tables, each table gets its own export button with the appropriate table identifier:
+
+```php
+return InertiaTable::view('Dashboard/Index')
+    ->table('users', function (InertiaTable $table) {
+        $table->withQueryBuilderCallback(function () {
+            InertiaTable::updateQueryBuilderParameters('users');
+            return QueryBuilder::for(User::class)
+                ->allowedFilters([AllowedFilter::partial('name')]);
+        })
+        ->column('name', 'Name', searchable: true)
+        ->column('email', 'Email')
+        ->withGlobalSearch();
+        // CSV export is automatically enabled for this table
+    })
+    ->table('products', function (InertiaTable $table) {
+        $table->withQueryBuilderCallback(function () {
+            InertiaTable::updateQueryBuilderParameters('products');
+            return QueryBuilder::for(Product::class)
+                ->allowedFilters([AllowedFilter::partial('title')]);
+        })
+        ->column('title', 'Title', searchable: true)
+        ->column('price', 'Price');
+        // CSV export is automatically enabled for this table
+    })
+    ->render();
+```
+
+### Disabling CSV Export
+
+If you want to disable CSV export for a specific table:
+
+```php
+return InertiaTable::make()
+    ->withQueryBuilder($queryBuilder)
+    ->column('name', 'Name')
+    ->handleExport(false) // Disable CSV export
+    ->render('Users/Index');
+```
+
+### CSV Export Features
+
+-   **Complete Data Export**: Exports all filtered data, not just the current page
+-   **Automatic Filtering**: Export URLs automatically include all active filters and search parameters
+-   **UTF-8 Support**: Proper encoding with BOM for international characters
+-   **Reactive URLs**: Export URLs update automatically when filters change
+-   **Multiple Tables**: Each table in multi-table views has its own export functionality
+-   **Proper CSV Formatting**: Automatic escaping of special characters and proper quoting
+-   **Column Visibility**: Only exports visible columns (respects column hiding)
+-   **Smart Data Formatting**: Automatic formatting for dates, booleans, and other data types
+
+### How It Works
+
+1. **Automatic Route Handling**: The package automatically detects CSV export requests via the `do_export=1` query parameter
+2. **Filter Preservation**: All current filters, searches, and sorting are automatically applied to the export
+3. **Complete Dataset**: The export bypasses pagination to include all matching records
+4. **Proper Headers**: CSV files are served with appropriate headers and UTF-8 encoding
+5. **Filename Generation**: Automatic filename generation with table name and timestamp
+
+### Frontend Integration
+
+The CSV export button is automatically added to the table interface. The export URL is reactive and updates automatically when filters change:
+
+```vue
+<template>
+    <!-- The Table component automatically includes the CSV export button -->
+    <Table :resource="users" />
+
+    <!-- For multiple tables, each gets its own export button -->
+    <Table :resource="users" name="users" />
+    <Table :resource="products" name="products" />
+</template>
+```
+
+The export functionality is built into the `Table.vue` component and requires no additional configuration.
 
 ## Testing
 

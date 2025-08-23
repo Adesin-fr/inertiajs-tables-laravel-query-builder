@@ -21,6 +21,7 @@ class UserFactory extends Factory
             'score'         => $this->faker->numberBetween(1, 100),
             'email'         => $this->faker->unique()->safeEmail(),
             'language_code' => $this->faker->randomElement(['en', 'nl']),
+            'is_admin'      => $this->faker->boolean(50), // 20% chance to be admin
         ];
     }
 }
