@@ -25,29 +25,33 @@
                     </h3>
                     <div class="p-2">
                         <div v-if="filter.type === 'select'" class="space-y-3">
-                            <select :name="filter.key" :value="filter.value"
-                                :class="getTheme('select')" @change="onFilterChange(filter.key, $event.target.value)">
-                                <option v-for="(option, optionKey) in filter.options" :key="optionKey" :value="optionKey">
+                            <select :name="filter.key" :value="filter.value" :class="getTheme('select')"
+                                @change="onFilterChange(filter.key, $event.target.value)">
+                                <option v-for="(option, optionKey) in filter.options" :key="optionKey"
+                                    :value="optionKey">
                                     {{ option }}
                                 </option>
                             </select>
                             <div v-if="filter.value && filter.value !== ''" class="flex justify-end">
-                                <button type="button" :class="getTheme('reset_button')" @click="onFilterChange(filter.key, '')">
+                                <button type="button" :class="getTheme('reset_button')"
+                                    @click="onFilterChange(filter.key, '')">
                                     <span class="sr-only">{{ translations.reset_filter }}</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
                             </div>
                         </div>
                         <ToggleFilter v-if="filter.type === 'toggle'" :filter="filter"
                             :on-filter-change="onFilterChange" :color="color" />
-                        <div v-if="filter.type === 'number_range'" class="py-4 px-8" style="min-width: 250px;">
+                        <div v-if="filter.type === 'number_range'" class="p-2" style="min-width: 250px;">
                             <NumberRangeFilter v-model="filter.value" :max="filter.max" :min="filter.min"
                                 :prefix="filter.prefix" :suffix="filter.suffix" :step="filter.step" :color="color"
                                 @update:model-value="updateNumberRangeFilter(filter)" />
                         </div>
-                        <div v-if="filter.type === 'date'" class="py-4 px-8" style="min-width: 300px;">
+                        <div v-if="filter.type === 'date'" class="p-2" style="min-width: 300px;">
                             <DateFilter :filter="filter" :on-filter-change="onFilterChange" :color="color" />
                         </div>
                     </div>

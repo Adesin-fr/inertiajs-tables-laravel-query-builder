@@ -1,5 +1,5 @@
 <template>
-    <div class="space-y-4">
+    <div class="space-y-2">
         <!-- Type Selector -->
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
