@@ -15,6 +15,7 @@ return new class extends Migration {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->tinyInteger('score');
             $table->string('email')->unique();
             $table->string('language_code', 2);
             $table->timestamps();

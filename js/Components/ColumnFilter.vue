@@ -54,6 +54,9 @@
                         <div v-if="filter.type === 'date'" class="p-2" style="min-width: 300px;">
                             <DateFilter :filter="filter" :on-filter-change="onFilterChange" :color="color" />
                         </div>
+                        <div v-if="filter.type === 'number'" class="p-2" style="min-width: 300px;">
+                            <NumberFilter :filter="filter" :on-filter-change="onFilterChange" :color="color" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -71,6 +74,7 @@ import { computed, ref, inject, onMounted, onUnmounted, Teleport } from "vue";
 import ToggleFilter from "./TableFilters/ToggleFilter.vue";
 import NumberRangeFilter from "./TableFilters/NumberRangeFilter.vue";
 import DateFilter from "./TableFilters/DateFilter.vue";
+import NumberFilter from "./TableFilters/NumberFilter.vue";
 import { twMerge } from "tailwind-merge";
 import { get_theme_part } from "../helpers.js";
 import translations from "../translations.js";
@@ -164,6 +168,8 @@ function filterIsNull(filter) {
         case "toggle":
             return false;
         case "date":
+            return !filter.value || (typeof filter.value === 'object' && !filter.value.type);
+        case "number":
             return !filter.value || (typeof filter.value === 'object' && !filter.value.type);
         default:
             return !filter.value;

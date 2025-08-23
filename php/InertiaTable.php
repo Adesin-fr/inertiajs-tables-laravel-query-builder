@@ -7,6 +7,7 @@ use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\Filterable;
 use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\NumberRangeFilter;
 use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\ToggleFilter;
 use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\DateFilter;
+use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\NumberFilter;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
@@ -224,6 +225,8 @@ class InertiaTable
                     ];
                 } elseif ($filter instanceof DateFilter) {
                     $filter->value = $queryFilters[$filter->key];
+                } elseif ($filter instanceof NumberFilter) {
+                    $filter->value = $queryFilters[$filter->key];
                 } else {
                     $filter->value = $queryFilters[$filter->key];
                 }
@@ -248,7 +251,10 @@ class InertiaTable
 
         return $this->searchInputs->map(function (SearchInput $searchInput) use ($filters) {
             if (array_key_exists($searchInput->key, $filters)) {
-                $searchInput->value = $filters[$searchInput->key];
+                // Only assign string values to SearchInput, skip arrays (like NumberFilter)
+                if (is_string($filters[$searchInput->key]) || is_null($filters[$searchInput->key])) {
+                    $searchInput->value = $filters[$searchInput->key];
+                }
             }
 
             return $searchInput;
@@ -424,6 +430,31 @@ class InertiaTable
             label: $label ?: Str::headline($key),
             value: $defaultValue,
             format: $format
+        ))->values();
+
+        return $this;
+    }
+
+    /**
+     * @param string $key
+     * @param string|null $label
+     * @param array|null $defaultValue
+     * @param string $prefix
+     * @param string $suffix
+     * @param float $step
+     * @return self
+     */
+    public function numberFilter(string $key, string $label = null, array $defaultValue = null, string $prefix = '', string $suffix = '', float $step = 1): self
+    {
+        $this->filters = $this->filters->reject(function (Filterable $filter) use ($key) {
+            return $filter->key === $key;
+        })->push(new NumberFilter(
+            key: $key,
+            label: $label ?: Str::headline($key),
+            value: $defaultValue,
+            prefix: $prefix,
+            suffix: $suffix,
+            step: $step
         ))->values();
 
         return $this;

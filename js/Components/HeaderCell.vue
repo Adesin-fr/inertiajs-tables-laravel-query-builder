@@ -25,11 +25,20 @@
           </slot>
         </span>
 
-        <!-- Column Filter -->
-        <slot name="filter">
-          <ColumnFilter v-if="cell.filters && cell.filters.length > 0" :column-key="cell.key" :filters="cell.filters"
-            :on-filter-change="cell.onFilterChange" :color="cell.color" @click.stop />
-        </slot>
+        <span class="flex items-center space-x-1">
+          <!-- Column Search -->
+          <slot name="search">
+            <ColumnSearch v-if="cell.searchable && cell.searchInputs && cell.searchInputs.length > 0"
+              :column-key="cell.key" :column-label="cell.label" :search-inputs="cell.searchInputs"
+              :on-search-change="cell.onSearchChange" :color="cell.color" @click.stop />
+          </slot>
+
+          <!-- Column Filter -->
+          <slot name="filter">
+            <ColumnFilter v-if="cell.filters && cell.filters.length > 0" :column-key="cell.key" :filters="cell.filters"
+              :on-filter-change="cell.onFilterChange" :color="cell.color" @click.stop />
+          </slot>
+        </span>
       </span>
     </component>
 
@@ -43,6 +52,7 @@
 import { computed, inject } from 'vue';
 import ColumnResizeHandle from './ColumnResizeHandle.vue';
 import ColumnFilter from './ColumnFilter.vue';
+import ColumnSearch from './ColumnSearch.vue';
 
 const props = defineProps({
   cell: {

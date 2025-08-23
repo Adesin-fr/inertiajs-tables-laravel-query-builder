@@ -25,7 +25,7 @@
                     </slot>
                 </div>
 
-                <slot v-if="!withGroupedMenu" name="tableAddSearchRow"
+                <slot v-if="!withGroupedMenu && !hideSearchInputsAboveTable" name="tableAddSearchRow"
                     :has-search-inputs="queryBuilderProps.hasSearchInputs"
                     :has-search-inputs-without-value="queryBuilderProps.hasSearchInputsWithoutValue"
                     :search-inputs="queryBuilderProps.searchInputsWithoutGlobal" :on-add="showSearchInput">
@@ -56,7 +56,8 @@
                 </slot>
             </div>
 
-            <slot name="tableSearchRows" :has-search-rows-with-value="queryBuilderProps.hasSearchInputsWithValue"
+            <slot v-if="!hideSearchInputsAboveTable" name="tableSearchRows"
+                :has-search-rows-with-value="queryBuilderProps.hasSearchInputsWithValue"
                 :search-inputs="queryBuilderProps.searchInputsWithoutGlobal"
                 :forced-visible-search-inputs="forcedVisibleSearchInputs" :on-change="changeSearchInputValue">
                 <TableSearchRows
@@ -261,6 +262,12 @@ const props = defineProps({
         default: true,
         required: false,
     },
+
+    hideSearchInputsAboveTable: {
+        type: Boolean,
+        default: false,
+        required: false,
+    },
 });
 
 const app = getCurrentInstance();
@@ -368,7 +375,7 @@ const defaultActions = ref({
         onChange: changeColumnStatus,
     },
     searchFields: {
-        show: queryBuilderProps.value.hasSearchInputs,
+        show: queryBuilderProps.value.hasSearchInputs && !props.hideSearchInputsAboveTable,
         searchInputs: queryBuilderProps.value.searchInputsWithoutGlobal,
         hasSearchInputsWithoutValue: queryBuilderProps.value.hasSearchInputsWithoutValue,
         onClick: showSearchInput,
@@ -769,8 +776,24 @@ function header(key) {
         filter.key.includes(key)
     );
 
+    // Vérifier si cette colonne est searchable en cherchant un searchInput correspondant
+    const columnSearchInputs = queryBuilderProps.value.searchInputs.filter(searchInput =>
+        searchInput.key === key
+    );
+
+    if (columnSearchInputs.length > 0) {
+        columnData.searchable = true;
+        columnData.searchInputs = columnSearchInputs;
+    } else {
+        columnData.searchable = false;
+        columnData.searchInputs = [];
+    }
+
     // Ajouter la fonction de changement de filtre
     columnData.onFilterChange = changeFilterValue;
+
+    // Ajouter la fonction de changement de recherche
+    columnData.onSearchChange = changeSearchInputValue;
 
     // Ajouter la couleur pour le thème
     columnData.color = props.color;

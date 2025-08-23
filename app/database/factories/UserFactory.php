@@ -18,6 +18,7 @@ class UserFactory extends Factory
     {
         return [
             'name'          => $this->faker->name(),
+            'score'         => $this->faker->numberBetween(1, 100),
             'email'         => $this->faker->unique()->safeEmail(),
             'language_code' => $this->faker->randomElement(['en', 'nl']),
         ];

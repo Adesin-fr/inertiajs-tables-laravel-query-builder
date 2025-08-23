@@ -1,11 +1,11 @@
 import { twMerge } from "tailwind-merge";
 
 export function get_theme_part(keys, fallbackTheme, themeVariables, ui) {
-    let currentFallbackTheme = { ...fallbackTheme };
+    let currentFallbackTheme = fallbackTheme ? { ...fallbackTheme } : {};
     let fallbackThemeClasses = null;
-    let currentThemeVariables = { ...themeVariables };
+    let currentThemeVariables = themeVariables ? { ...themeVariables } : {};
     let themeVariableClasses = null;
-    let currentUi = { ...ui };
+    let currentUi = ui ? { ...ui } : {};
     let uiClasses = null;
     for (const key of keys) {
         if (fallbackThemeClasses === null) {

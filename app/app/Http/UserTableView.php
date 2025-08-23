@@ -4,6 +4,8 @@ namespace App\Http;
 
 use AdesinFr\LaravelQueryBuilderInertiaJs\InertiaTable;
 use AdesinFr\LaravelQueryBuilderInertiaJs\QueryBuilderFilters\FiltersDate;
+use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\NumberRangeFilter;
+use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\NumberFilter;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Support\Collection;
@@ -27,8 +29,16 @@ class UserTableView
 
         $users = QueryBuilder::for(User::query())
             ->defaultSort('name')
-            ->allowedSorts(['name', 'email', 'language_code', 'created_at'])
-            ->allowedFilters(['name', 'email', 'language_code', $globalSearch, AllowedFilter::custom('created_at', new FiltersDate())])
+            ->allowedSorts(['name', 'email', 'language_code', 'created_at', 'score'])
+            ->allowedFilters([
+                'name',
+                'email',
+                'language_code',
+                $globalSearch,
+                AllowedFilter::custom('created_at', new FiltersDate()),
+                //NumberRangeFilter::getQueryBuilderFilter('score'),
+                NumberFilter::getQueryBuilderFilter('score')
+            ])
             ->{$paginateMethod}(request()->query('perPage', 10))
             ->withQueryString();
 
@@ -40,6 +50,7 @@ class UserTableView
                 ->defaultSort('name')
                 ->column(key: 'name', searchable: true, sortable: true, canBeHidden: false)
                 ->column(key: 'email', searchable: true, sortable: true, headerClass: 'hidden md:table-cell', bodyClass: 'hidden md:table-cell')
+                ->column(key: 'score', searchable: true, sortable: true, headerClass: 'hidden md:table-cell', bodyClass: 'hidden md:table-cell')
                 ->column(key: 'language_code', label: 'Language')
                 ->column(key: 'created_at', sortable: true, label: 'Created at')
                 ->column(label: 'Actions')
@@ -48,7 +59,8 @@ class UserTableView
                     'en' => 'English',
                     'nl' => 'Dutch',
                 ], label: 'Language')
-                ->dateFilter(key: 'created_at', label: 'Date de création', format: 'Y-m-d');
+                //->numberRangeFilter('score', 100, 0)
+                ->numberFilter(key: 'score', label: 'Filtrer le score');
         });
     }
 }

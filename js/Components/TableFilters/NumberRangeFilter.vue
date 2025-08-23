@@ -1,118 +1,73 @@
 <template>
-  <div
-    ref="range"
-    class="flex w-full my-4 items-center justify-center"
-    unselectable="on"
-    onselectstart="return false;"
-  >
-    <div class="py-1 relative min-w-full">
-      <div :class="getTheme('main_bar')">
-        <div
-          class="absolute"
-          :class="getTheme('selected_bar')"
-          :style="`width: ${rangeWidth}% !important; left: ${currentMinValueInPercent}% !important;`"
-        />
-        <div
-          :class="getTheme('button')"
-          class="absolute flex items-center justify-center -ml-2 top-0 cursor-pointer"
-          :style="`left: ${currentMinValueInPercent}%;`"
-          @mousedown="handleMouseDown($event, true)"
-        >
-          <div class="z-40">
-            <div
-              ref="popover_min"
-              class="relative shadow-md"
-            >
-              <div
-                :class="getTheme('popover')"
-                :style="getMarginTop(hasOverlap && displayFirstDown)"
-              >
-                <span v-if="prefix">{{ prefix }}</span>
-                {{ currentMinValue ?? 0 }}
-                <span v-if="suffix">{{ suffix }}</span>
-              </div>
-              <svg
-                class="absolute w-full h-2 left-0"
-                x="0px"
-                y="0px"
-                viewBox="0 0 255 255"
-                xml:space="preserve"
-                :class="[hasOverlap && displayFirstDown ? 'bottom-6 rotate-180' : 'top-100', getTheme('popover_arrow')]"
-              >
-                <polygon
-                  class="fill-current"
-                  points="0,0 127.5,127.5 255,0"
-                />
-              </svg>
+    <div ref="range" class="flex w-full my-4 items-center justify-center" unselectable="on"
+        onselectstart="return false;">
+        <div class="py-1 relative min-w-full">
+            <div :class="getTheme('main_bar')">
+                <div class="absolute" :class="getTheme('selected_bar')"
+                    :style="`width: ${rangeWidth}% !important; left: ${currentMinValueInPercent}% !important;`" />
+                <div :class="getTheme('button')"
+                    class="absolute flex items-center justify-center -ml-2 top-0 cursor-pointer"
+                    :style="`left: ${currentMinValueInPercent}%;`" @mousedown="handleMouseDown($event, true)">
+                    <div class="z-40">
+                        <div ref="popover_min" class="relative shadow-md">
+                            <div :class="getTheme('popover')" :style="getMarginTop(hasOverlap && displayFirstDown)">
+                                <span v-if="prefix">{{ prefix }}</span>
+                                {{ currentMinValue ?? 0 }}
+                                <span v-if="suffix">{{ suffix }}</span>
+                            </div>
+                            <svg class="absolute w-full h-2 left-0" x="0px" y="0px" viewBox="0 0 255 255"
+                                xml:space="preserve"
+                                :class="[hasOverlap && displayFirstDown ? 'bottom-6 rotate-180' : 'top-100', getTheme('popover_arrow')]">
+                                <polygon class="fill-current" points="0,0 127.5,127.5 255,0" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div :class="getTheme('button')"
+                    class="absolute flex items-center justify-center -ml-2 top-0 cursor-pointer"
+                    :style="`left: ${currentMaxValueInPercent}%;`" @mousedown="handleMouseDown($event, false)">
+                    <div class="z-40">
+                        <div ref="popover_max" class="relative shadow-md">
+                            <div :class="getTheme('popover')" :style="getMarginTop(hasOverlap && !displayFirstDown)">
+                                <span v-if="prefix">{{ prefix }}</span>
+                                {{ currentMaxValue ?? 0 }}
+                                <span v-if="suffix">{{ suffix }}</span>
+                            </div>
+                            <div draggable="true">
+                                <svg class="absolute w-full h-2 left-0 top-100" x="0px" y="0px" viewBox="0 0 255 255"
+                                    xml:space="preserve"
+                                    :class="[hasOverlap && !displayFirstDown ? 'bottom-6 rotate-180' : 'top-100', getTheme('popover_arrow')]">
+                                    <polygon class="fill-current" points="0,0 127.5,127.5 255,0" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute -ml-1 bottom-0 left-0 -mb-6" :class="getTheme('text')">
+                    <span v-if="prefix">{{ prefix }}</span>
+                    {{ min ?? 0 }}
+                    <span v-if="suffix">{{ suffix }}</span>
+                </div>
+                <div class="absolute -mr-1 bottom-0 right-0 -mb-6" :class="getTheme('text')">
+                    <span v-if="prefix">{{ prefix }}</span>
+                    {{ max ?? 0 }}
+                    <span v-if="suffix">{{ suffix }}</span>
+                </div>
             </div>
-          </div>
-        </div>
-        <div
-          :class="getTheme('button')"
-          class="absolute flex items-center justify-center -ml-2 top-0 cursor-pointer"
-          :style="`left: ${currentMaxValueInPercent}%;`"
-          @mousedown="handleMouseDown($event, false)"
-        >
-          <div class="z-40">
-            <div
-              ref="popover_max"
-              class="relative shadow-md"
-            >
-              <div
-                :class="getTheme('popover')"
-                :style="getMarginTop(hasOverlap && !displayFirstDown)"
-              >
-                <span v-if="prefix">{{ prefix }}</span>
-                {{ currentMaxValue ?? 0 }}
-                <span v-if="suffix">{{ suffix }}</span>
-              </div>
-              <div draggable="true">
-                <svg
-                  class="absolute w-full h-2 left-0 top-100"
-                  x="0px"
-                  y="0px"
-                  viewBox="0 0 255 255"
-                  xml:space="preserve"
-                  :class="[hasOverlap && !displayFirstDown ? 'bottom-6 rotate-180' : 'top-100', getTheme('popover_arrow')]"
-                >
-                  <polygon
-                    class="fill-current"
-                    points="0,0 127.5,127.5 255,0"
-                  />
-                </svg>
-              </div>
+
+            <!-- Reset Button -->
+            <div v-if="hasValue" class="flex justify-end mt-4">
+                <button type="button" :class="getTheme('reset_button')" @click="resetFilter">
+                    <span class="sr-only">{{ translations.reset_filter }}</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
-          </div>
         </div>
-        <div
-          class="absolute -ml-1 bottom-0 left-0 -mb-6"
-          :class="getTheme('text')"
-        >
-          <span v-if="prefix">{{ prefix }}</span>
-          {{ min ?? 0 }}
-          <span v-if="suffix">{{ suffix }}</span>
-        </div>
-        <div
-          class="absolute -mr-1 bottom-0 right-0 -mb-6"
-          :class="getTheme('text')"
-        >
-          <span v-if="prefix">{{ prefix }}</span>
-          {{ max ?? 0 }}
-          <span v-if="suffix">{{ suffix }}</span>
-        </div>
-      </div>
-      
-      <!-- Reset Button -->
-      <div v-if="hasValue" class="flex justify-end mt-4">
-        <button type="button" :class="getTheme('reset_button')" @click="resetFilter">
-          <span class="sr-only">{{ translations.reset_filter }}</span>
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -170,7 +125,55 @@ export default {
             moveMax: false,
             hasOverlap: false,
             internalValue: this.modelValue ? [...this.modelValue] : null,
-            fallbackTheme: null,
+            fallbackTheme: {
+                main_bar: {
+                    base: "h-2 rounded-full",
+                    color: {
+                        primary: "bg-gray-200",
+                        dootix: "bg-gray-200",
+                    },
+                },
+                selected_bar: {
+                    base: "h-2 rounded-full",
+                    color: {
+                        primary: "bg-indigo-600",
+                        dootix: "bg-gradient-to-r from-cyan-500 to-blue-600",
+                    },
+                },
+                button: {
+                    base: "h-4 w-4 rounded-full shadow border",
+                    color: {
+                        primary: "bg-white border-gray-300",
+                        dootix: "bg-white border-gray-300",
+                    },
+                },
+                popover: {
+                    base: "truncate text-xs rounded py-1 px-4",
+                    color: {
+                        primary: "bg-gray-600 text-white",
+                        dootix: "bg-gray-600 text-white",
+                    },
+                },
+                popover_arrow: {
+                    color: {
+                        primary: "text-gray-600",
+                        dootix: "text-gray-600",
+                    },
+                },
+                text: {
+                    color: {
+                        primary: "text-gray-700",
+                        dootix: "text-gray-700",
+                    },
+                },
+                reset_button: {
+                    base: "rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2",
+                    color: {
+                        primary: "text-gray-400 hover:text-gray-500 focus:ring-indigo-500",
+                        dootix: "text-gray-400 hover:text-gray-500 focus:ring-cyan-500",
+                    },
+                },
+            },
             translations: translations,
         };
     },
@@ -230,61 +233,9 @@ export default {
     mounted() {
         this.detectIfOverlap();
     },
-    beforeMount() {
-        this.fallbackTheme = {
-            main_bar: {
-                base: "h-2 rounded-full",
-                color: {
-                    primary: "bg-gray-200",
-                    dootix: "bg-gray-200",
-                },
-            },
-            selected_bar: {
-                base: "h-2 rounded-full",
-                color: {
-                    primary: "bg-indigo-600",
-                    dootix: "bg-gradient-to-r from-cyan-500 to-blue-600",
-                },
-            },
-            button: {
-                base: "h-4 w-4 rounded-full shadow border",
-                color: {
-                    primary: "bg-white border-gray-300",
-                    dootix: "bg-white border-gray-300",
-                },
-            },
-            popover: {
-                base: "truncate text-xs rounded py-1 px-4",
-                color: {
-                    primary: "bg-gray-600 text-white",
-                    dootix: "bg-gray-600 text-white",
-                },
-            },
-            popover_arrow: {
-                color: {
-                    primary: "text-gray-600",
-                    dootix: "text-gray-600",
-                },
-            },
-            text: {
-                color: {
-                    primary: "text-gray-700",
-                    dootix: "text-gray-700",
-                },
-            },
-            reset_button: {
-                base: "rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2",
-                color: {
-                    primary: "text-gray-400 hover:text-gray-500 focus:ring-indigo-500",
-                    dootix: "text-gray-400 hover:text-gray-500 focus:ring-cyan-500",
-                },
-            },
-        };
-        return fallbackTheme;
-    },
     hasValue() {
-        return this.internalValue && 
-               (Number(Math.max(...this.internalValue)) !== Number(this.max) || 
+        return this.internalValue &&
+            (Number(Math.max(...this.internalValue)) !== Number(this.max) ||
                 Number(Math.min(...this.internalValue)) !== Number(this.min));
     },
     methods: {
