@@ -54,18 +54,6 @@
                     <span v-if="suffix">{{ suffix }}</span>
                 </div>
             </div>
-
-            <!-- Reset Button -->
-            <div v-if="hasValue" class="flex justify-end mt-4">
-                <button type="button" :class="getTheme('reset_button')" @click="resetFilter">
-                    <span class="sr-only">{{ translations.reset_filter }}</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
         </div>
     </div>
 </template>
@@ -73,7 +61,6 @@
 <script>
 import { twMerge } from "tailwind-merge";
 import { get_theme_part } from "../../helpers.js";
-import translations from "../../translations.js";
 
 export default {
     name: "SimpleMultiRange",
@@ -125,56 +112,7 @@ export default {
             moveMax: false,
             hasOverlap: false,
             internalValue: this.modelValue ? [...this.modelValue] : null,
-            fallbackTheme: {
-                main_bar: {
-                    base: "h-2 rounded-full",
-                    color: {
-                        primary: "bg-gray-200",
-                        dootix: "bg-gray-200",
-                    },
-                },
-                selected_bar: {
-                    base: "h-2 rounded-full",
-                    color: {
-                        primary: "bg-indigo-600",
-                        dootix: "bg-gradient-to-r from-cyan-500 to-blue-600",
-                    },
-                },
-                button: {
-                    base: "h-4 w-4 rounded-full shadow border",
-                    color: {
-                        primary: "bg-white border-gray-300",
-                        dootix: "bg-white border-gray-300",
-                    },
-                },
-                popover: {
-                    base: "truncate text-xs rounded py-1 px-4",
-                    color: {
-                        primary: "bg-gray-600 text-white",
-                        dootix: "bg-gray-600 text-white",
-                    },
-                },
-                popover_arrow: {
-                    color: {
-                        primary: "text-gray-600",
-                        dootix: "text-gray-600",
-                    },
-                },
-                text: {
-                    color: {
-                        primary: "text-gray-700",
-                        dootix: "text-gray-700",
-                    },
-                },
-                reset_button: {
-                    base: "rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2",
-                    color: {
-                        primary: "text-gray-400 hover:text-gray-500 focus:ring-indigo-500",
-                        dootix: "text-gray-400 hover:text-gray-500 focus:ring-cyan-500",
-                    },
-                },
-            },
-            translations: translations,
+            fallbackTheme: null,
         };
     },
     computed: {
@@ -233,10 +171,49 @@ export default {
     mounted() {
         this.detectIfOverlap();
     },
-    hasValue() {
-        return this.internalValue &&
-            (Number(Math.max(...this.internalValue)) !== Number(this.max) ||
-                Number(Math.min(...this.internalValue)) !== Number(this.min));
+    beforeMount() {
+        this.fallbackTheme = {
+            main_bar: {
+                base: "h-2 rounded-full",
+                color: {
+                    primary: "bg-gray-200",
+                    dootix: "bg-gray-200",
+                },
+            },
+            selected_bar: {
+                base: "h-2 rounded-full",
+                color: {
+                    primary: "bg-indigo-600",
+                    dootix: "bg-gradient-to-r from-cyan-500 to-blue-600",
+                },
+            },
+            button: {
+                base: "h-4 w-4 rounded-full shadow border",
+                color: {
+                    primary: "bg-white border-gray-300",
+                    dootix: "bg-white border-gray-300",
+                },
+            },
+            popover: {
+                base: "truncate text-xs rounded py-1 px-4",
+                color: {
+                    primary: "bg-gray-600 text-white",
+                    dootix: "bg-gray-600 text-white",
+                },
+            },
+            popover_arrow: {
+                color: {
+                    primary: "text-gray-600",
+                    dootix: "text-gray-600",
+                },
+            },
+            text: {
+                color: {
+                    primary: "text-gray-700",
+                    dootix: "text-gray-700",
+                },
+            },
+        };
     },
     methods: {
         getMarginTop(isDown) {
@@ -300,10 +277,6 @@ export default {
             window.removeEventListener("mousemove", this.handleMouseMove);
             window.removeEventListener("mouseup", this.handleMouseUp);
             this.$emit("update:modelValue", [this.currentMinValue, this.currentMaxValue]);
-        },
-        resetFilter() {
-            this.internalValue = [this.min, this.max];
-            this.$emit('update:modelValue', this.internalValue);
         },
         getTheme(item) {
             return twMerge(

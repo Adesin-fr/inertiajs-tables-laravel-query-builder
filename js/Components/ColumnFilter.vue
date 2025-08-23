@@ -24,38 +24,21 @@
                         {{ filter.label }}
                     </h3>
                     <div class="p-2">
-                        <div v-if="filter.type === 'select'" class="space-y-3">
-                            <select :name="filter.key" :value="filter.value" :class="getTheme('select')"
-                                @change="onFilterChange(filter.key, $event.target.value)">
-                                <option v-for="(option, optionKey) in filter.options" :key="optionKey"
-                                    :value="optionKey">
-                                    {{ option }}
-                                </option>
-                            </select>
-                            <div v-if="filter.value && filter.value !== ''" class="flex justify-end">
-                                <button type="button" :class="getTheme('reset_button')"
-                                    @click="onFilterChange(filter.key, '')">
-                                    <span class="sr-only">{{ translations.reset_filter }}</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
+                        <select v-if="filter.type === 'select'" :name="filter.key" :value="filter.value"
+                            :class="getTheme('select')" @change="onFilterChange(filter.key, $event.target.value)">
+                            <option v-for="(option, optionKey) in filter.options" :key="optionKey" :value="optionKey">
+                                {{ option }}
+                            </option>
+                        </select>
                         <ToggleFilter v-if="filter.type === 'toggle'" :filter="filter"
                             :on-filter-change="onFilterChange" :color="color" />
-                        <div v-if="filter.type === 'number_range'" class="p-2" style="min-width: 250px;">
+                        <div v-if="filter.type === 'number_range'" class="py-4 px-8" style="min-width: 250px;">
                             <NumberRangeFilter v-model="filter.value" :max="filter.max" :min="filter.min"
                                 :prefix="filter.prefix" :suffix="filter.suffix" :step="filter.step" :color="color"
                                 @update:model-value="updateNumberRangeFilter(filter)" />
                         </div>
-                        <div v-if="filter.type === 'date'" class="p-2" style="min-width: 300px;">
+                        <div v-if="filter.type === 'date'" class="py-4 px-8" style="min-width: 300px;">
                             <DateFilter :filter="filter" :on-filter-change="onFilterChange" :color="color" />
-                        </div>
-                        <div v-if="filter.type === 'number'" class="p-2" style="min-width: 300px;">
-                            <NumberFilter :filter="filter" :on-filter-change="onFilterChange" :color="color" />
                         </div>
                     </div>
                 </div>
@@ -74,10 +57,8 @@ import { computed, ref, inject, onMounted, onUnmounted, Teleport } from "vue";
 import ToggleFilter from "./TableFilters/ToggleFilter.vue";
 import NumberRangeFilter from "./TableFilters/NumberRangeFilter.vue";
 import DateFilter from "./TableFilters/DateFilter.vue";
-import NumberFilter from "./TableFilters/NumberFilter.vue";
 import { twMerge } from "tailwind-merge";
 import { get_theme_part } from "../helpers.js";
-import translations from "../translations.js";
 
 const props = defineProps({
     columnKey: {
@@ -169,8 +150,6 @@ function filterIsNull(filter) {
             return false;
         case "date":
             return !filter.value || (typeof filter.value === 'object' && !filter.value.type);
-        case "number":
-            return !filter.value || (typeof filter.value === 'object' && !filter.value.type);
         default:
             return !filter.value;
     }
@@ -199,13 +178,6 @@ const fallbackTheme = {
         color: {
             primary: "border-gray-300 focus:ring-indigo-500 focus:border-indigo-500",
             dootix: "border-gray-300 focus:ring-cyan-500 focus:border-blue-500",
-        },
-    },
-    reset_button: {
-        base: "rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2",
-        color: {
-            primary: "text-gray-400 hover:text-gray-500 focus:ring-indigo-500",
-            dootix: "text-gray-400 hover:text-gray-500 focus:ring-cyan-500",
         },
     },
 };

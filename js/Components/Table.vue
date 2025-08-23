@@ -140,8 +140,12 @@
                             <span class="italic text-sm px-2" v-if="hasCheckboxes">{{ lineCountLabel }}</span>
                             <Pagination :on-click="visitPageFromUrl" :has-data="hasData" :meta="resourceMeta"
                                 :per-page-options="queryBuilderProps.perPageOptions"
-                                :on-per-page-change="onPerPageChange" :color="color" 
-                                :show-export-button="showExportButton" :export-url="exportUrlWithParams" />
+                                :on-per-page-change="onPerPageChange" :color="color"
+                                :show-export-button="showExportButton" :export-url="exportUrlWithParams">
+                                <template #export-button="exportButtonProps">
+                                    <slot name="export-button" v-bind="exportButtonProps" />
+                                </template>
+                            </Pagination>
                         </div>
                     </slot>
                 </TableWrapper>
@@ -436,10 +440,10 @@ const exportUrlWithParams = computed(() => {
     }
 
     const currentUrl = new URL(window.location.href);
-    
+
     // Add the export parameter
     currentUrl.searchParams.set('do_export', '1');
-    
+
     return currentUrl.toString();
 });
 
