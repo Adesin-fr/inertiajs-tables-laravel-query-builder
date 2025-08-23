@@ -141,7 +141,12 @@
                             <Pagination :on-click="visitPageFromUrl" :has-data="hasData" :meta="resourceMeta"
                                 :per-page-options="queryBuilderProps.perPageOptions"
                                 :on-per-page-change="onPerPageChange" :color="color"
-                                :show-export-button="showExportButton" :export-url="exportUrlWithParams" />
+                                :show-export-button="showExportButton" :export-url="exportUrlWithParams">
+                                <!-- Slot pour personnaliser le bouton export -->
+                                <template #exportButton="exportProps">
+                                    <slot name="exportButton" v-bind="exportProps" />
+                                </template>
+                            </Pagination>
                         </div>
                     </slot>
                 </TableWrapper>

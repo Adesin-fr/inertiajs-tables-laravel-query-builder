@@ -842,6 +842,7 @@ The `Table.vue` has several slots that you can use to inject your own implementa
 | tableWrapper      | The component that _wraps_ the table element, handling overflow, shadow, padding, etc. |
 | head              | The location of the table header.                                                      |
 | body              | The location of the table body.                                                        |
+| exportButton      | The CSV export button. Provides `exportUrl` and `translations` as slot props.         |
 | with-grouped-menu | Use the grouped menu instead of multiple buttons                                       |
 | pagination        | The location of the paginator.                                                         |
 | color             | The style of the table                                                                 |
@@ -856,6 +857,72 @@ Each slot is provided with props to interact with the parent `Table` component.
                 placeholder="Custom Global Search Component..."
                 @input="slotProps.onChange($event.target.value)"
             />
+        </template>
+    </Table>
+</template>
+```
+
+#### Customizing the Export Button
+
+The `exportButton` slot allows you to customize the CSV export functionality with your own button design and behavior:
+
+```vue
+<template>
+    <Table :resource="users" :show-export-button="true">
+        <!-- Custom export button with different styling -->
+        <template #exportButton="{ exportUrl, translations }">
+            <button @click="customExportFunction(exportUrl)" 
+                class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                <svg class="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z"/>
+                </svg>
+                {{ translations.export_csv }}
+            </button>
+        </template>
+    </Table>
+</template>
+
+<script setup>
+const customExportFunction = (exportUrl) => {
+    // Add custom logic before export
+    console.log('Starting export...');
+    
+    // Perform the actual export
+    window.location.href = exportUrl;
+    
+    // Add custom logic after export
+    // e.g., analytics tracking, notifications, etc.
+};
+</script>
+```
+
+You can also create more complex export options:
+
+```vue
+<template>
+    <Table :resource="users" :show-export-button="true">
+        <!-- Export dropdown with multiple options -->
+        <template #exportButton="{ exportUrl, translations }">
+            <div class="relative">
+                <button @click="toggleExportMenu" 
+                    class="px-4 py-2 border rounded-md bg-white hover:bg-gray-50">
+                    Export Options
+                    <svg class="h-4 w-4 ml-2 inline" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
+                    </svg>
+                </button>
+                <div v-if="showMenu" class="absolute mt-2 w-48 bg-white rounded-md shadow-lg border">
+                    <a :href="exportUrl" class="block px-4 py-2 hover:bg-gray-100">
+                        Export as CSV
+                    </a>
+                    <button @click="exportAsExcel" class="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                        Export as Excel
+                    </button>
+                    <button @click="exportAsPDF" class="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                        Export as PDF
+                    </button>
+                </div>
+            </div>
         </template>
     </Table>
 </template>
