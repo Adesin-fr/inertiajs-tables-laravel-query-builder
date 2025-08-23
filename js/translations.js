@@ -32,6 +32,8 @@ const translationsObject = {
         number_range: "Number range",
         start_number: "Start number",
         end_number: "End number",
+        // Export translations
+        export_csv: "CSV",
     }
 };
 

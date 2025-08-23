@@ -134,12 +134,14 @@
                     </slot>
 
                     <slot name="pagination" :on-click="visitPageFromUrl" :has-data="hasData" :meta="resourceMeta"
-                        :per-page-options="queryBuilderProps.perPageOptions" :on-per-page-change="onPerPageChange">
+                        :per-page-options="queryBuilderProps.perPageOptions" :on-per-page-change="onPerPageChange"
+                        :show-export-button="showExportButton" :export-url="exportUrlWithParams">
                         <div class="flex justify-between bg-white px-2 py-3 items-center border-t border-gray-200">
                             <span class="italic text-sm px-2" v-if="hasCheckboxes">{{ lineCountLabel }}</span>
                             <Pagination :on-click="visitPageFromUrl" :has-data="hasData" :meta="resourceMeta"
                                 :per-page-options="queryBuilderProps.perPageOptions"
-                                :on-per-page-change="onPerPageChange" :color="color" />
+                                :on-per-page-change="onPerPageChange" :color="color" 
+                                :show-export-button="showExportButton" :export-url="exportUrlWithParams" />
                         </div>
                     </slot>
                 </TableWrapper>
@@ -264,6 +266,11 @@ const props = defineProps({
     },
 
     hideSearchInputsAboveTable: {
+        type: Boolean,
+        default: false,
+        required: false,
+    },
+    showExportButton: {
         type: Boolean,
         default: false,
         required: false,
@@ -421,6 +428,19 @@ const canBeReset = computed(() => {
     });
 
     return dirty;
+});
+
+const exportUrlWithParams = computed(() => {
+    if (!props.showExportButton) {
+        return null;
+    }
+
+    const currentUrl = new URL(window.location.href);
+    
+    // Add the export parameter
+    currentUrl.searchParams.set('do_export', '1');
+    
+    return currentUrl.toString();
 });
 
 function resetQuery() {
