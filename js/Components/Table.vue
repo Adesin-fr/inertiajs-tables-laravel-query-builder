@@ -595,13 +595,8 @@ function visitPageFromUrl(url) {
         return null;
     }
 
-    const pageName = usePage().props.queryBuilderProps[props.name].pageName ?? "page";
-    const page = new URL(url)?.searchParams?.get(pageName);
-    if (page !== null) {
-        queryBuilderData.value.page = page;
-    } else {
-        visit(url);
-    }
+    // Directly visit the URL instead of trying to modify queryBuilderData.page
+    visit(url);
 }
 
 function generateNewQueryString() {
