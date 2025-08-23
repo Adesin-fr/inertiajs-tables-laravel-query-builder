@@ -1179,6 +1179,132 @@ The CSV export button is automatically added to the table interface. The export 
 
 The export functionality is built into the `Table.vue` component and requires no additional configuration.
 
+### Custom Export Callbacks ✨ **NEW!**
+
+You can now provide a custom callback function to handle exports manually. This allows you to customize the export format, apply additional processing, or export to different formats like Excel or JSON.
+
+#### Basic Custom Export
+
+```php
+return InertiaTable::make()
+    ->withQueryBuilder($queryBuilder)
+    ->column('name', 'Name', searchable: true, sortable: true)
+    ->column('email', 'Email', searchable: true, sortable: true)
+    ->withExportCallback(function ($queryBuilder) {
+        // The callback receives the QueryBuilder with all filters applied
+        $data = $queryBuilder->get();
+
+        // Custom data processing
+        $processedData = $data->map(function ($user) {
+            return [
+                'ID' => $user->id,
+                'Full Name' => strtoupper($user->name),
+                'Email' => $user->email,
+                'Registration Date' => $user->created_at->format('d/m/Y'),
+                'Status' => $user->email_verified_at ? 'Verified' : 'Unverified',
+            ];
+        });
+
+        // Custom CSV generation with semicolon separator
+        $csv = "\xEF\xBB\xBF"; // UTF-8 BOM
+
+        if ($processedData->isNotEmpty()) {
+            // Headers
+            $headers = array_keys($processedData->first());
+            $csv .= implode(';', array_map(function ($header) {
+                return '"' . str_replace('"', '""', $header) . '"';
+            }, $headers)) . "\n";
+
+            // Data rows
+            foreach ($processedData as $row) {
+                $csvRow = array_map(function ($value) {
+                    return '"' . str_replace('"', '""', $value) . '"';
+                }, array_values($row));
+                $csv .= implode(';', $csvRow) . "\n";
+            }
+        }
+
+        return response($csv)
+            ->header('Content-Type', 'text/csv; charset=utf-8')
+            ->header('Content-Disposition', 'attachment; filename="users-custom-export-' . now()->format('Y-m-d-H-i-s') . '.csv"');
+    })
+    ->render('Users/Index');
+```
+
+#### Export to Different Formats
+
+```php
+return InertiaTable::make()
+    ->withQueryBuilder($queryBuilder)
+    ->column('name', 'Name')
+    ->column('email', 'Email')
+    ->withExportCallback(function ($queryBuilder) {
+        $data = $queryBuilder->get();
+
+        // Export as JSON
+        $exportData = [
+            'metadata' => [
+                'exported_at' => now()->toISOString(),
+                'total_records' => $data->count(),
+                'applied_filters' => request()->get('filter', []),
+            ],
+            'users' => $data->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'created_at' => $user->created_at->toISOString(),
+                ];
+            }),
+        ];
+
+        return response()->json($exportData)
+            ->header('Content-Disposition', 'attachment; filename="users-export-' . now()->format('Y-m-d-H-i-s') . '.json"');
+    })
+    ->render('Users/Index');
+```
+
+#### Integration with Laravel Excel
+
+```php
+// Using maatwebsite/excel package
+return InertiaTable::make()
+    ->withQueryBuilder($queryBuilder)
+    ->column('name', 'Name')
+    ->column('email', 'Email')
+    ->withExportCallback(function ($queryBuilder) {
+        // Use Laravel Excel for advanced Excel exports
+        return Excel::download(new UsersExport($queryBuilder), 'users.xlsx');
+    })
+    ->render('Users/Index');
+```
+
+#### Custom Export Service
+
+```php
+return InertiaTable::make()
+    ->withQueryBuilder($queryBuilder)
+    ->column('name', 'Name')
+    ->column('email', 'Email')
+    ->withExportCallback(function ($queryBuilder) {
+        // Delegate to a dedicated export service
+        $exportService = app(UserExportService::class);
+        return $exportService->exportWithCustomLogic($queryBuilder);
+    })
+    ->render('Users/Index');
+```
+
+**Key Features of Custom Export Callbacks:**
+
+-   **Full Control**: Complete control over export format and processing
+-   **QueryBuilder Access**: Receive the QueryBuilder with all filters and searches applied
+-   **Multiple Formats**: Export to CSV, Excel, JSON, PDF, or any custom format
+-   **Data Processing**: Apply custom transformations and formatting before export
+-   **Service Integration**: Easily integrate with existing export services or packages
+-   **Preserves Filters**: All table filters, searches, and sorting are automatically applied to the QueryBuilder
+
+The custom export callback completely replaces the default CSV export behavior when defined, giving you full flexibility over the export process.
+
 ## Testing
 
 A huge [Laravel Dusk](https://laravel.com/docs/9.x/dusk) E2E test-suite can be found in the `app` directory. Here you'll find a Laravel + Inertia application.

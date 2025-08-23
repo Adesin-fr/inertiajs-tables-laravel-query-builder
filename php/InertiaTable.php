@@ -25,14 +25,14 @@ class InertiaTable
     private Collection $columns;
     private Collection $searchInputs;
     private Collection $filters;
-    private array $columnFilters = []; // Nouveau : Association colonne -> filtres
+    private array $columnFilters = [];
     private string $defaultSort = '';
 
-    // Nouvelles propriétés pour l'API fluide
     private array $data = [];
     private bool $handleExport = true;
-    private ?\Spatie\QueryBuilder\QueryBuilder $queryBuilder = null;
+    private ?QueryBuilder $queryBuilder = null;
     private $queryBuilderCallback = null;
+    private $exportCallback = null;
     private string $paginateMethod = 'paginate';
     private ?string $resourceClass = null;
 
@@ -113,6 +113,20 @@ class InertiaTable
     public function withQueryBuilderCallback(callable $callback): self
     {
         $this->queryBuilderCallback = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Set a callback to handle CSV export manually.
+     * The callback will receive the QueryBuilder instance as parameter.
+     *
+     * @param callable $callback
+     * @return self
+     */
+    public function withExportCallback(callable $callback): self
+    {
+        $this->exportCallback = $callback;
 
         return $this;
     }
@@ -744,6 +758,12 @@ class InertiaTable
             return response('No query builder available for export', 400);
         }
 
+        // If a custom export callback is defined, use it instead of the default export logic
+        if ($this->exportCallback) {
+            return call_user_func($this->exportCallback, $queryBuilder);
+        }
+
+        // Default export logic
         // Create a fresh query builder with the same base query but apply current request filters
         $exportQueryBuilder = clone $queryBuilder;
 

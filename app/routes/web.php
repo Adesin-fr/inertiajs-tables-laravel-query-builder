@@ -27,5 +27,14 @@ Route::get('/users/resource/simple', fn() => $table(resource: true, paginateMeth
 Route::get('/users/eloquent/cursor', fn() => $table(resource: false, paginateMethod: 'cursorPaginate'));
 Route::get('/users/resource/cursor', fn() => $table(resource: true, paginateMethod: 'cursorPaginate'));
 
+// Routes pour les exemples d'export personnalisé
+Route::get('/users/custom-export', function () {
+    return (new App\Http\UserTableWithCustomExport)();
+});
+
+Route::get('/users/excel-export', function () {
+    return (new App\Http\UserTableWithExcelExport)();
+});
+
 // Route for multiple tables example
 Route::get('/dashboard', \App\Http\MultipleTablesView::class)->name('dashboard');
