@@ -17,13 +17,23 @@ const exportExcel = () => {
     showExportMenu.value = false;
     // Ici vous pouvez implémenter la logique d'export Excel personnalisée
 };
+
+const userRowStyle = (user) => {
+    if (user.score > 80) {
+        return 'bg-green-50';
+    } else if (user.score > 50) {
+        return 'bg-yellow-50';
+    }
+    return 'bg-red-50';
+};
+
 </script>
 
 <template>
     <div class="hidden md:table-cell"></div>
     <BreezeGuestLayout>
         <Table :resource="users" :input-debounce-ms="50" :resizeable-columns="true" :show-export-button="true"
-            :hide-search-inputs-above-table="true">
+            :row-class="userRowStyle" :hide-search-inputs-above-table="true">
             <template #cell(actions)="{ item: user }">
                 <a :href="`/users/${user.id}/edit`">
                     Edit
@@ -32,7 +42,7 @@ const exportExcel = () => {
             <!-- Exemple avec un bouton export en forme de dropdown -->
             <template #exportButton="{ exportUrl, translations }">
                 <div class="relative">
-                    <button @click="toggleExportMenu" 
+                    <button @click="toggleExportMenu"
                         class="relative inline-flex items-center px-4 py-2 border border-green-300 text-sm font-medium rounded-md text-green-700 bg-green-50 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                         <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -44,11 +54,13 @@ const exportExcel = () => {
                         </svg>
                     </button>
                     <!-- Menu dropdown (simplifié) -->
-                    <div v-if="showExportMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border">
+                    <div v-if="showExportMenu"
+                        class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border">
                         <a :href="exportUrl" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             Export CSV
                         </a>
-                        <button @click="exportExcel" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <button @click="exportExcel"
+                            class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             Export Excel (personnalisé)
                         </button>
                     </div>

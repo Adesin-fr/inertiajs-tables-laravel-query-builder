@@ -100,11 +100,7 @@
                                 <tbody class="divide-y divide-gray-200 bg-white">
                                     <slot name="body" :show="show">
                                         <tr v-for="(item, key) in resourceData" :key="`table-${name}-row-${key}`"
-                                            class="" :class="{
-                                                'bg-gray-50': striped && key % 2,
-                                                'hover:bg-gray-100': striped,
-                                                'hover:bg-gray-50': !striped
-                                            }">
+                                            :class="getRowClass(item, key)">
                                             <td class="whitespace-nowrap text-sm text-gray-500" v-if="hasCheckboxes"
                                                 style="width: 60px;">
                                                 <input type="checkbox" :id="`table-${name}-select-${key}`"
@@ -280,6 +276,11 @@ const props = defineProps({
         default: false,
         required: false,
     },
+    rowClass: {
+        type: Function,
+        default: null,
+        required: false,
+    },
 });
 
 const app = getCurrentInstance();
@@ -434,6 +435,31 @@ const canBeReset = computed(() => {
 
     return dirty;
 });
+
+const getRowClass = (item, index) => {
+    let classes = [];
+
+    // Default striped and hover classes
+    if (props.striped && index % 2) {
+        classes.push('bg-gray-50');
+    }
+
+    if (props.striped) {
+        classes.push('hover:bg-gray-100');
+    } else {
+        classes.push('hover:bg-gray-50');
+    }
+
+    // Custom row class function
+    if (props.rowClass && typeof props.rowClass === 'function') {
+        const customClass = props.rowClass(item);
+        if (customClass) {
+            classes.push(customClass);
+        }
+    }
+
+    return classes.join(' ');
+};
 
 const exportUrlWithParams = computed(() => {
     if (!props.showExportButton) {

@@ -27,6 +27,7 @@ This package is a fork of [protonemedia/inertiajs-tables-laravel-query-builder],
 -   Pagination (support for Eloquent/API Resource/Simple/Cursor)
 -   Automatically updates the query string (by using [Inertia's replace](https://inertiajs.com/manual-visits#browser-history) feature)
 -   Customizable header and body cells classes
+-   **Custom row styling**: Apply conditional CSS classes to table rows based on data
 -   Resizeable columns ✅
 
 ## Compatibility
@@ -657,10 +658,46 @@ The `Table` has some additional properties to tweak its front-end behaviour.
 | preventOverlappingRequests | Cancels a previous visit on new user input to prevent an inconsistent state.                                                                                                                              | `true`  |
 | inputDebounceMs            | Number of ms to wait before refreshing the table on user input.                                                                                                                                           | 350     |
 | preserveScroll             | Configures the [Scroll preservation](https://inertiajs.com/scroll-management#scroll-preservation) behavior. You may also pass `table-top` to this property to scroll to the top of the table on new data. | false   |
+| rowClass                   | A function that receives the row item as parameter and returns a CSS class string to apply to the table row. Useful for conditional row styling.                                                          | `null`  |
 
 The `Table` has some events that you can use
 
 -   rowClicked: this event is fired when the user click on the row. The event give you this informations: event, item, key. Be careful if you use this event with a clickable element inside the row like an action button. Don't forget to use `event.stopPropagation()` for all other clickable elements
+
+#### Custom row styling
+
+You can apply custom CSS classes to table rows based on the row data using the `rowClass` property. This function receives the row item as a parameter and should return a CSS class string.
+
+```vue
+<template>
+    <Table :resource="users" :row-class="getRowClass"> </Table>
+</template>
+
+<script setup>
+import { defineProps } from "vue";
+
+defineProps(["users"]);
+
+const getRowClass = (user) => {
+    if (user.status === "inactive") {
+        return "opacity-50 bg-red-50";
+    }
+    if (user.role === "admin") {
+        return "bg-blue-50 border-l-4 border-blue-500";
+    }
+    if (
+        user.created_at &&
+        new Date(user.created_at) >
+            new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+    ) {
+        return "bg-green-50";
+    }
+    return null; // No custom class
+};
+</script>
+```
+
+For more advanced examples of custom row styling, see [examples/RowClassExamples.vue](examples/RowClassExamples.vue).
 
 #### Custom column cells
 
@@ -842,7 +879,7 @@ The `Table.vue` has several slots that you can use to inject your own implementa
 | tableWrapper      | The component that _wraps_ the table element, handling overflow, shadow, padding, etc. |
 | head              | The location of the table header.                                                      |
 | body              | The location of the table body.                                                        |
-| exportButton      | The CSV export button. Provides `exportUrl` and `translations` as slot props.         |
+| exportButton      | The CSV export button. Provides `exportUrl` and `translations` as slot props.          |
 | with-grouped-menu | Use the grouped menu instead of multiple buttons                                       |
 | pagination        | The location of the paginator.                                                         |
 | color             | The style of the table                                                                 |
@@ -871,10 +908,18 @@ The `exportButton` slot allows you to customize the CSV export functionality wit
     <Table :resource="users" :show-export-button="true">
         <!-- Custom export button with different styling -->
         <template #exportButton="{ exportUrl, translations }">
-            <button @click="customExportFunction(exportUrl)" 
-                class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                <svg class="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z"/>
+            <button
+                @click="customExportFunction(exportUrl)"
+                class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+                <svg
+                    class="h-4 w-4 mr-2"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                >
+                    <path
+                        d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z"
+                    />
                 </svg>
                 {{ translations.export_csv }}
             </button>
@@ -885,11 +930,11 @@ The `exportButton` slot allows you to customize the CSV export functionality wit
 <script setup>
 const customExportFunction = (exportUrl) => {
     // Add custom logic before export
-    console.log('Starting export...');
-    
+    console.log("Starting export...");
+
     // Perform the actual export
     window.location.href = exportUrl;
-    
+
     // Add custom logic after export
     // e.g., analytics tracking, notifications, etc.
 };
@@ -904,21 +949,41 @@ You can also create more complex export options:
         <!-- Export dropdown with multiple options -->
         <template #exportButton="{ exportUrl, translations }">
             <div class="relative">
-                <button @click="toggleExportMenu" 
-                    class="px-4 py-2 border rounded-md bg-white hover:bg-gray-50">
+                <button
+                    @click="toggleExportMenu"
+                    class="px-4 py-2 border rounded-md bg-white hover:bg-gray-50"
+                >
                     Export Options
-                    <svg class="h-4 w-4 ml-2 inline" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
+                    <svg
+                        class="h-4 w-4 ml-2 inline"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                    >
+                        <path
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        />
                     </svg>
                 </button>
-                <div v-if="showMenu" class="absolute mt-2 w-48 bg-white rounded-md shadow-lg border">
-                    <a :href="exportUrl" class="block px-4 py-2 hover:bg-gray-100">
+                <div
+                    v-if="showMenu"
+                    class="absolute mt-2 w-48 bg-white rounded-md shadow-lg border"
+                >
+                    <a
+                        :href="exportUrl"
+                        class="block px-4 py-2 hover:bg-gray-100"
+                    >
                         Export as CSV
                     </a>
-                    <button @click="exportAsExcel" class="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                    <button
+                        @click="exportAsExcel"
+                        class="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                    >
                         Export as Excel
                     </button>
-                    <button @click="exportAsPDF" class="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                    <button
+                        @click="exportAsPDF"
+                        class="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                    >
                         Export as PDF
                     </button>
                 </div>
@@ -1408,6 +1473,14 @@ php artisan dusk
 -   When using a custom `thead`, the `showColumn` method has been renamed to `show`.
 -   The `setTranslations` method is no longer part of the `Pagination` component, but should be imported.
 -   The templates and logic of the components are not separated anymore. Use slots to inject your own implementations.
+
+## Examples
+
+The `examples/` folder contains comprehensive usage examples:
+
+-   **[SimpleRowClassExample.vue](examples/SimpleRowClassExample.vue)**: Quick example showing basic usage of the `rowClass` property
+-   **[ExportButtonExamples.vue](examples/ExportButtonExamples.vue)**: Complete examples of custom CSV export buttons with different styles and functionalities
+-   **[RowClassExamples.vue](examples/RowClassExamples.vue)**: Advanced examples of custom row styling using the `rowClass` property
 
 ## Contributing
 
