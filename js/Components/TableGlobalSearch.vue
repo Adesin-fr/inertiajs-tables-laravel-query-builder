@@ -19,12 +19,10 @@ import { twMerge } from "tailwind-merge";
 import { get_theme_part } from "../helpers.js";
 import { getTranslations } from "../translations.js";
 
-const translations = getTranslations();
-
 const props = defineProps({
     label: {
         type: String,
-        default: translations.search,
+        default: "Search...",
         required: false,
     },
 
@@ -51,6 +49,8 @@ const props = defineProps({
         default: {},
     },
 });
+
+const translations = getTranslations();
 
 // Theme
 const fallbackTheme = {
