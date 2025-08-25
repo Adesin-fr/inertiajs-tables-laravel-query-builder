@@ -29,7 +29,7 @@
                             @input="onSearchInput" @keydown.enter="closeDropdown" @keydown.escape="closeDropdown" />
                         <div v-if="currentSearchValue && currentSearchValue !== ''" class="flex justify-end">
                             <button type="button" :class="getTheme('reset_button')" @click="onSearchChange('')">
-                                <span class="sr-only">{{ translations.reset_search }}</span>
+                                <span class="sr-only">{{ translations.reset }}</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -53,7 +53,7 @@
 import { computed, ref, inject, onMounted, onUnmounted, Teleport, nextTick } from "vue";
 import { twMerge } from "tailwind-merge";
 import { get_theme_part } from "../helpers.js";
-import translations from "../translations.js";
+import { getTranslations } from "../translations.js";
 
 const props = defineProps({
     columnKey: {
@@ -83,6 +83,8 @@ const props = defineProps({
         default: {},
     },
 });
+
+const translations = getTranslations();
 
 const isDropdownOpen = ref(false);
 const dropdown = ref(null);

@@ -58,7 +58,7 @@
 import { ref, computed, watch, inject, onMounted } from "vue";
 import { twMerge } from "tailwind-merge";
 import { get_theme_part } from "../../helpers.js";
-import translations from "../../translations.js";
+import { getTranslations } from "../../translations.js";
 
 const props = defineProps({
     filter: {
@@ -80,6 +80,8 @@ const props = defineProps({
         default: {},
     },
 });
+
+const translations = getTranslations();
 
 // Reactive data
 const filterType = ref('');
