@@ -659,6 +659,76 @@ The `Table` has some additional properties to tweak its front-end behaviour.
 | inputDebounceMs            | Number of ms to wait before refreshing the table on user input.                                                                                                                                           | 350     |
 | preserveScroll             | Configures the [Scroll preservation](https://inertiajs.com/scroll-management#scroll-preservation) behavior. You may also pass `table-top` to this property to scroll to the top of the table on new data. | false   |
 | rowClass                   | A function that receives the row item as parameter and returns a CSS class string to apply to the table row. Useful for conditional row styling.                                                          | `null`  |
+| paginationClickCallback    | A function that receives the pagination URL as parameter and handles custom pagination logic instead of the default Inertia navigation.                                                                   | `null`  |
+
+#### Custom Pagination Callback ✨ **NEW!**
+
+You can now provide a custom callback function to handle pagination clicks instead of the default Inertia navigation. This is useful when you want to implement custom data loading logic, API calls, or state management for pagination.
+
+```vue
+<template>
+    <Table
+        :resource="users"
+        :pagination-click-callback="handleCustomPagination"
+    />
+</template>
+
+<script setup>
+import { ref } from "vue";
+
+const users = ref(props.users);
+const isLoading = ref(false);
+
+const handleCustomPagination = async (url) => {
+    console.log("Custom pagination triggered for:", url);
+
+    isLoading.value = true;
+
+    try {
+        // Custom logic for fetching data
+        const response = await fetch(url, {
+            headers: {
+                Accept: "application/json",
+                "X-Inertia": "true",
+            },
+        });
+
+        const data = await response.json();
+
+        // Update your component's data
+        users.value = data.users;
+
+        // You can also update other parts of your application state
+        // emit events, update stores, etc.
+    } catch (error) {
+        console.error("Pagination error:", error);
+        // Handle error (show notification, fallback, etc.)
+    } finally {
+        isLoading.value = false;
+    }
+};
+</script>
+```
+
+**Key Features:**
+
+-   **Full Control**: Complete control over pagination behavior
+-   **Async Support**: Handle async operations like API calls
+-   **Error Handling**: Implement custom error handling and loading states
+-   **State Management**: Integrate with your preferred state management solution
+-   **Backward Compatible**: When not provided, falls back to default Inertia navigation
+-   **URL Preservation**: Receives the complete pagination URL with all filters and parameters
+
+**Use Cases:**
+
+-   **SPA Behavior**: Implement single-page application pagination without page reloads
+-   **API Integration**: Fetch data from external APIs instead of server-side rendering
+-   **Custom Loading States**: Show custom loading indicators and animations
+-   **State Persistence**: Maintain complex application state during pagination
+-   **Analytics Tracking**: Track pagination interactions for analytics
+-   **Performance Optimization**: Implement custom caching or data optimization strategies
+
+For a complete example, see [examples/PaginationCallbackExample.vue](examples/PaginationCallbackExample.vue).
 
 The `Table` has some events that you can use
 
@@ -1481,6 +1551,7 @@ The `examples/` folder contains comprehensive usage examples:
 -   **[SimpleRowClassExample.vue](examples/SimpleRowClassExample.vue)**: Quick example showing basic usage of the `rowClass` property
 -   **[ExportButtonExamples.vue](examples/ExportButtonExamples.vue)**: Complete examples of custom CSV export buttons with different styles and functionalities
 -   **[RowClassExamples.vue](examples/RowClassExamples.vue)**: Advanced examples of custom row styling using the `rowClass` property
+-   **[PaginationCallbackExample.vue](examples/PaginationCallbackExample.vue)**: Complete example demonstrating custom pagination handling with the `paginationClickCallback` property
 
 ## Contributing
 

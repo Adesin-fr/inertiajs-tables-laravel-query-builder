@@ -281,6 +281,11 @@ const props = defineProps({
         default: null,
         required: false,
     },
+    paginationClickCallback: {
+        type: Function,
+        default: null,
+        required: false,
+    },
 });
 
 const app = getCurrentInstance();
@@ -725,7 +730,13 @@ function visitPageFromUrl(url) {
         return null;
     }
 
-    // Directly visit the URL instead of trying to modify queryBuilderData.page
+    // Si un callback de pagination est fourni, l'utiliser au lieu de la navigation Inertia
+    if (props.paginationClickCallback && typeof props.paginationClickCallback === 'function') {
+        props.paginationClickCallback(url);
+        return;
+    }
+
+    // Comportement par défaut : navigation Inertia
     visit(url);
 }
 
