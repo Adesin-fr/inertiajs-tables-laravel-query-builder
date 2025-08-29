@@ -17,8 +17,7 @@
         <!-- Teleported Dropdown with Popper -->
         <Teleport to="body">
             <div v-if="isDropdownOpen" ref="container"
-                class="bg-white border border-gray-200 rounded-md shadow-lg z-[9999] min-w-max"
-                @click.stop>
+                class="bg-white border border-gray-200 rounded-md shadow-lg z-[9999] min-w-max" @click.stop>
                 <div v-for="filter in columnFilters" :key="filter.key">
                     <h3 class="text-xs uppercase tracking-wide bg-gray-100 p-3">
                         {{ filter.label }}
@@ -32,6 +31,9 @@
                         </select>
                         <ToggleFilter v-if="filter.type === 'toggle'" :filter="filter"
                             :on-filter-change="onFilterChange" :color="color" />
+                        <div v-if="filter.type === 'number'" class="py-4 px-8" style="min-width: 300px;">
+                            <NumberFilter :filter="filter" :on-filter-change="onFilterChange" :color="color" />
+                        </div>
                         <div v-if="filter.type === 'number_range'" class="py-4 px-8" style="min-width: 250px;">
                             <NumberRangeFilter v-model="filter.value" :max="filter.max" :min="filter.min"
                                 :prefix="filter.prefix" :suffix="filter.suffix" :step="filter.step" :color="color"
@@ -56,6 +58,7 @@
 import { computed, ref, inject, onMounted, onUnmounted, Teleport } from "vue";
 import ToggleFilter from "./TableFilters/ToggleFilter.vue";
 import NumberRangeFilter from "./TableFilters/NumberRangeFilter.vue";
+import NumberFilter from "./TableFilters/NumberFilter.vue";
 import DateFilter from "./TableFilters/DateFilter.vue";
 import { twMerge } from "tailwind-merge";
 import { get_theme_part } from "../helpers.js";
