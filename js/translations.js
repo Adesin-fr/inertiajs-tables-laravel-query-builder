@@ -21,6 +21,20 @@ const translationsObject = {
         start_date: "Start date",
         end_date: "End date",
         reset_filter: "Reset filter",
+        // Number filter translations
+        exact_number: "Exact value",
+        less_than: "Less than",
+        greater_than: "Greater than",
+        less_than_or_equal: "Less than or equal",
+        greater_than_or_equal: "Greater than or equal",
+        number_range: "Between",
+        start_number: "Start value",
+        end_number: "End value",
+        // UI translations
+        export_csv: "Export CSV",
+        add_search_fields: "Add search field",
+        show_hide_columns: "Show / Hide columns",
+        grouped_reset: "Reset",
     }
 };
 

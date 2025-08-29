@@ -918,6 +918,7 @@ You can override the default pagination translations with the `setTranslations` 
 import { setTranslations } from "@adesin-fr/inertiajs-tables-laravel-query-builder";
 
 setTranslations({
+    // Pagination translations
     next: "Next",
     no_results_found: "No results found",
     of: "of",
@@ -925,13 +926,78 @@ setTranslations({
     previous: "Previous",
     results: "results",
     to: "to",
-    search: "Search",
+
+    // General UI translations
     reset: "Reset",
-    grouped_reset: "Reset",
+    search: "Search...",
+    noLineSelected: "No line selected",
+    lineSelected: "line(s) selected",
+
+    // Date filter translations
+    filter_type: "Filter type",
+    no_filter: "No filter",
+    exact_date: "Exact date",
+    before_date: "Before",
+    after_date: "After",
+    date_range: "Date range",
+    start_date: "Start date",
+    end_date: "End date",
+    reset_filter: "Reset filter",
+
+    // Number filter translations
+    exact_number: "Exact value",
+    less_than: "Less than",
+    greater_than: "Greater than",
+    less_than_or_equal: "Less than or equal",
+    greater_than_or_equal: "Greater than or equal",
+    number_range: "Between",
+    start_number: "Start value",
+    end_number: "End value",
+
+    // Export and menu translations
+    export_csv: "Export CSV",
     add_search_fields: "Add search field",
     show_hide_columns: "Show / Hide columns",
+    grouped_reset: "Reset",
 });
 ```
+
+**Available Translation Keys:**
+
+| Key                     | Description                          | Default Value           |
+| ----------------------- | ------------------------------------ | ----------------------- |
+| `next`                  | Next button in pagination            | "Next"                  |
+| `previous`              | Previous button in pagination        | "Previous"              |
+| `no_results_found`      | Message when no data                 | "No results found"      |
+| `of`                    | Pagination separator (X of Y)        | "of"                    |
+| `per_page`              | Per page selector suffix             | "per page"              |
+| `results`               | Results count label                  | "results"               |
+| `to`                    | Range separator (X to Y)             | "to"                    |
+| `reset`                 | Reset button label                   | "Reset"                 |
+| `search`                | Search input placeholder             | "Search..."             |
+| `noLineSelected`        | Bulk action message                  | "No line selected"      |
+| `lineSelected`          | Bulk action message                  | "line(s) selected"      |
+| `filter_type`           | Filter type dropdown label           | "Filter type"           |
+| `no_filter`             | No filter option                     | "No filter"             |
+| `exact_date`            | Date filter: exact match             | "Exact date"            |
+| `before_date`           | Date filter: before date             | "Before"                |
+| `after_date`            | Date filter: after date              | "After"                 |
+| `date_range`            | Date filter: date range              | "Date range"            |
+| `start_date`            | Date filter: start date              | "Start date"            |
+| `end_date`              | Date filter: end date                | "End date"              |
+| `reset_filter`          | Reset filter button                  | "Reset filter"          |
+| `exact_number`          | Number filter: exact value           | "Exact value"           |
+| `less_than`             | Number filter: less than             | "Less than"             |
+| `greater_than`          | Number filter: greater than          | "Greater than"          |
+| `less_than_or_equal`    | Number filter: less than or equal    | "Less than or equal"    |
+| `greater_than_or_equal` | Number filter: greater than or equal | "Greater than or equal" |
+| `number_range`          | Number filter: between range         | "Between"               |
+| `start_number`          | Number filter: start value           | "Start value"           |
+| `end_number`            | Number filter: end value             | "End value"             |
+| `export_csv`            | CSV export button                    | "Export CSV"            |
+| `add_search_fields`     | Add search field button              | "Add search field"      |
+| `show_hide_columns`     | Column visibility button             | "Show / Hide columns"   |
+| `grouped_reset`         | Grouped actions reset                | "Reset"                 |
 
 #### Table.vue slots
 
