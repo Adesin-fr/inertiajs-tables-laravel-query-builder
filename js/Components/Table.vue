@@ -867,6 +867,8 @@ function loadColumnsFromStorage() {
         return;
     }
 
+    console.log('Loading columns from storage for table:', props.name);
+
     const savedColumns = localStorage.getItem(`columns-${props.name}`);
     if (!savedColumns) {
         return;
@@ -937,20 +939,20 @@ function show(key) {
 
 function header(key) {
     const intKey = findDataKey("columns", key);
-    const columnData = clone(queryBuilderProps.value.columns[intKey]);
+    const columnData = clone(queryBuilderData.value.columns[intKey]);
 
     columnData.onSort = sortBy;
 
     // Ajouter les filtres pour cette colonne uniquement
     // Logique simple : associer les filtres dont la key correspond ou contient la key de la colonne
-    columnData.filters = queryBuilderProps.value.filters.filter(filter =>
+    columnData.filters = queryBuilderData.value.filters.filter(filter =>
         filter.key === key ||
         filter.key.startsWith(key + '_') ||
         filter.key.includes(key)
     );
 
     // Vérifier si cette colonne est searchable en cherchant un searchInput correspondant
-    const columnSearchInputs = queryBuilderProps.value.searchInputs.filter(searchInput =>
+    const columnSearchInputs = queryBuilderData.value.searchInputs.filter(searchInput =>
         searchInput.key === key
     );
 
@@ -1002,6 +1004,7 @@ const totalTableWidth = computed(() => {
     if (props.hasCheckboxes) {
         totalWidth += 60; // 60px for checkbox column
     }
+
 
     // Calculer la largeur totale des colonnes
     queryBuilderProps.value.columns.forEach(column => {

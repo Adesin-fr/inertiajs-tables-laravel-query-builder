@@ -41,6 +41,7 @@ class UserTableView
             ]);
 
         return InertiaTable::make()
+            ->name('users-table')
             ->withQueryBuilder($queryBuilder)
             ->paginateMethod($paginateMethod)
             ->withResource($resource ? UserResource::class : null)

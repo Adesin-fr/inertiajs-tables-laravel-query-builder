@@ -33,7 +33,7 @@ const userRowStyle = (user) => {
     <div class="hidden md:table-cell"></div>
     <BreezeGuestLayout>
         <Table :resource="users" :input-debounce-ms="50" :resizeable-columns="true" :show-export-button="true"
-            :with-grouped-menu="false" :row-class="userRowStyle">
+            name="users-table" :with-grouped-menu="false" :row-class="userRowStyle">
             <template #cell(actions)="{ item: user }">
                 <a :href="`/users/${user.id}/edit`">
                     Edit

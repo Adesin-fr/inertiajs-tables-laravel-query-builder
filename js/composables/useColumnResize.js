@@ -15,6 +15,7 @@ export function useColumnResize(tableName) {
         }
 
         const saved = localStorage.getItem(`table-column-widths-${tableName}`);
+
         if (saved) {
             try {
                 const parsed = JSON.parse(saved);
