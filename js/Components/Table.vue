@@ -36,11 +36,11 @@
                 </slot>
 
                 <slot v-if="!withGroupedMenu" name="tableColumns" :has-columns="queryBuilderProps.hasToggleableColumns"
-                    :columns="queryBuilderProps.columns" :has-hidden-columns="queryBuilderProps.hasHiddenColumns"
+                    :columns="queryBuilderData.columns" :has-hidden-columns="queryBuilderProps.hasHiddenColumns"
                     :on-change="changeColumnStatus">
                     <TableColumns v-if="queryBuilderProps.hasToggleableColumns" :class="{ 'mr-2 sm:mr-4': canBeReset }"
-                        :columns="queryBuilderProps.columns" :has-hidden-columns="queryBuilderProps.hasHiddenColumns"
-                        :on-change="changeColumnStatus" :color="color" />
+                        :columns="queryBuilderData.columns" :has-hidden-columns="queryBuilderProps.hasHiddenColumns"
+                        :on-change="changeColumnStatus" :table-name="name" :color="color" />
                 </slot>
 
                 <slot v-if="withGroupedMenu" name="groupedAction" :actions="defaultActions">
@@ -86,14 +86,15 @@
                                                     @change="toggleSelection" v-model="headerCheckboxSelected"
                                                     class="rounded-sm mr-1 border-gray-300 m-1" />
                                             </th>
-                                            <HeaderCell v-for="column in queryBuilderProps.columns"
-                                                :key="`table-${name}-header-${column.key}`" :cell="header(column.key)">
-                                                <template #label>
-                                                    <slot :name="`header(${column.key})`"
-                                                        :label="header(column.key).label"
-                                                        :column="header(column.key)" />
-                                                </template>
-                                            </HeaderCell>
+                                            <template v-for="column in queryBuilderData.columns">
+                                                <HeaderCell :cell="header(column.key)">
+                                                    <template #label>
+                                                        <slot :name="`header(${column.key})`"
+                                                            :label="header(column.key).label"
+                                                            :column="header(column.key)" />
+                                                    </template>
+                                                </HeaderCell>
+                                            </template>
                                         </tr>
                                     </slot>
                                 </thead>
@@ -108,7 +109,7 @@
                                                     v-model="item.__itSelected" />
                                             </td>
 
-                                            <td v-for="(column, colIndex) in queryBuilderProps.columns"
+                                            <td v-for="(column, colIndex) in queryBuilderData.columns"
                                                 v-show="show(column.key)"
                                                 :key="`table-${name}-row-${key}-column-${column.key}`"
                                                 @click="rowClicked($event, item, key)" :class="column.body_class"
@@ -299,16 +300,10 @@ provide('columnResize', columnResize);
 // State for displaying resize indicators
 const showIndicators = ref(false);
 
-const updates = ref(0);
-
 const queryBuilderProps = computed(() => {
-    let data = usePage().props.queryBuilderProps
+    return usePage().props.queryBuilderProps
         ? { ...usePage().props.queryBuilderProps[props.name] } || {}
         : {};
-
-    data._updates = updates.value;
-
-    return data;
 });
 
 const queryBuilderData = ref(queryBuilderProps.value);
@@ -629,21 +624,24 @@ function findDataKey(dataKey, key) {
     });
 }
 
-function changeColumnStatus(key, visible) {
-    const intKey = findDataKey("columns", key);
+function changeColumnStatus(keyOrColumns) {
+    queryBuilderData.value.columns = keyOrColumns;
 
-    queryBuilderData.value.columns[intKey].hidden = !visible;
+    // Persist the column hidden attribute and order in the local storage
+    saveColumnsToStorage();
+}
 
-    // Persist only the column .hidden attribute  in the local storage
-    const columns = queryBuilderData.value.columns.map((column) => {
-        return {
-            key: column.key,
-            hidden: column.hidden,
-        };
-    });
-    localStorage.setItem(`columns-${props.name}`, JSON.stringify(columns));
-
-
+function saveColumnsToStorage() {
+    if (props.name && props.name !== 'default') {
+        const columns = queryBuilderData.value.columns.map((column, index) => {
+            return {
+                key: column.key,
+                hidden: column.hidden,
+                order: index
+            };
+        });
+        localStorage.setItem(`columns-${props.name}`, JSON.stringify(columns));
+    }
 }
 
 function getFilterForQuery() {
@@ -812,8 +810,6 @@ function visit(url) {
 
                     window.scrollTo({ top });
                 }
-
-                updates.value++;
             }
         }
     );
@@ -840,8 +836,6 @@ watch(props.resource, () => {
 }, { deep: true });
 
 const inertiaListener = () => {
-    updates.value++;
-
     // Reset column widths after data loading
     if (props.resizeableColumns && columnResize) {
         setTimeout(() => {
@@ -854,15 +848,8 @@ const inertiaListener = () => {
 }; onMounted(() => {
     document.addEventListener("inertia:success", inertiaListener);
 
-    // Reload the columns visibility from the local storage
-    const columnsVisibility = localStorage.getItem(`columns-${props.name}`);
-    // Iterate through the columns and set the visibility
-    if (columnsVisibility) {
-        const columnsVisibilityData = JSON.parse(columnsVisibility);
-        forEach(queryBuilderData.value.columns, (column, key) => {
-            queryBuilderData.value.columns[key].hidden = columnsVisibilityData[key].hidden;
-        });
-    }
+    // Charger l'ordre et la visibilité des colonnes depuis le localStorage
+    loadColumnsFromStorage();
 
     // Initialize column widths after mounting
     if (props.resizeableColumns && columnResize) {
@@ -874,6 +861,56 @@ const inertiaListener = () => {
         }, 0);
     }
 });
+
+function loadColumnsFromStorage() {
+    if (!props.name || props.name === 'default') {
+        return;
+    }
+
+    const savedColumns = localStorage.getItem(`columns-${props.name}`);
+    if (!savedColumns) {
+        return;
+    }
+
+    try {
+        const savedColumnData = JSON.parse(savedColumns);
+
+        // Si les données sauvegardées ont un format d'ordre (avec la propriété 'order')
+        if (savedColumnData.length > 0 && 'order' in savedColumnData[0]) {
+            // Créer un map pour un accès rapide aux données sauvegardées
+            const savedDataMap = new Map(savedColumnData.map(col => [col.key, col]));
+
+            // Appliquer la visibilité sauvegardée
+            queryBuilderData.value.columns.forEach((column, index) => {
+                const savedData = savedDataMap.get(column.key);
+                if (savedData) {
+                    queryBuilderData.value.columns[index].hidden = savedData.hidden;
+                }
+            });
+
+            // Réorganiser les colonnes selon l'ordre sauvegardé
+            queryBuilderData.value.columns.sort((a, b) => {
+                const aData = savedDataMap.get(a.key);
+                const bData = savedDataMap.get(b.key);
+
+                const aOrder = aData?.order ?? 999;
+                const bOrder = bData?.order ?? 999;
+
+                return aOrder - bOrder;
+            });
+        } else {
+            // Format ancien (seulement hidden), appliquer seulement la visibilité
+            savedColumnData.forEach((savedCol, index) => {
+                const columnIndex = queryBuilderData.value.columns.findIndex(col => col.key === savedCol.key);
+                if (columnIndex !== -1) {
+                    queryBuilderData.value.columns[columnIndex].hidden = savedCol.hidden;
+                }
+            });
+        }
+    } catch (error) {
+        console.warn('Error loading column order from localStorage:', error);
+    }
+}
 
 onUnmounted(() => {
     document.removeEventListener("inertia:success", inertiaListener);
