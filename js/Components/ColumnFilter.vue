@@ -1,6 +1,6 @@
 <template>
     <div class="relative inline-block">
-        <button ref="buttonRef" @click="toggleDropdown" :class="[
+        <button ref="trigger" @click="toggleDropdown" :class="[
             'p-1 rounded hover:bg-gray-100 transition-colors duration-150',
             {
                 'text-blue-500': hasActiveFilter,
@@ -14,11 +14,11 @@
             </svg>
         </button>
 
-        <!-- Teleported Dropdown -->
+        <!-- Teleported Dropdown with Popper -->
         <Teleport to="body">
-            <div v-if="isDropdownOpen" ref="dropdown"
-                class="fixed bg-white border border-gray-200 rounded-md shadow-lg z-[9999] min-w-max"
-                :style="dropdownStyle" @click.stop>
+            <div v-if="isDropdownOpen" ref="container"
+                class="bg-white border border-gray-200 rounded-md shadow-lg z-[9999] min-w-max"
+                @click.stop>
                 <div v-for="filter in columnFilters" :key="filter.key">
                     <h3 class="text-xs uppercase tracking-wide bg-gray-100 p-3">
                         {{ filter.label }}
@@ -59,6 +59,7 @@ import NumberRangeFilter from "./TableFilters/NumberRangeFilter.vue";
 import DateFilter from "./TableFilters/DateFilter.vue";
 import { twMerge } from "tailwind-merge";
 import { get_theme_part } from "../helpers.js";
+import { usePopper } from "../composables/usePopper.js";
 
 const props = defineProps({
     columnKey: {
@@ -87,8 +88,17 @@ const props = defineProps({
 
 const isDropdownOpen = ref(false);
 const dropdown = ref(null);
-const buttonRef = ref(null);
-const dropdownPosition = ref({ top: 0, left: 0 });
+
+// Configuration Popper.js
+const [trigger, container] = usePopper({
+    placement: 'bottom-end',
+    strategy: 'fixed',
+    modifiers: [
+        { name: 'offset', options: { offset: [0, 4] } },
+        { name: 'preventOverflow', options: { padding: 8 } },
+        { name: 'flip', options: { fallbackPlacements: ['top-end', 'bottom-start', 'top-start'] } }
+    ],
+});
 
 // Filter les filtres pour cette colonne uniquement
 const columnFilters = computed(() => {
@@ -108,30 +118,9 @@ const hasActiveFilter = computed(() => {
     return columnFilters.value.some(filter => !filterIsNull(filter));
 });
 
-// Style calculé pour le dropdown
-const dropdownStyle = computed(() => {
-    return {
-        top: dropdownPosition.value.top + 'px',
-        left: dropdownPosition.value.left + 'px'
-    };
-});
-
 function toggleDropdown() {
     if (columnFilters.value.length > 0) {
-        if (!isDropdownOpen.value) {
-            calculateDropdownPosition();
-        }
         isDropdownOpen.value = !isDropdownOpen.value;
-    }
-}
-
-function calculateDropdownPosition() {
-    if (buttonRef.value) {
-        const rect = buttonRef.value.getBoundingClientRect();
-        dropdownPosition.value = {
-            top: rect.bottom + window.scrollY + 4,
-            left: rect.right + window.scrollX - 300 // Aligner à droite en supposant une largeur de 300px
-        };
     }
 }
 
@@ -192,7 +181,7 @@ const getTheme = (item) => {
 
 // Fermer le dropdown quand on clique en dehors
 function handleClickOutside(event) {
-    if (dropdown.value && !dropdown.value.contains(event.target) && !event.target.closest(`[dusk="column-filter-${props.columnKey}"]`)) {
+    if (container.value && !container.value.contains(event.target) && !event.target.closest(`[dusk="column-filter-${props.columnKey}"]`)) {
         closeDropdown();
     }
 }

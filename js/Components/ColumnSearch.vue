@@ -1,6 +1,6 @@
 <template>
     <div class="relative inline-block">
-        <button ref="buttonRef" @click="toggleDropdown" :class="[
+        <button ref="trigger" @click="toggleDropdown" :class="[
             'p-1 rounded hover:bg-gray-100 transition-colors duration-150',
             {
                 'text-blue-500': hasActiveSearch,
@@ -14,11 +14,11 @@
             </svg>
         </button>
 
-        <!-- Teleported Dropdown -->
+        <!-- Teleported Dropdown with Popper -->
         <Teleport to="body">
-            <div v-if="isDropdownOpen" ref="dropdown"
-                class="fixed bg-white border border-gray-200 rounded-md shadow-lg z-[9999] min-w-max"
-                :style="dropdownStyle" @click.stop>
+            <div v-if="isDropdownOpen" ref="container"
+                class="bg-white border border-gray-200 rounded-md shadow-lg z-[9999] min-w-max"
+                @click.stop>
                 <div class="p-3">
                     <h3 class="text-xs uppercase tracking-wide text-gray-600 mb-2">
                         {{ translations.search }} {{ columnLabel }}
@@ -54,6 +54,7 @@ import { computed, ref, inject, onMounted, onUnmounted, Teleport, nextTick } fro
 import { twMerge } from "tailwind-merge";
 import { get_theme_part } from "../helpers.js";
 import { getTranslations } from "../translations.js";
+import { usePopper } from "../composables/usePopper.js";
 
 const props = defineProps({
     columnKey: {
@@ -87,10 +88,18 @@ const props = defineProps({
 const translations = getTranslations();
 
 const isDropdownOpen = ref(false);
-const dropdown = ref(null);
-const buttonRef = ref(null);
 const searchInput = ref(null);
-const dropdownPosition = ref({ top: 0, left: 0 });
+
+// Configuration Popper.js
+const [trigger, container] = usePopper({
+    placement: 'bottom-end',
+    strategy: 'fixed',
+    modifiers: [
+        { name: 'offset', options: { offset: [0, 4] } },
+        { name: 'preventOverflow', options: { padding: 8 } },
+        { name: 'flip', options: { fallbackPlacements: ['top-end', 'bottom-start', 'top-start'] } }
+    ],
+});
 
 // Find searchinput for this column
 const columnSearchInput = computed(() => {
@@ -107,19 +116,8 @@ const hasActiveSearch = computed(() => {
     return currentSearchValue.value !== '';
 });
 
-// Computed style for dropdown position
-const dropdownStyle = computed(() => {
-    return {
-        top: dropdownPosition.value.top + 'px',
-        left: dropdownPosition.value.left + 'px'
-    };
-});
-
 async function toggleDropdown() {
     if (columnSearchInput.value) {
-        if (!isDropdownOpen.value) {
-            calculateDropdownPosition();
-        }
         isDropdownOpen.value = !isDropdownOpen.value;
 
         if (isDropdownOpen.value) {
@@ -129,16 +127,6 @@ async function toggleDropdown() {
                 searchInput.value.focus();
             }
         }
-    }
-}
-
-function calculateDropdownPosition() {
-    if (buttonRef.value) {
-        const rect = buttonRef.value.getBoundingClientRect();
-        dropdownPosition.value = {
-            top: rect.bottom + window.scrollY + 4,
-            left: rect.right + window.scrollX - 250 // Align to right assuming a width of 250px
-        };
     }
 }
 
@@ -183,7 +171,7 @@ const getTheme = (item) => {
 
 // Close the dropdown when clicking outside
 function handleClickOutside(event) {
-    if (dropdown.value && !dropdown.value.contains(event.target) && !event.target.closest(`[dusk="column-search-${props.columnKey}"]`)) {
+    if (container.value && !container.value.contains(event.target) && !event.target.closest(`[dusk="column-search-${props.columnKey}"]`)) {
         closeDropdown();
     }
 }
