@@ -74,9 +74,7 @@
                     <span>{{ translations.show_hide_columns ?? 'Show / Hide columns' }}</span>
                 </button>
                 <div class="px-2">
-                    <div class="py-2 text-xs text-gray-500 font-medium uppercase">
-                        Glissez pour réorganiser
-                    </div>
+
                     <ColumnManager :columns="actions.toggleColumns.columns" :can-sort="true"
                         @columns-changed="onColumnsChanged" />
                 </div>

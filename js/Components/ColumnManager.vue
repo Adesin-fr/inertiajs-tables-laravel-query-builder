@@ -32,9 +32,6 @@
                     }"
                         class="inline-block h-5 w-5 rounded-full bg-white shadow ring-0 transition ease-in-out duration-200" />
                 </button>
-                <div v-else class="ml-4 w-11 flex justify-center">
-                    <span class="text-xs text-gray-400">Fixe</span>
-                </div>
             </div>
         </template>
     </draggable>

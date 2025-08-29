@@ -1,7 +1,6 @@
 <script setup>
 import BreezeGuestLayout from "@/Layouts/Guest.vue";
 import Table from "@inertiajs-tables/Components/Table.vue"
-import { hide } from "@popperjs/core";
 import { ref } from 'vue';
 
 defineProps(["users"]);
@@ -38,6 +37,11 @@ const userRowStyle = (user) => {
                 <a :href="`/users/${user.id}/edit`">
                     Edit
                 </a>
+            </template>
+            <template #cell(created_at)="{ item: user }">
+                <div class="px-2">
+                    {{ new Date(user.created_at).toLocaleDateString() }}
+                </div>
             </template>
             <!-- Exemple avec un bouton export en forme de dropdown -->
             <template #exportButton="{ exportUrl, translations }">
