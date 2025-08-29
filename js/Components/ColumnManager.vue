@@ -12,12 +12,33 @@
                             </path>
                         </svg>
                     </div>
-                    <p class="text-sm text-gray-900" :class="{ 'text-gray-400': element.hidden }">
+                    <button v-if="element.can_be_pinned !== false" type="button"
+                        class="mr-2 p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600"
+                        :class="{ 'text-blue-500': element.pinned }"
+                        @click.prevent="onTogglePin(element.key, element.pinned)"
+                        :title="element.pinned ? 'Désépingler la colonne' : 'Épingler la colonne'">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24"
+                            v-if="element.pinned">
+                            <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="1.5">
+                                <path d="M9.5 14.5L3 21" />
+                                <path fill="currentColor"
+                                    d="m5 9.485l9.193 9.193l1.697-1.697l-.393-3.787l5.51-4.673l-5.85-5.85l-4.674 5.51l-3.786-.393z" />
+                            </g>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" v-else>
+                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="1.5"
+                                d="M9.5 14.5L3 21M5 9.485l9.193 9.193l1.697-1.697l-.393-3.787l5.51-4.673l-5.85-5.85l-4.674 5.51l-3.786-.393z" />
+                        </svg>
+                    </button>
+                    <p class="text-sm text-gray-900"
+                        :class="{ 'text-gray-400': element.hidden, 'font-semibold': element.pinned }">
                         {{ element.label }}
                     </p>
                 </div>
 
-                <button v-if="element.can_be_hidden" type="button"
+                <button v-if="element.can_be_hidden && !element.pinned" type="button"
                     class="ml-4 relative inline-flex shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-light-blue-500"
                     :class="{
                         'bg-green-500': !element.hidden,
@@ -81,6 +102,23 @@ function onToggleColumn(key, hidden) {
     if (columnIndex !== -1) {
         localColumns.value[columnIndex].hidden = !hidden
     }
+
+    emit('columns-changed', localColumns.value)
+}
+
+function onTogglePin(key, pinned) {
+    // Mettre à jour la colonne locale
+    const columnIndex = localColumns.value.findIndex(col => col.key === key)
+    if (columnIndex !== -1) {
+        localColumns.value[columnIndex].pinned = !pinned
+    }
+
+    // Réorganiser les colonnes : épinglées en premier
+    localColumns.value.sort((a, b) => {
+        if (a.pinned && !b.pinned) return -1
+        if (!a.pinned && b.pinned) return 1
+        return 0
+    })
 
     emit('columns-changed', localColumns.value)
 }

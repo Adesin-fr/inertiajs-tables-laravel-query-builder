@@ -1,29 +1,18 @@
 <template>
-  <OnClickOutside :do="hide">
-    <div class="relative">
-      <button
-        ref="button"
-        type="button"
-        :dusk="dusk"
-        :disabled="disabled"
-        :class="getTheme('button')"
-        aria-haspopup="true"
-        @click.prevent="toggle"
-      >
-        <slot name="button" />
-      </button>
+    <OnClickOutside :do="hide">
+        <div class="relative">
+            <button ref="button" type="button" :dusk="dusk" :disabled="disabled" :class="getTheme('button')"
+                aria-haspopup="true" @click.prevent="toggle">
+                <slot name="button" />
+            </button>
 
-      <div
-        v-show="opened"
-        ref="tooltip"
-        class="absolute z-10"
-      >
-        <div class="mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-          <slot />
+            <div v-show="opened" ref="tooltip" class="absolute z-50">
+                <div class="mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                    <slot />
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </OnClickOutside>
+    </OnClickOutside>
 </template>
 
 <script setup>

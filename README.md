@@ -5,7 +5,7 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/adesin-fr/inertiajs-tables-laravel-query-builder.svg?style=flat-square)](https://packagist.org/packages/adesin-fr/inertiajs-tables-laravel-query-builder)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
-This package provides a _DataTables-like_ experience for [Inertia.js](https://inertiajs.com/) with support for searching, filtering, sorting, toggling columns, and pagination. It generates URLs that can be consumed by Spatie's excellent [Laravel Query Builder](https://github.com/spatie/laravel-query-builder) package, with no additional logic needed. The components are styled with [Tailwind CSS 3.0](https://tailwindcss.com/), but it's fully customizable with slots. The data refresh logic is based on Inertia's [Ping CRM demo](https://github.com/inertiajs/pingcrm).
+This package provides a _DataTables-like_ experience for [Inertia.js](https://inertiajs.com/) with support for searching, filtering, sorting, toggling columns, column reordering, column pinning, and pagination. It generates URLs that can be consumed by Spatie's excellent [Laravel Query Builder](https://github.com/spatie/laravel-query-builder) package, with no additional logic needed. The components are styled with [Tailwind CSS 3.0](https://tailwindcss.com/), but it's fully customizable with slots. The data refresh logic is based on Inertia's [Ping CRM demo](https://github.com/inertiajs/pingcrm).
 
 This package is a fork of [protonemedia/inertiajs-tables-laravel-query-builder], Since it has been abandonned in favor of a commercial project.
 
@@ -24,6 +24,8 @@ This package is a fork of [protonemedia/inertiajs-tables-laravel-query-builder],
 -   **Column Filters**: Add filter icons directly in column headers for intuitive filtering
 -   Toggle columns
 -   Sort columns
+-   **Column Reordering**: Drag and drop columns to reorder them with persistent state ✅ **NEW!**
+-   **Column Pinning**: Pin important columns to prevent them from being hidden ✅ **NEW!**
 -   Pagination (support for Eloquent/API Resource/Simple/Cursor)
 -   Automatically updates the query string (by using [Inertia's replace](https://inertiajs.com/manual-visits#browser-history) feature)
 -   Customizable header and body cells classes
@@ -574,6 +576,75 @@ class UserIndexController
 	}
 }
 ```
+
+#### Column Reordering and Pinning ✨ **NEW!**
+
+The table supports drag-and-drop column reordering with persistent state management. Users can reorder columns by dragging the column in the column list, and the new order is automatically saved and restored on future visits (persisted in brower's local storage)
+
+##### Column Reordering
+
+Columns can be reordered by dragging and dropping the column headers. The new column order is automatically persisted in the browser's local storage for each named table.
+
+```php
+// With the Fluent API
+return InertiaTable::make()
+    ->name('users-table') // Table name is required for persistent column ordering
+    ->column('name', 'User Name', sortable: true)
+    ->column('email', 'Email', sortable: true)
+    ->column('status', 'Status')
+    ->render('Users/Index');
+
+// With the Traditional API
+return Inertia::render('Users/Index')->table(function (InertiaTable $table) {
+    $table->column('name', 'User Name', sortable: true);
+    $table->column('email', 'Email', sortable: true);
+    $table->column('status', 'Status');
+});
+```
+
+The column order is automatically saved per table name. If no table name is provided, the current route name is used as a fallback.
+
+##### Column Pinning
+
+Columns can be pinned (marked as non-hideable) to prevent users from accidentally hiding important columns. Pinned columns are marked with a "Fixed" label in the column toggle interface.
+
+```php
+// With the Fluent API
+return InertiaTable::make()
+    ->column('id', 'ID', canBeHidden: false) // This column is pinned and cannot be hidden
+    ->column('name', 'User Name', canBeHidden: true, sortable: true)
+    ->column('email', 'Email', canBeHidden: true, sortable: true)
+    ->column('actions', 'Actions', canBeHidden: false) // Actions column is also pinned
+    ->render('Users/Index');
+
+// With the Traditional API
+return Inertia::render('Users/Index')->table(function (InertiaTable $table) {
+    $table->column(key: 'id', label: 'ID', canBeHidden: false);
+    $table->column(key: 'name', label: 'User Name', canBeHidden: true, sortable: true);
+    $table->column(key: 'email', label: 'Email', canBeHidden: true, sortable: true);
+    $table->column(key: 'actions', label: 'Actions', canBeHidden: false);
+});
+```
+
+##### Features of Column Management
+
+-   **Persistent State**: Column order and visibility are automatically saved in the browser's local storage
+-   **Per-Table Configuration**: Each named table maintains its own column configuration
+-   **Drag & Drop Interface**: Intuitive drag-and-drop interface for reordering columns
+-   **Visual Feedback**: Clear visual indicators during drag operations
+-   **Reset Functionality**: Users can reset columns to their default order and visibility
+-   **Pinned Column Protection**: Pinned columns cannot be hidden and are clearly marked in the UI
+
+##### Frontend Usage
+
+The column reordering and pinning features work automatically once you configure your columns on the backend. Users can:
+
+1. **Reorder Columns**: Drag column headers to reorder them
+2. **Toggle Column Visibility**: Use the column toggle button to show/hide columns
+3. **Reset Columns**: Reset all columns to their default state
+4. **Pin Important Columns**: Columns can be pinned. They will be always visible at left of the table !
+
+The column state is automatically synchronized between the frontend and backend through the query string and local storage.
 
 ### Client-side installation (Inertia)
 

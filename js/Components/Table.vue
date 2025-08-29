@@ -80,14 +80,15 @@
                                     <slot name="head" :show="show" :sort-by="sortBy" :header="header">
                                         <tr>
                                             <th v-if="hasCheckboxes"
-                                                class="text-left text-sm font-semibold text-gray-900 relative resize-border"
+                                                class="text-left text-sm font-semibold text-gray-900 relative resize-border pinned-checkbox-header"
                                                 style="width: 60px;">
                                                 <input type="checkbox" :id="`table-${name}-select-header`"
                                                     @change="toggleSelection" v-model="headerCheckboxSelected"
                                                     class="rounded-sm mr-1 border-gray-300 m-1" />
                                             </th>
                                             <template v-for="column in queryBuilderData.columns">
-                                                <HeaderCell :cell="header(column.key)">
+                                                <HeaderCell :cell="header(column.key)"
+                                                    :style="getPinnedHeaderStyle(column.key)">
                                                     <template #label>
                                                         <slot :name="`header(${column.key})`"
                                                             :label="header(column.key).label"
@@ -102,8 +103,8 @@
                                     <slot name="body" :show="show">
                                         <tr v-for="(item, key) in resourceData" :key="`table-${name}-row-${key}`"
                                             :class="getRowClass(item, key)">
-                                            <td class="whitespace-nowrap text-sm text-gray-500" v-if="hasCheckboxes"
-                                                style="width: 60px;">
+                                            <td class="whitespace-nowrap text-sm text-gray-500 pinned-checkbox"
+                                                v-if="hasCheckboxes" style="width: 60px;">
                                                 <input type="checkbox" :id="`table-${name}-select-${key}`"
                                                     class="rounded-sm m-1 border-gray-300"
                                                     v-model="item.__itSelected" />
@@ -116,7 +117,8 @@
                                                 :data-column-key="column.key" :style="{
                                                     width: getColumnWidthForBody(column.key),
                                                     overflow: 'hidden',
-                                                    textOverflow: 'ellipsis'
+                                                    textOverflow: 'ellipsis',
+                                                    ...getPinnedColumnStyle(column.key)
                                                 }">
 
                                                 <slot :name="`cell(${column.key})`" :item="item">
@@ -568,6 +570,7 @@ function resetQuery() {
         queryBuilderData.value.columns[key].hidden = column.can_be_hidden
             ? !queryBuilderProps.value.defaultVisibleToggleableColumns.includes(column.key)
             : false;
+        queryBuilderData.value.columns[key].pinned = false;
     });
 
     // Reset the columns visibility in the local storage
@@ -627,6 +630,13 @@ function findDataKey(dataKey, key) {
 function changeColumnStatus(keyOrColumns) {
     queryBuilderData.value.columns = keyOrColumns;
 
+    // Réorganiser les colonnes : épinglées en premier
+    queryBuilderData.value.columns.sort((a, b) => {
+        if (a.pinned && !b.pinned) return -1
+        if (!a.pinned && b.pinned) return 1
+        return 0
+    });
+
     // Persist the column hidden attribute and order in the local storage
     saveColumnsToStorage();
 }
@@ -637,6 +647,7 @@ function saveColumnsToStorage() {
             return {
                 key: column.key,
                 hidden: column.hidden,
+                pinned: column.pinned || false,
                 order: index
             };
         });
@@ -882,18 +893,23 @@ function loadColumnsFromStorage() {
             // Créer un map pour un accès rapide aux données sauvegardées
             const savedDataMap = new Map(savedColumnData.map(col => [col.key, col]));
 
-            // Appliquer la visibilité sauvegardée
+            // Appliquer la visibilité et l'état épinglé sauvegardé
             queryBuilderData.value.columns.forEach((column, index) => {
                 const savedData = savedDataMap.get(column.key);
                 if (savedData) {
                     queryBuilderData.value.columns[index].hidden = savedData.hidden;
+                    queryBuilderData.value.columns[index].pinned = savedData.pinned || false;
                 }
             });
 
-            // Réorganiser les colonnes selon l'ordre sauvegardé
+            // Réorganiser les colonnes selon l'ordre sauvegardé et épinglées en premier
             queryBuilderData.value.columns.sort((a, b) => {
                 const aData = savedDataMap.get(a.key);
                 const bData = savedDataMap.get(b.key);
+
+                // Les colonnes épinglées en premier
+                if (a.pinned && !b.pinned) return -1;
+                if (!a.pinned && b.pinned) return 1;
 
                 const aOrder = aData?.order ?? 999;
                 const bOrder = bData?.order ?? 999;
@@ -906,6 +922,7 @@ function loadColumnsFromStorage() {
                 const columnIndex = queryBuilderData.value.columns.findIndex(col => col.key === savedCol.key);
                 if (columnIndex !== -1) {
                     queryBuilderData.value.columns[columnIndex].hidden = savedCol.hidden;
+                    queryBuilderData.value.columns[columnIndex].pinned = savedCol.pinned || false;
                 }
             });
         }
@@ -990,6 +1007,70 @@ function getColumnWidthForBody(columnKey) {
     return width === 'auto' ? width : `${width}px`;
 }
 
+// Fonction pour calculer la position left d'une colonne épinglée
+function getPinnedColumnLeft(columnKey) {
+    if (!props.resizeableColumns || !columnResize) {
+        return '0px';
+    }
+
+    let leftPosition = 0;
+    const visibleColumns = queryBuilderData.value.columns.filter(col => !col.hidden);
+
+    // Ajouter la largeur de la colonne checkbox si présente
+    if (props.hasCheckboxes) {
+        leftPosition += 60;
+    }
+
+    // Calculer la position en additionnant les largeurs des colonnes épinglées précédentes
+    for (const column of visibleColumns) {
+        if (column.key === columnKey) {
+            break;
+        }
+        if (column.pinned) {
+            const width = columnResize.getColumnWidth(column.key);
+            leftPosition += width === 'auto' ? 150 : width; // largeur par défaut si auto
+        }
+    }
+
+    return `${leftPosition}px`;
+}
+
+// Vérifier si une colonne est épinglée
+function isColumnPinned(columnKey) {
+    const column = queryBuilderData.value.columns.find(col => col.key === columnKey);
+    return column && column.pinned;
+}
+
+// Calculer le style pour une colonne épinglée
+function getPinnedColumnStyle(columnKey) {
+    if (!isColumnPinned(columnKey)) {
+        return {};
+    }
+
+    return {
+        position: 'sticky',
+        left: getPinnedColumnLeft(columnKey),
+        zIndex: 10,
+        backgroundColor: 'white',
+        boxShadow: '2px 0 4px -2px rgba(0, 0, 0, 0.1)'
+    };
+}
+
+// Style pour l'en-tête d'une colonne épinglée
+function getPinnedHeaderStyle(columnKey) {
+    if (!isColumnPinned(columnKey)) {
+        return {};
+    }
+
+    return {
+        position: 'sticky',
+        left: getPinnedColumnLeft(columnKey),
+        zIndex: 11,
+        backgroundColor: '#f9fafb',
+        boxShadow: '2px 0 4px -2px rgba(0, 0, 0, 0.1)'
+    };
+}
+
 // Calculer la largeur totale de la table
 const totalTableWidth = computed(() => {
     // If resizing is not enabled, use default width
@@ -1072,5 +1153,52 @@ function hideResizeIndicators() {
 .resize-border:hover::after {
     background-color: #9ca3af;
     /* border-gray-400 */
+}
+
+.pinned-column {
+    position: sticky !important;
+    background: white;
+    z-index: 10;
+    box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid #e5e7eb;
+}
+
+.pinned-column-header {
+    position: sticky !important;
+    background: #f9fafb;
+    /* bg-gray-50 */
+    z-index: 11;
+    box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid #e5e7eb;
+}
+
+/* Style pour la colonne checkbox épinglée */
+.pinned-checkbox {
+    position: sticky !important;
+    left: 0 !important;
+    background: white;
+    z-index: 12;
+    border-right: 1px solid #e5e7eb;
+    box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+.pinned-checkbox-header {
+    position: sticky !important;
+    left: 0 !important;
+    background: #f9fafb !important;
+    z-index: 13;
+    border-right: 1px solid #e5e7eb;
+    box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+/* Transition pour un effet plus fluide */
+.pinned-column,
+.pinned-column-header {
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.pinned-column:hover,
+.pinned-column-header:hover {
+    box-shadow: 2px 0 8px -2px rgba(0, 0, 0, 0.15);
 }
 </style>
