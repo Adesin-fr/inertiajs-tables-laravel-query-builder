@@ -1,6 +1,6 @@
 {
   "name": "@adesin-fr/inertiajs-tables-laravel-query-builder",
-  "version": "3.3.5",
+  "version": "3.3.6",
   "description": "Inertia.js Front-end Components for Spatie's Laravel Query Builder",
   "private": false,
   "author": "AdesinFr <ludovic@adesin.fr>",
@@ -25,13 +25,13 @@
   "peerDependencies": {
     "@inertiajs/vue3": "^1.0.16",
     "tailwind-merge": "^2.2.0",
-    "vue": "^3.4.27"
+    "vue": "^3.4.27",
+    "vuedraggable": "^4.1.0"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.5",
     "lodash-es": "^4.17.21",
-    "qs": "^6.10.5",
-    "vuedraggable": "^4.1.0"
+    "qs": "^6.10.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.0",

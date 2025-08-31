@@ -18,11 +18,13 @@ export default defineConfig({
                 /^@popperjs.*/,
                 /^lodash-es.*/,
                 "qs",
-                "vue"
+                "vue",
+                "vuedraggable"
             ],
             output: {
                 globals: {
-                    vue: "Vue"
+                    vue: "Vue",
+                    vuedraggable: "vuedraggable"
                 }
             }
         }
