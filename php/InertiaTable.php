@@ -35,6 +35,7 @@ class InertiaTable
     private $exportCallback = null;
     private string $paginateMethod = 'paginate';
     private ?string $resourceClass = null;
+    private string $resourceName = 'data';
 
     private static bool|string $defaultGlobalSearch = false;
     private static array $defaultQueryBuilderConfig = [];
@@ -153,6 +154,19 @@ class InertiaTable
     public function withResource(?string $resourceClass): self
     {
         $this->resourceClass = $resourceClass;
+
+        return $this;
+    }
+
+    /**
+     * Set the resource name for the data property in the response.
+     *
+     * @param string $resourceName
+     * @return self
+     */
+    public function resourceName(string $resourceName): self
+    {
+        $this->resourceName = $resourceName;
 
         return $this;
     }
@@ -656,18 +670,18 @@ class InertiaTable
 
             // Handle resource transformation if requested
             if ($this->resourceClass) {
-                $props['users'] = $this->resourceClass::collection($paginatedData);
+                $props[$this->resourceName] = $this->resourceClass::collection($paginatedData);
             } elseif (isset($props['resource']) && $props['resource'] === true) {
                 // Fallback for backward compatibility
                 $resourceClass = '\\App\\Http\\Resources\\UserResource';
                 if (class_exists($resourceClass)) {
-                    $props['users'] = $resourceClass::collection($paginatedData);
+                    $props[$this->resourceName] = $resourceClass::collection($paginatedData);
                 } else {
-                    $props['users'] = $paginatedData;
+                    $props[$this->resourceName] = $paginatedData;
                 }
                 unset($props['resource']);
             } else {
-                $props['users'] = $paginatedData;
+                $props[$this->resourceName] = $paginatedData;
             }
         } else {
             // Check if this is an export request
@@ -736,9 +750,9 @@ class InertiaTable
 
             // Handle resource transformation if requested
             if ($this->resourceClass) {
-                return ['data' => $this->resourceClass::collection($paginatedData)];
+                return [$this->resourceName => $this->resourceClass::collection($paginatedData)];
             } else {
-                return ['data' => $paginatedData];
+                return [$this->resourceName => $paginatedData];
             }
         }
 
