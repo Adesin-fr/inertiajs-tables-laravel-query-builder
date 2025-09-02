@@ -803,7 +803,10 @@ For a complete example, see [examples/PaginationCallbackExample.vue](examples/Pa
 
 The `Table` has some events that you can use
 
--   rowClicked: this event is fired when the user click on the row. The event give you this informations: event, item, key. Be careful if you use this event with a clickable element inside the row like an action button. Don't forget to use `event.stopPropagation()` for all other clickable elements
+-   rowClicked: this event is fired when the user click on the row. The event give you this informations: event, item, key.
+    Be careful if you use this event with a clickable element inside the row like an action button.
+    Don't forget to use `event.stopPropagation()` for all other clickable elements.
+    If you want to disable rowClicked events on your "actions" column, you can use the key argument to filter out the event when the key corresponds to your action column key.
 
 #### Custom row styling
 

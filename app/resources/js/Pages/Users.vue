@@ -26,13 +26,17 @@ const userRowStyle = (user) => {
     return 'bg-red-50';
 };
 
+const rowClicked = (event, item, key) => {
+    console.log(key)
+}
+
 </script>
 
 <template>
     <div class="hidden md:table-cell"></div>
     <BreezeGuestLayout>
         <Table :resource="users" :input-debounce-ms="50" :resizeable-columns="true" :show-export-button="true"
-            name="users-table" :with-grouped-menu="false" :row-class="userRowStyle">
+            @row-clicked="rowClicked" name="users-table" :with-grouped-menu="false" :row-class="userRowStyle">
             <template #cell(actions)="{ item: user }">
                 <a :href="`/users/${user.id}/edit`">
                     Edit

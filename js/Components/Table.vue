@@ -113,7 +113,7 @@
                                             <td v-for="(column, colIndex) in queryBuilderData.columns"
                                                 v-show="show(column.key)"
                                                 :key="`table-${name}-row-${key}-column-${column.key}`"
-                                                @click="rowClicked($event, item, key)" :class="column.body_class"
+                                                @click="rowClicked($event, item, column.key)" :class="column.body_class"
                                                 :data-column-key="column.key" :style="{
                                                     width: getColumnWidthForBody(column.key),
                                                     overflow: 'hidden',
