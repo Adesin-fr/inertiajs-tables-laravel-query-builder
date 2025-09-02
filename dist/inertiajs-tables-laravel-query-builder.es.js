@@ -1,4 +1,4 @@
-import { ref as P, onMounted as ae, onBeforeUnmount as St, openBlock as d, createElementBlock as h, renderSlot as A, watch as ge, inject as ee, createBlock as O, withCtx as V, createElementVNode as s, normalizeClass as q, withModifiers as U, withDirectives as D, vShow as pe, createStaticVNode as Mt, normalizeStyle as se, toDisplayString as w, createCommentVNode as $, createTextVNode as ne, computed as F, unref as I, vModelSelect as ot, vModelText as we, watchEffect as zt, onUnmounted as Fe, Teleport as Pe, Fragment as Y, renderList as Z, createVNode as K, withKeys as Je, nextTick as nt, resolveDynamicComponent as xe, reactive as qt, getCurrentInstance as Tt, provide as It, Transition as Nt, vModelCheckbox as Ye, normalizeProps as Pt, guardReactiveProps as Ft } from "vue";
+import { ref as P, onMounted as ae, onBeforeUnmount as St, openBlock as d, createElementBlock as h, renderSlot as A, watch as ge, inject as ee, createBlock as O, withCtx as V, createElementVNode as s, normalizeClass as z, withModifiers as U, withDirectives as D, vShow as pe, createStaticVNode as Mt, normalizeStyle as se, toDisplayString as w, createCommentVNode as $, createTextVNode as ne, computed as F, unref as I, vModelSelect as ot, vModelText as we, watchEffect as zt, onUnmounted as Fe, Teleport as Pe, Fragment as Y, renderList as Z, createVNode as K, withKeys as Je, nextTick as nt, resolveDynamicComponent as xe, reactive as qt, getCurrentInstance as Tt, provide as It, Transition as Nt, vModelCheckbox as Ye, normalizeProps as Pt, guardReactiveProps as Ft } from "vue";
 import { createPopper as Ot } from "@popperjs/core/lib/popper-lite";
 import jt from "@popperjs/core/lib/modifiers/preventOverflow";
 import Lt from "@popperjs/core/lib/modifiers/flip";
@@ -161,11 +161,11 @@ const Xt = {
       }
       C === "[" ? p++ : C === "]" && p--;
     }
-    const y = n.length === 0 ? a : a.substring(c), S = y.startsWith(st), T = S ? y.substring(1) : y, b = x && x > c ? x - c : void 0;
+    const y = n.length === 0 ? a : a.substring(c), S = y.startsWith(st), q = S ? y.substring(1) : y, b = x && x > c ? x - c : void 0;
     return {
       modifiers: n,
       hasImportantModifier: S,
-      baseClassName: T,
+      baseClassName: q,
       maybePostfixModifierPosition: b
     };
   };
@@ -199,9 +199,9 @@ const Xt = {
       baseClassName: y,
       maybePostfixModifierPosition: S
     } = l(p);
-    let T = Boolean(S), b = i(T ? y.substring(0, S) : y);
+    let q = Boolean(S), b = i(q ? y.substring(0, S) : y);
     if (!b) {
-      if (!T) {
+      if (!q) {
         a = p + (a.length > 0 ? " " + a : a);
         continue;
       }
@@ -209,13 +209,13 @@ const Xt = {
         a = p + (a.length > 0 ? " " + a : a);
         continue;
       }
-      T = !1;
+      q = !1;
     }
     const m = or(c).join(":"), C = x ? m + st : m, _ = C + b;
     if (r.includes(_))
       continue;
     r.push(_);
-    const M = t(b, T);
+    const M = t(b, q);
     for (let j = 0; j < M.length; ++j) {
       const W = M[j];
       r.push(C + W);
@@ -262,7 +262,7 @@ const R = (e) => {
   const i = it.exec(e);
   return i ? i[1] ? typeof o == "string" ? i[1] === o : o.has(i[1]) : l(i[2]) : !1;
 }, Cr = (e) => fr.test(e) && !mr.test(e), ut = () => !1, _r = (e) => pr.test(e), $r = (e) => gr.test(e), Sr = () => {
-  const e = R("colors"), o = R("spacing"), l = R("blur"), i = R("brightness"), t = R("borderColor"), r = R("borderRadius"), u = R("borderSpacing"), a = R("borderWidth"), n = R("contrast"), p = R("grayscale"), c = R("hueRotate"), x = R("invert"), y = R("gap"), S = R("gradientColorStops"), T = R("gradientColorStopPositions"), b = R("inset"), m = R("margin"), C = R("opacity"), _ = R("padding"), M = R("saturate"), j = R("scale"), W = R("sepia"), G = R("skew"), X = R("space"), te = R("translate"), re = () => ["auto", "contain", "none"], ie = () => ["auto", "hidden", "clip", "visible", "scroll"], oe = () => ["auto", N, o], L = () => [N, o], ve = () => ["", le, fe], ue = () => ["auto", ke, N], ze = () => ["bottom", "center", "left", "left-bottom", "left-top", "right", "right-bottom", "right-top", "top"], be = () => ["solid", "dashed", "dotted", "double", "none"], qe = () => ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"], $e = () => ["start", "end", "center", "between", "around", "evenly", "stretch"], ce = () => ["", "0", N], Te = () => ["auto", "avoid", "all", "avoid-page", "page", "left", "right", "column"], Q = () => [ke, N];
+  const e = R("colors"), o = R("spacing"), l = R("blur"), i = R("brightness"), t = R("borderColor"), r = R("borderRadius"), u = R("borderSpacing"), a = R("borderWidth"), n = R("contrast"), p = R("grayscale"), c = R("hueRotate"), x = R("invert"), y = R("gap"), S = R("gradientColorStops"), q = R("gradientColorStopPositions"), b = R("inset"), m = R("margin"), C = R("opacity"), _ = R("padding"), M = R("saturate"), j = R("scale"), W = R("sepia"), G = R("skew"), X = R("space"), te = R("translate"), re = () => ["auto", "contain", "none"], ie = () => ["auto", "hidden", "clip", "visible", "scroll"], oe = () => ["auto", N, o], L = () => [N, o], ve = () => ["", le, fe], ue = () => ["auto", ke, N], ze = () => ["bottom", "center", "left", "left-bottom", "left-top", "right", "right-bottom", "right-top", "top"], be = () => ["solid", "dashed", "dotted", "double", "none"], qe = () => ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"], $e = () => ["start", "end", "center", "between", "around", "evenly", "stretch"], ce = () => ["", "0", N], Te = () => ["auto", "avoid", "all", "avoid-page", "page", "left", "right", "column"], Q = () => [ke, N];
   return {
     cacheSize: 500,
     separator: ":",
@@ -677,13 +677,13 @@ const R = (e) => {
         bg: [e]
       }],
       "gradient-from-pos": [{
-        from: [T]
+        from: [q]
       }],
       "gradient-via-pos": [{
-        via: [T]
+        via: [q]
       }],
       "gradient-to-pos": [{
-        to: [T]
+        to: [q]
       }],
       "gradient-from": [{
         from: [S]
@@ -1219,16 +1219,16 @@ const Mr = { class: "relative" }, zr = ["dusk", "disabled"], qr = { class: "mt-2
           dootix: "bg-white text-gray-700 hover:bg-gray-50 border-gray-300 focus:ring-cyan-500"
         }
       }
-    }, y = ee("themeVariables"), S = (T) => {
+    }, y = ee("themeVariables"), S = (q) => {
       var m, C;
       let b = "";
-      return T === "button" && t.disabled && (b = "cursor-not-allowed"), J(
+      return q === "button" && t.disabled && (b = "cursor-not-allowed"), J(
         b,
-        B([T, "base"], x, (m = y == null ? void 0 : y.inertia_table) == null ? void 0 : m.button_with_dropdown, t.ui),
-        B([T, "color", t.color], x, (C = y == null ? void 0 : y.inertia_table) == null ? void 0 : C.button_with_dropdown, t.ui)
+        B([q, "base"], x, (m = y == null ? void 0 : y.inertia_table) == null ? void 0 : m.button_with_dropdown, t.ui),
+        B([q, "color", t.color], x, (C = y == null ? void 0 : y.inertia_table) == null ? void 0 : C.button_with_dropdown, t.ui)
       );
     };
-    return (T, b) => (d(), O(Xt, { do: n }, {
+    return (q, b) => (d(), O(Xt, { do: n }, {
       default: V(() => [
         s("div", Mr, [
           s("button", {
@@ -1237,11 +1237,11 @@ const Mr = { class: "relative" }, zr = ["dusk", "disabled"], qr = { class: "mt-2
             type: "button",
             dusk: e.dusk,
             disabled: e.disabled,
-            class: q(S("button")),
+            class: z(S("button")),
             "aria-haspopup": "true",
             onClick: U(a, ["prevent"])
           }, [
-            A(T.$slots, "button")
+            A(q.$slots, "button")
           ], 10, zr),
           D(s("div", {
             ref_key: "tooltip",
@@ -1249,7 +1249,7 @@ const Mr = { class: "relative" }, zr = ["dusk", "disabled"], qr = { class: "mt-2
             class: "absolute z-50"
           }, [
             s("div", qr, [
-              A(T.$slots, "default")
+              A(q.$slots, "default")
             ])
           ], 512), [
             [pe, r.value]
@@ -1286,7 +1286,7 @@ const _e = (e, o) => {
       o.onResize(i, o.columnKey);
     };
     return (i, t) => (d(), h("div", {
-      class: q(["column-resize-handle", {
+      class: z(["column-resize-handle", {
         resizing: e.isActive,
         visible: e.isActive
       }]),
@@ -1351,11 +1351,11 @@ const _e = (e, o) => {
           onChange: u[0] || (u[0] = (a) => e.onFilterChange(e.filter.key, a.target.checked ? "1" : "0"))
         }, null, 40, Fr),
         s("div", {
-          class: q(["peer-focus:outline-none peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:transition-all", t("toggle")])
+          class: z(["peer-focus:outline-none peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:transition-all", t("toggle")])
         }, null, 2)
       ]),
       s("button", {
-        class: q(t("reset_button")),
+        class: z(t("reset_button")),
         onClick: u[1] || (u[1] = U((a) => e.onFilterChange(e.filter.key, null), ["prevent"]))
       }, [...u[2] || (u[2] = [
         s("span", { class: "sr-only" }, "Remove search", -1),
@@ -1569,21 +1569,21 @@ function Jr(e, o, l, i, t, r) {
   return d(), h("div", jr, [
     s("div", Lr, [
       s("div", {
-        class: q(r.getTheme("main_bar"))
+        class: z(r.getTheme("main_bar"))
       }, [
         s("div", {
-          class: q(["absolute", r.getTheme("selected_bar")]),
+          class: z(["absolute", r.getTheme("selected_bar")]),
           style: se(`width: ${r.rangeWidth}% !important; left: ${r.currentMinValueInPercent}% !important;`)
         }, null, 6),
         s("div", {
-          class: q([r.getTheme("button"), "absolute flex items-center justify-center -ml-2 top-0 cursor-pointer"]),
+          class: z([r.getTheme("button"), "absolute flex items-center justify-center -ml-2 top-0 cursor-pointer"]),
           style: se(`left: ${r.currentMinValueInPercent}%;`),
           onMousedown: o[0] || (o[0] = (c) => r.handleMouseDown(c, !0))
         }, [
           s("div", Ar, [
             s("div", Rr, [
               s("div", {
-                class: q(r.getTheme("popover")),
+                class: z(r.getTheme("popover")),
                 style: se(r.getMarginTop(t.hasOverlap && r.displayFirstDown))
               }, [
                 l.prefix ? (d(), h("span", Br, w(l.prefix), 1)) : $("", !0),
@@ -1591,7 +1591,7 @@ function Jr(e, o, l, i, t, r) {
                 l.suffix ? (d(), h("span", Er, w(l.suffix), 1)) : $("", !0)
               ], 6),
               (d(), h("svg", {
-                class: q(["absolute w-full h-2 left-0", [t.hasOverlap && r.displayFirstDown ? "bottom-6 rotate-180" : "top-100", r.getTheme("popover_arrow")]]),
+                class: z(["absolute w-full h-2 left-0", [t.hasOverlap && r.displayFirstDown ? "bottom-6 rotate-180" : "top-100", r.getTheme("popover_arrow")]]),
                 x: "0px",
                 y: "0px",
                 viewBox: "0 0 255 255",
@@ -1606,14 +1606,14 @@ function Jr(e, o, l, i, t, r) {
           ])
         ], 38),
         s("div", {
-          class: q([r.getTheme("button"), "absolute flex items-center justify-center -ml-2 top-0 cursor-pointer"]),
+          class: z([r.getTheme("button"), "absolute flex items-center justify-center -ml-2 top-0 cursor-pointer"]),
           style: se(`left: ${r.currentMaxValueInPercent}%;`),
           onMousedown: o[1] || (o[1] = (c) => r.handleMouseDown(c, !1))
         }, [
           s("div", Vr, [
             s("div", Wr, [
               s("div", {
-                class: q(r.getTheme("popover")),
+                class: z(r.getTheme("popover")),
                 style: se(r.getMarginTop(t.hasOverlap && !r.displayFirstDown))
               }, [
                 l.prefix ? (d(), h("span", Gr, w(l.prefix), 1)) : $("", !0),
@@ -1622,7 +1622,7 @@ function Jr(e, o, l, i, t, r) {
               ], 6),
               s("div", Dr, [
                 (d(), h("svg", {
-                  class: q(["absolute w-full h-2 left-0 top-100", [t.hasOverlap && !r.displayFirstDown ? "bottom-6 rotate-180" : "top-100", r.getTheme("popover_arrow")]]),
+                  class: z(["absolute w-full h-2 left-0 top-100", [t.hasOverlap && !r.displayFirstDown ? "bottom-6 rotate-180" : "top-100", r.getTheme("popover_arrow")]]),
                   x: "0px",
                   y: "0px",
                   viewBox: "0 0 255 255",
@@ -1638,14 +1638,14 @@ function Jr(e, o, l, i, t, r) {
           ])
         ], 38),
         s("div", {
-          class: q(["absolute -ml-1 bottom-0 left-0 -mb-6", r.getTheme("text")])
+          class: z(["absolute -ml-1 bottom-0 left-0 -mb-6", r.getTheme("text")])
         }, [
           l.prefix ? (d(), h("span", Hr, w(l.prefix), 1)) : $("", !0),
           ne(" " + w((n = l.min) != null ? n : 0) + " ", 1),
           l.suffix ? (d(), h("span", Kr, w(l.suffix), 1)) : $("", !0)
         ], 2),
         s("div", {
-          class: q(["absolute -mr-1 bottom-0 right-0 -mb-6", r.getTheme("text")])
+          class: z(["absolute -mr-1 bottom-0 right-0 -mb-6", r.getTheme("text")])
         }, [
           l.prefix ? (d(), h("span", Xr, w(l.prefix), 1)) : $("", !0),
           ne(" " + w((p = l.max) != null ? p : 0) + " ", 1),
@@ -1828,7 +1828,7 @@ const Yr = { class: "space-y-4" }, Zr = { class: "block text-sm font-medium text
           dootix: "text-gray-400 hover:text-gray-500 focus:ring-cyan-500"
         }
       }
-    }, S = ee("themeVariables"), T = (b) => {
+    }, S = ee("themeVariables"), q = (b) => {
       var m, C, _, M;
       return J(
         B([b, "base"], y, (C = (m = S == null ? void 0 : S.inertia_table) == null ? void 0 : m.table_filter) == null ? void 0 : C.number_filter, o.ui),
@@ -1840,7 +1840,7 @@ const Yr = { class: "space-y-4" }, Zr = { class: "block text-sm font-medium text
         s("label", Zr, w(I(l).filter_type), 1),
         D(s("select", {
           "onUpdate:modelValue": m[0] || (m[0] = (C) => i.value = C),
-          class: q(T("select")),
+          class: z(q("select")),
           onChange: p
         }, [
           s("option", eo, w(I(l).no_filter), 1),
@@ -1863,7 +1863,7 @@ const Yr = { class: "space-y-4" }, Zr = { class: "block text-sm font-medium text
               type: "number",
               "onUpdate:modelValue": m[1] || (m[1] = (C) => t.value = C),
               step: e.filter.step || 1,
-              class: q(T("input")),
+              class: z(q("input")),
               onInput: c,
               placeholder: "0"
             }, null, 42, mo), [
@@ -1886,7 +1886,7 @@ const Yr = { class: "space-y-4" }, Zr = { class: "block text-sm font-medium text
                 type: "number",
                 "onUpdate:modelValue": m[2] || (m[2] = (C) => r.value = C),
                 step: e.filter.step || 1,
-                class: q(T("input")),
+                class: z(q("input")),
                 onInput: c,
                 placeholder: "0"
               }, null, 42, yo), [
@@ -1908,7 +1908,7 @@ const Yr = { class: "space-y-4" }, Zr = { class: "block text-sm font-medium text
                 type: "number",
                 "onUpdate:modelValue": m[3] || (m[3] = (C) => u.value = C),
                 step: e.filter.step || 1,
-                class: q(T("input")),
+                class: z(q("input")),
                 onInput: c,
                 placeholder: "0"
               }, null, 42, _o), [
@@ -1927,7 +1927,7 @@ const Yr = { class: "space-y-4" }, Zr = { class: "block text-sm font-medium text
       a.value ? (d(), h("div", So, [
         s("button", {
           type: "button",
-          class: q(T("reset_button")),
+          class: z(q("reset_button")),
           onClick: x
         }, [
           s("span", Mo, w(I(l).reset_filter), 1),
@@ -2053,7 +2053,7 @@ const Yr = { class: "space-y-4" }, Zr = { class: "block text-sm font-medium text
           dootix: "text-gray-400 hover:text-gray-500 focus:ring-cyan-500"
         }
       }
-    }, S = ee("themeVariables"), T = (b) => {
+    }, S = ee("themeVariables"), q = (b) => {
       var m, C, _, M;
       return J(
         B([b, "base"], y, (C = (m = S == null ? void 0 : S.inertia_table) == null ? void 0 : m.table_filter) == null ? void 0 : C.date_filter, o.ui),
@@ -2065,7 +2065,7 @@ const Yr = { class: "space-y-4" }, Zr = { class: "block text-sm font-medium text
         s("label", qo, w(I(l).filter_type), 1),
         D(s("select", {
           "onUpdate:modelValue": m[0] || (m[0] = (C) => i.value = C),
-          class: q(T("select")),
+          class: z(q("select")),
           onChange: p
         }, [
           s("option", To, w(I(l).no_filter), 1),
@@ -2083,7 +2083,7 @@ const Yr = { class: "space-y-4" }, Zr = { class: "block text-sm font-medium text
           D(s("input", {
             type: "date",
             "onUpdate:modelValue": m[1] || (m[1] = (C) => t.value = C),
-            class: q(T("input")),
+            class: z(q("input")),
             onChange: c
           }, null, 34), [
             [we, t.value]
@@ -2095,7 +2095,7 @@ const Yr = { class: "space-y-4" }, Zr = { class: "block text-sm font-medium text
             D(s("input", {
               type: "date",
               "onUpdate:modelValue": m[2] || (m[2] = (C) => r.value = C),
-              class: q(T("input")),
+              class: z(q("input")),
               onChange: c
             }, null, 34), [
               [we, r.value]
@@ -2106,7 +2106,7 @@ const Yr = { class: "space-y-4" }, Zr = { class: "block text-sm font-medium text
             D(s("input", {
               type: "date",
               "onUpdate:modelValue": m[3] || (m[3] = (C) => u.value = C),
-              class: q(T("input")),
+              class: z(q("input")),
               onChange: c
             }, null, 34), [
               [we, u.value]
@@ -2117,7 +2117,7 @@ const Yr = { class: "space-y-4" }, Zr = { class: "block text-sm font-medium text
       a.value ? (d(), h("div", Eo, [
         s("button", {
           type: "button",
-          class: q(T("reset_button")),
+          class: z(q("reset_button")),
           onClick: x
         }, [
           s("span", Vo, w(I(l).reset_filter), 1),
@@ -2241,7 +2241,7 @@ const Wo = { class: "relative inline-block" }, Go = ["dusk"], Uo = { class: "tex
           dootix: "border-gray-300 focus:ring-cyan-500 focus:border-blue-500"
         }
       }
-    }, S = ee("themeVariables"), T = (m) => {
+    }, S = ee("themeVariables"), q = (m) => {
       var C, _, M, j;
       return J(
         B([m, "base"], y, (_ = (C = S == null ? void 0 : S.inertia_table) == null ? void 0 : C.table_filter) == null ? void 0 : _.select_filter, o.ui),
@@ -2260,7 +2260,7 @@ const Wo = { class: "relative inline-block" }, Go = ["dusk"], Uo = { class: "tex
         ref_key: "trigger",
         ref: i,
         onClick: a,
-        class: q([
+        class: z([
           "p-1 rounded hover:bg-gray-100 transition-colors duration-150",
           {
             "text-blue-500": u.value,
@@ -2300,7 +2300,7 @@ const Wo = { class: "relative inline-block" }, Go = ["dusk"], Uo = { class: "tex
                 key: 0,
                 name: _.key,
                 value: _.value,
-                class: q(T("select")),
+                class: z(q("select")),
                 onChange: (M) => c(_.key, M.target.value)
               }, [
                 (d(!0), h(Y, null, Z(_.options, (M, j) => (d(), h("option", {
@@ -2409,7 +2409,7 @@ const Wo = { class: "relative inline-block" }, Go = ["dusk"], Uo = { class: "tex
     function S(_) {
       o.onSearchChange(o.columnKey, _);
     }
-    const T = {
+    const q = {
       input: {
         base: "block w-full shadow-sm text-sm rounded-md min-w-[200px]",
         color: {
@@ -2427,8 +2427,8 @@ const Wo = { class: "relative inline-block" }, Go = ["dusk"], Uo = { class: "tex
     }, b = ee("themeVariables"), m = (_) => {
       var M, j, W, G;
       return J(
-        B([_, "base"], T, (j = (M = b == null ? void 0 : b.inertia_table) == null ? void 0 : M.table_search) == null ? void 0 : j.column_search, o.ui),
-        B([_, "color", o.color], T, (G = (W = b == null ? void 0 : b.inertia_table) == null ? void 0 : W.table_search) == null ? void 0 : G.column_search, o.ui)
+        B([_, "base"], q, (j = (M = b == null ? void 0 : b.inertia_table) == null ? void 0 : M.table_search) == null ? void 0 : j.column_search, o.ui),
+        B([_, "color", o.color], q, (G = (W = b == null ? void 0 : b.inertia_table) == null ? void 0 : W.table_search) == null ? void 0 : G.column_search, o.ui)
       );
     };
     function C(_) {
@@ -2443,7 +2443,7 @@ const Wo = { class: "relative inline-block" }, Go = ["dusk"], Uo = { class: "tex
         ref_key: "trigger",
         ref: r,
         onClick: c,
-        class: q([
+        class: z([
           "p-1 rounded hover:bg-gray-100 transition-colors duration-150",
           {
             "text-blue-500": p.value,
@@ -2482,7 +2482,7 @@ const Wo = { class: "relative inline-block" }, Go = ["dusk"], Uo = { class: "tex
                 ref: t,
                 type: "text",
                 value: n.value,
-                class: q(m("input")),
+                class: z(m("input")),
                 placeholder: `${I(l).search} ${e.columnLabel.toLowerCase()}...`,
                 onInput: y,
                 onKeydown: [
@@ -2493,7 +2493,7 @@ const Wo = { class: "relative inline-block" }, Go = ["dusk"], Uo = { class: "tex
               n.value && n.value !== "" ? (d(), h("div", ln, [
                 s("button", {
                   type: "button",
-                  class: q(m("reset_button")),
+                  class: z(m("reset_button")),
                   onClick: M[0] || (M[0] = (j) => S(""))
                 }, [
                   s("span", sn, w(I(l).reset), 1),
@@ -2561,7 +2561,7 @@ const un = ["data-column-key"], cn = { class: "flex flex-row items-center justif
       l && l.startResize(n, p);
     }
     return (n, p) => D((d(), h("th", {
-      class: q(["py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 relative resize-border", e.cell.header_class]),
+      class: z(["py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 relative resize-border", e.cell.header_class]),
       style: se({ width: i.value }),
       "data-column-key": e.cell.key
     }, [
@@ -2580,7 +2580,7 @@ const un = ["data-column-key"], cn = { class: "flex flex-row items-center justif
                 e.cell.sortable ? (d(), h("svg", {
                   key: 0,
                   "aria-hidden": "true",
-                  class: q(["w-3 h-3 ml-2", {
+                  class: z(["w-3 h-3 ml-2", {
                     "text-gray-400": !e.cell.sorted,
                     "text-green-500": e.cell.sorted
                   }]),
@@ -2691,7 +2691,7 @@ const un = ["data-column-key"], cn = { class: "flex flex-row items-center justif
       name: "per_page",
       dusk: e.dusk,
       value: e.value,
-      class: q(u("select")),
+      class: z(u("select")),
       onChange: n[0] || (n[0] = (p) => e.onChange(p.target.value))
     }, [
       (d(!0), h(Y, null, Z(i.value, (p) => (d(), h("option", {
@@ -2763,10 +2763,10 @@ const un = ["data-column-key"], cn = { class: "flex flex-row items-center justif
       !e.hasData || r.value.total < 1 ? (d(), h("p", Cn, w(I(o).no_results_found), 1)) : $("", !0),
       e.hasData ? (d(), h("div", {
         key: 1,
-        class: q(["flex-1 flex justify-between", { "sm:hidden": i.value }])
+        class: z(["flex-1 flex justify-between", { "sm:hidden": i.value }])
       }, [
         (d(), O(xe(u.value ? "a" : "div"), {
-          class: q([{
+          class: z([{
             "cursor-not-allowed text-gray-400": !u.value,
             "text-gray-700 hover:text-gray-500": u.value
           }, "relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md bg-white"]),
@@ -2801,7 +2801,7 @@ const un = ["data-column-key"], cn = { class: "flex flex-row items-center justif
           color: e.color
         }, null, 8, ["value", "options", "on-change", "color"]),
         (d(), O(xe(a.value ? "a" : "div"), {
-          class: q([{
+          class: z([{
             "cursor-not-allowed text-gray-400": !a.value,
             "text-gray-700 hover:text-gray-500": a.value
           }, "ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md bg-white"]),
@@ -2850,7 +2850,7 @@ const un = ["data-column-key"], cn = { class: "flex flex-row items-center justif
         s("div", null, [
           s("nav", Nn, [
             (d(), O(xe(u.value ? "a" : "div"), {
-              class: q([{
+              class: z([{
                 "cursor-not-allowed text-gray-400": !u.value,
                 "text-gray-500 hover:bg-gray-50": u.value
               }, "relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium"]),
@@ -2881,7 +2881,7 @@ const un = ["data-column-key"], cn = { class: "flex flex-row items-center justif
                   key: 0,
                   href: x.url,
                   dusk: x.url ? `pagination-${x.label}` : null,
-                  class: q(["relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium text-gray-700", {
+                  class: z(["relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium text-gray-700", {
                     "cursor-not-allowed": !x.url,
                     "hover:bg-gray-50": x.url,
                     "bg-white": !x.active,
@@ -2897,7 +2897,7 @@ const un = ["data-column-key"], cn = { class: "flex flex-row items-center justif
               ])
             ]))), 128)),
             (d(), O(xe(a.value ? "a" : "div"), {
-              class: q([{
+              class: z([{
                 "cursor-not-allowed text-gray-400": !a.value,
                 "text-gray-500 hover:bg-gray-50": a.value
               }, "relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium"]),
@@ -3056,7 +3056,7 @@ const un = ["data-column-key"], cn = { class: "flex flex-row items-center justif
     }
     function n(c, x) {
       const y = t.value.findIndex((S) => S.key === c);
-      y !== -1 && (t.value[y].pinned = !x), t.value.sort((S, T) => S.pinned && !T.pinned ? -1 : !S.pinned && T.pinned ? 1 : 0), i("columns-changed", t.value);
+      y !== -1 && (t.value[y].pinned = !x), t.value.sort((S, q) => S.pinned && !q.pinned ? -1 : !S.pinned && q.pinned ? 1 : 0), i("columns-changed", t.value);
     }
     function p() {
       u.value = !0, i("columns-changed", t.value);
@@ -3090,7 +3090,7 @@ const un = ["data-column-key"], cn = { class: "flex flex-row items-center justif
             y.can_be_pinned !== !1 ? (d(), h("button", {
               key: 0,
               type: "button",
-              class: q(["mr-2 p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600", { "text-blue-500": y.pinned }]),
+              class: z(["mr-2 p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600", { "text-blue-500": y.pinned }]),
               onClick: U((S) => n(y.key, y.pinned), ["prevent"]),
               title: y.pinned ? "D\xE9s\xE9pingler la colonne" : "\xC9pingler la colonne"
             }, [
@@ -3120,13 +3120,13 @@ const un = ["data-column-key"], cn = { class: "flex flex-row items-center justif
               ])]))
             ], 10, Wn)) : $("", !0),
             s("p", {
-              class: q(["text-sm text-gray-900", { "text-gray-400": y.hidden, "font-semibold": y.pinned }])
+              class: z(["text-sm text-gray-900", { "text-gray-400": y.hidden, "font-semibold": y.pinned }])
             }, w(y.label), 3)
           ]),
           y.can_be_hidden && !y.pinned ? (d(), h("button", {
             key: 0,
             type: "button",
-            class: q(["ml-4 relative inline-flex shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-light-blue-500", {
+            class: z(["ml-4 relative inline-flex shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-light-blue-500", {
               "bg-green-500": !y.hidden,
               "bg-gray-200": y.hidden
             }]),
@@ -3139,7 +3139,7 @@ const un = ["data-column-key"], cn = { class: "flex flex-row items-center justif
             x[6] || (x[6] = s("span", { class: "sr-only" }, "Column status", -1)),
             s("span", {
               "aria-hidden": "true",
-              class: q([{
+              class: z([{
                 "translate-x-5": !y.hidden,
                 "translate-x-0": y.hidden
               }, "inline-block h-5 w-5 rounded-full bg-white shadow ring-0 transition ease-in-out duration-200"])
@@ -3346,7 +3346,7 @@ const Hn = {
                 key: 0,
                 name: c.key,
                 value: c.value,
-                class: q(a("select", e.color)),
+                class: z(a("select", e.color)),
                 onChange: (y) => e.onFilterChange(c.key, y.target.value)
               }, [
                 (d(!0), h(Y, null, Z(c.options, (y, S) => (d(), h("option", {
@@ -3439,7 +3439,7 @@ const Hn = {
     };
     return (r, u) => (d(), h("div", il, [
       s("input", {
-        class: q(t("input")),
+        class: z(t("input")),
         placeholder: e.label,
         value: e.value,
         type: "text",
@@ -3559,12 +3559,12 @@ const Hn = {
           name: c.key,
           value: c.value,
           type: "text",
-          class: q(a("input")),
+          class: z(a("input")),
           onInput: (y) => e.onChange(c.key, y.target.value)
         }, null, 42, ml)),
         s("div", pl, [
           s("button", {
-            class: q(a("remove_button")),
+            class: z(a("remove_button")),
             dusk: `remove-search-row-${c.key}`,
             onClick: U((y) => e.onRemove(c.key), ["prevent"])
           }, [...p[1] || (p[1] = [
@@ -3630,7 +3630,7 @@ const Hn = {
         ref: "button",
         type: "button",
         dusk: "reset-table",
-        class: q(r("button")),
+        class: z(r("button")),
         "aria-haspopup": "true",
         onClick: a[0] || (a[0] = U((...p) => e.onClick && e.onClick(...p), ["prevent"]))
       }, [
@@ -3716,7 +3716,7 @@ const _l = /* @__PURE__ */ _e(bl, [["render", Cl]]), $l = {
                 dusk: "add-search-fields-button",
                 class: "text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex gap-2 items-center",
                 role: "menuitem",
-                onClick: n[0] || (n[0] = (T) => t.value = !0)
+                onClick: n[0] || (n[0] = (q) => t.value = !0)
               }, [
                 n[6] || (n[6] = s("svg", {
                   xmlns: "http://www.w3.org/2000/svg",
@@ -3737,7 +3737,7 @@ const _l = /* @__PURE__ */ _e(bl, [["render", Cl]]), $l = {
                 dusk: "toggle-column-button",
                 class: "text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex gap-2 items-center",
                 role: "menuitem",
-                onClick: n[1] || (n[1] = (T) => i.value = !0)
+                onClick: n[1] || (n[1] = (q) => i.value = !0)
               }, [
                 n[7] || (n[7] = s("svg", {
                   xmlns: "http://www.w3.org/2000/svg",
@@ -3760,9 +3760,9 @@ const _l = /* @__PURE__ */ _e(bl, [["render", Cl]]), $l = {
                 dusk: "reset-button",
                 class: "text-left w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 hover:text-red-700 flex gap-2 items-center",
                 role: "menuitem",
-                onClick: n[2] || (n[2] = (...T) => {
+                onClick: n[2] || (n[2] = (...q) => {
                   var b, m;
-                  return ((b = e.actions.reset) == null ? void 0 : b.onClick) && ((m = e.actions.reset) == null ? void 0 : m.onClick(...T));
+                  return ((b = e.actions.reset) == null ? void 0 : b.onClick) && ((m = e.actions.reset) == null ? void 0 : m.onClick(...q));
                 })
               }, [
                 n[8] || (n[8] = s("svg", {
@@ -3786,7 +3786,7 @@ const _l = /* @__PURE__ */ _e(bl, [["render", Cl]]), $l = {
               s("button", {
                 type: "button",
                 class: "text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex gap-2 items-center",
-                onClick: n[3] || (n[3] = (T) => t.value = !1)
+                onClick: n[3] || (n[3] = (q) => t.value = !1)
               }, [
                 n[10] || (n[10] = s("svg", {
                   viewBox: "0 0 24 24",
@@ -3804,13 +3804,13 @@ const _l = /* @__PURE__ */ _e(bl, [["render", Cl]]), $l = {
                 ], -1)),
                 s("span", null, w((y = I(o).add_search_fields) != null ? y : "Add search field"), 1)
               ]),
-              (d(!0), h(Y, null, Z(e.actions.searchFields.searchInputs, (T, b) => (d(), h("button", {
+              (d(!0), h(Y, null, Z(e.actions.searchFields.searchInputs, (q, b) => (d(), h("button", {
                 key: b,
-                dusk: `add-search-row-${T.key}`,
+                dusk: `add-search-row-${q.key}`,
                 class: "text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900",
                 role: "menuitem",
-                onClick: U((m) => e.actions.searchFields.onClick(T.key), ["prevent"])
-              }, w(T.label), 9, Sl))), 128))
+                onClick: U((m) => e.actions.searchFields.onClick(q.key), ["prevent"])
+              }, w(q.label), 9, Sl))), 128))
             ], 512), [
               [pe, t.value]
             ]),
@@ -3818,7 +3818,7 @@ const _l = /* @__PURE__ */ _e(bl, [["render", Cl]]), $l = {
               s("button", {
                 type: "button",
                 class: "text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex gap-2 items-center",
-                onClick: n[4] || (n[4] = (T) => i.value = !1)
+                onClick: n[4] || (n[4] = (q) => i.value = !1)
               }, [
                 n[11] || (n[11] = s("svg", {
                   viewBox: "0 0 24 24",
@@ -3923,7 +3923,7 @@ function ql(e) {
         X && (X.style.width = `${r[M]}px`);
       });
     });
-  }, T = () => {
+  }, q = () => {
     Object.keys(r).forEach((m) => {
       delete r[m];
     }), e !== "default" && localStorage.removeItem(`table-column-widths-${e}`);
@@ -3941,7 +3941,7 @@ function ql(e) {
     startResize: n,
     getColumnWidth: x,
     setColumnWidth: y,
-    resetColumnWidths: T,
+    resetColumnWidths: q,
     loadColumnWidths: u,
     saveColumnWidths: a,
     initializeColumnWidths: S
@@ -4059,11 +4059,11 @@ const Tl = ["dusk"], Il = { class: "flex flex-row flex-wrap sm:flex-nowrap justi
     Tt();
     const r = t.resizeableColumns ? ql(t.name) : null;
     It("columnResize", r);
-    const u = P(!1), a = F(() => Ze().props.queryBuilderProps ? { ...Ze().props.queryBuilderProps[t.name] } : {}), n = P(a.value), p = F(() => a.value.pageName), c = P([]), x = P(null), y = P(!1), S = F(() => a.value.hasToggleableColumns || a.value.hasFilters || a.value.hasSearchInputs ? !1 : !a.value.globalSearch), T = F(() => Object.keys(t.resource).length === 0 ? t.data : "data" in t.resource ? t.resource.data : t.resource), b = F(() => Object.keys(t.resource).length === 0 ? t.meta : "links" in t.resource && "meta" in t.resource && Object.keys(t.resource.links).length === 4 && "next" in t.resource.links && "prev" in t.resource.links ? {
+    const u = P(!1), a = F(() => Ze().props.queryBuilderProps ? { ...Ze().props.queryBuilderProps[t.name] } : {}), n = P(a.value), p = F(() => a.value.pageName), c = P([]), x = P(null), y = P(!1), S = F(() => a.value.hasToggleableColumns || a.value.hasFilters || a.value.hasSearchInputs ? !1 : !a.value.globalSearch), q = F(() => Object.keys(t.resource).length === 0 ? t.data : "data" in t.resource ? t.resource.data : t.resource), b = F(() => Object.keys(t.resource).length === 0 ? t.meta : "links" in t.resource && "meta" in t.resource && Object.keys(t.resource.links).length === 4 && "next" in t.resource.links && "prev" in t.resource.links ? {
       ...t.resource.meta,
       next_page_url: t.resource.links.next,
       prev_page_url: t.resource.links.prev
-    } : "meta" in t.resource ? t.resource.meta : t.resource), m = F(() => T.value.length > 0 ? !0 : b.value.total > 0), C = P({
+    } : "meta" in t.resource ? t.resource.meta : t.resource), m = F(() => q.value.length > 0 ? !0 : b.value.total > 0), C = P({
       reset: {
         onClick: X
       },
@@ -4092,16 +4092,16 @@ const Tl = ["dusk"], Il = { class: "flex flex-row flex-wrap sm:flex-nowrap justi
       if (f[p.value] > 1)
         return !0;
       const v = t.name === "default" ? "" : t.name + "_";
-      let z = !1;
+      let T = !1;
       return de(["filter", "columns", "cursor", "sort"], (k) => {
         const E = f[v + k];
-        k === "sort" && E === a.value.defaultSort || E !== void 0 && (z = !0);
-      }), z;
+        k === "sort" && E === a.value.defaultSort || E !== void 0 && (T = !0);
+      }), T;
     }), W = (f, g) => {
       let v = [];
       if (t.striped && g % 2 && v.push("bg-gray-50"), t.striped ? v.push("hover:bg-gray-100") : v.push("hover:bg-gray-50"), t.rowClass && typeof t.rowClass == "function") {
-        const z = t.rowClass(f);
-        z && v.push(z);
+        const T = t.rowClass(f);
+        T && v.push(T);
       }
       return v.join(" ");
     }, G = F(() => {
@@ -4130,10 +4130,10 @@ const Tl = ["dusk"], Il = { class: "flex flex-row flex-wrap sm:flex-nowrap justi
           }) : g.set(`${k}[${E}]`, H);
         });
       }
-      const z = n.value.columns.filter((k) => !k.hidden).map((k) => k.key);
-      if (z.length !== n.value.columns.length) {
+      const T = n.value.columns.filter((k) => !k.hidden).map((k) => k.key);
+      if (T.length !== n.value.columns.length) {
         const k = t.name === "default" ? "columns" : `${t.name}_columns`;
-        z.forEach((E) => {
+        T.forEach((E) => {
           g.append(`${k}[]`, E);
         });
       }
@@ -4198,14 +4198,14 @@ const Tl = ["dusk"], Il = { class: "flex flex-row flex-wrap sm:flex-nowrap justi
     }
     function qe() {
       const f = n.value.columns;
-      let g = Wt(f, (z) => !z.hidden), v = Dt(g, (z) => z.key).sort();
+      let g = Wt(f, (T) => !T.hidden), v = Dt(g, (T) => T.key).sort();
       return Ut(v, a.value.defaultVisibleToggleableColumns) ? {} : v;
     }
     function $e() {
       const f = be(), g = qe(), v = {};
       Object.keys(f).length > 0 && (v.filter = f), Object.keys(g).length > 0 && (v.columns = g);
-      const z = n.value.cursor, k = n.value.page, E = n.value.sort, H = n.value.perPage;
-      return z && (v.cursor = z), k > 1 && (v.page = k), H > 1 && (v.perPage = H), E && (v.sort = E), v;
+      const T = n.value.cursor, k = n.value.page, E = n.value.sort, H = n.value.perPage;
+      return T && (v.cursor = T), k > 1 && (v.page = k), H > 1 && (v.perPage = H), E && (v.sort = E), v;
     }
     function ce(f) {
       if (!f)
@@ -4218,13 +4218,13 @@ const Tl = ["dusk"], Il = { class: "flex flex-row flex-wrap sm:flex-nowrap justi
     }
     function Te() {
       const f = Ae.parse(location.search.substring(1)), g = t.name === "default" ? "" : t.name + "_";
-      de(["filter", "columns", "cursor", "sort"], (z) => {
-        delete f[g + z];
-      }), delete f[p.value], de($e(), (z, k) => {
-        k === "page" ? f[p.value] = z : k === "perPage" ? f.perPage = z : f[g + k] = z;
+      de(["filter", "columns", "cursor", "sort"], (T) => {
+        delete f[g + T];
+      }), delete f[p.value], de($e(), (T, k) => {
+        k === "page" ? f[p.value] = T : k === "perPage" ? f.perPage = T : f[g + k] = T;
       });
       let v = Ae.stringify(f, {
-        filter(z, k) {
+        filter(T, k) {
           return typeof k == "object" && k !== null ? Ht(k) : k;
         },
         skipNulls: !0,
@@ -4260,8 +4260,8 @@ const Tl = ["dusk"], Il = { class: "flex flex-row flex-wrap sm:flex-nowrap justi
       );
     }
     function ht(f, g, v) {
-      var z;
-      t.hasCheckboxes && ((z = f.target) == null ? void 0 : z.parentElement.cellIndex) === 0 || i("rowClicked", f, g, v);
+      var T;
+      t.hasCheckboxes && ((T = f.target) == null ? void 0 : T.parentElement.cellIndex) === 0 || i("rowClicked", f, g, v);
     }
     ge(n, () => {
       We(location.pathname + "?" + Te()), y.value = !1;
@@ -4292,22 +4292,22 @@ const Tl = ["dusk"], Il = { class: "flex flex-row flex-wrap sm:flex-nowrap justi
         try {
           const g = JSON.parse(f);
           if (g.length > 0 && "order" in g[0]) {
-            const v = new Map(g.map((z) => [z.key, z]));
-            n.value.columns.forEach((z, k) => {
-              const E = v.get(z.key);
+            const v = new Map(g.map((T) => [T.key, T]));
+            n.value.columns.forEach((T, k) => {
+              const E = v.get(T.key);
               E && (n.value.columns[k].hidden = E.hidden, n.value.columns[k].pinned = E.pinned || !1);
-            }), n.value.columns.sort((z, k) => {
+            }), n.value.columns.sort((T, k) => {
               var Xe, Qe;
-              const E = v.get(z.key), H = v.get(k.key);
-              if (z.pinned && !k.pinned)
+              const E = v.get(T.key), H = v.get(k.key);
+              if (T.pinned && !k.pinned)
                 return -1;
-              if (!z.pinned && k.pinned)
+              if (!T.pinned && k.pinned)
                 return 1;
               const ye = (Xe = E == null ? void 0 : E.order) != null ? Xe : 999, Le = (Qe = H == null ? void 0 : H.order) != null ? Qe : 999;
               return ye - Le;
             });
           } else
-            g.forEach((v, z) => {
+            g.forEach((v, T) => {
               const k = n.value.columns.findIndex((E) => E.key === v.key);
               k !== -1 && (n.value.columns[k].hidden = v.hidden, n.value.columns[k].pinned = v.pinned || !1);
             });
@@ -4330,10 +4330,10 @@ const Tl = ["dusk"], Il = { class: "flex flex-row flex-wrap sm:flex-nowrap justi
       v.onSort = Ue, v.filters = n.value.filters.filter(
         (k) => k.key === f || k.key.startsWith(f + "_") || k.key.includes(f)
       );
-      const z = n.value.searchInputs.filter(
+      const T = n.value.searchInputs.filter(
         (k) => k.key === f
       );
-      return z.length > 0 ? (v.searchable = !0, v.searchInputs = z) : (v.searchable = !1, v.searchInputs = []), v.onFilterChange = oe, v.onSearchChange = re, v.color = t.color, v;
+      return T.length > 0 ? (v.searchable = !0, v.searchInputs = T) : (v.searchable = !1, v.searchInputs = []), v.onFilterChange = oe, v.onSearchChange = re, v.color = t.color, v;
     }
     function bt() {
       t.resource.data.forEach((f) => {
@@ -4350,13 +4350,13 @@ const Tl = ["dusk"], Il = { class: "flex flex-row flex-wrap sm:flex-nowrap justi
       if (!t.resizeableColumns || !r)
         return "0px";
       let g = 0;
-      const v = n.value.columns.filter((z) => !z.hidden);
+      const v = n.value.columns.filter((T) => !T.hidden);
       t.hasCheckboxes && (g += 60);
-      for (const z of v) {
-        if (z.key === f)
+      for (const T of v) {
+        if (T.key === f)
           break;
-        if (z.pinned) {
-          const k = r.getColumnWidth(z.key);
+        if (T.pinned) {
+          const k = r.getColumnWidth(T.key);
           g += k === "auto" ? 150 : k;
         }
       }
@@ -4391,8 +4391,8 @@ const Tl = ["dusk"], Il = { class: "flex flex-row flex-wrap sm:flex-nowrap justi
       return t.hasCheckboxes && (f += 60), a.value.columns.forEach((v) => {
         if (!Ie(v.key))
           return;
-        const z = r.getColumnWidth(v.key);
-        z === "auto" ? g = !0 : f += z;
+        const T = r.getColumnWidth(v.key);
+        T === "auto" ? g = !0 : f += T;
       }), !g && f > 0 ? `${f}px` : "max(100%, " + (f > 0 ? f + "px" : "800px") + ")";
     }), Ke = F(() => t.resource.data.filter((f) => f.__itSelected).length), Ct = F(() => Ke.value === 0 ? l.noLineSelected : `${Ke.value} ${l.lineSelected}`);
     function _t() {
@@ -4410,7 +4410,7 @@ const Tl = ["dusk"], Il = { class: "flex flex-row flex-wrap sm:flex-nowrap justi
           ref: x,
           key: `table-${e.name}`,
           dusk: `table-${e.name}`,
-          class: q(["min-w-0", { "opacity-75": Q.value }])
+          class: z(["min-w-0", { "opacity-75": Q.value }])
         }, [
           s("div", Il, [
             a.value.globalSearch ? (d(), h("div", Nl, [
@@ -4471,7 +4471,7 @@ const Tl = ["dusk"], Il = { class: "flex flex-row flex-wrap sm:flex-nowrap justi
             }, () => [
               a.value.hasToggleableColumns ? (d(), O(Jn, {
                 key: 0,
-                class: q({ "mr-2 sm:mr-4": j.value }),
+                class: z({ "mr-2 sm:mr-4": j.value }),
                 columns: n.value.columns,
                 "has-hidden-columns": a.value.hasHiddenColumns,
                 "on-change": ue,
@@ -4524,13 +4524,13 @@ const Tl = ["dusk"], Il = { class: "flex flex-row flex-wrap sm:flex-nowrap justi
           ], !0),
           A(f.$slots, "tableWrapper", { meta: b.value }, () => [
             K(_l, {
-              class: q({ "mt-3": !S.value })
+              class: z({ "mt-3": !S.value })
             }, {
               default: V(() => [
                 A(f.$slots, "table", {}, () => [
                   s("div", Ol, [
                     s("table", {
-                      class: q(["divide-y divide-gray-300", { "show-resize-indicators": e.resizeableColumns && u.value }]),
+                      class: z(["divide-y divide-gray-300", { "show-resize-indicators": e.resizeableColumns && u.value }]),
                       style: se([{ "table-layout": "fixed", "min-width": "100%" }, { width: kt.value }]),
                       onMouseenter: g[1] || (g[1] = (v) => e.resizeableColumns ? _t : null),
                       onMouseleave: g[2] || (g[2] = (v) => e.resizeableColumns ? $t : null)
@@ -4570,14 +4570,14 @@ const Tl = ["dusk"], Il = { class: "flex flex-row flex-wrap sm:flex-nowrap justi
                       ]),
                       s("tbody", Rl, [
                         A(f.$slots, "body", { show: Ie }, () => [
-                          (d(!0), h(Y, null, Z(T.value, (v, z) => (d(), h("tr", {
-                            key: `table-${e.name}-row-${z}`,
-                            class: q(W(v, z))
+                          (d(!0), h(Y, null, Z(q.value, (v, T) => (d(), h("tr", {
+                            key: `table-${e.name}-row-${T}`,
+                            class: z(W(v, T))
                           }, [
                             e.hasCheckboxes ? (d(), h("td", Bl, [
                               D(s("input", {
                                 type: "checkbox",
-                                id: `table-${e.name}-select-${z}`,
+                                id: `table-${e.name}-select-${T}`,
                                 class: "rounded-sm m-1 border-gray-300",
                                 "onUpdate:modelValue": (k) => v.__itSelected = k
                               }, null, 8, El), [
@@ -4585,9 +4585,9 @@ const Tl = ["dusk"], Il = { class: "flex flex-row flex-wrap sm:flex-nowrap justi
                               ])
                             ])) : $("", !0),
                             (d(!0), h(Y, null, Z(n.value.columns, (k, E) => D((d(), h("td", {
-                              key: `table-${e.name}-row-${z}-column-${k.key}`,
-                              onClick: (H) => ht(H, v, z),
-                              class: q(k.body_class),
+                              key: `table-${e.name}-row-${T}-column-${k.key}`,
+                              onClick: (H) => ht(H, v, k.key),
+                              class: z(k.body_class),
                               "data-column-key": k.key,
                               style: se({
                                 width: yt(k.key),
@@ -4645,7 +4645,7 @@ const Tl = ["dusk"], Il = { class: "flex flex-row flex-wrap sm:flex-nowrap justi
       _: 3
     }));
   }
-}, ds = /* @__PURE__ */ _e(Ul, [["__scopeId", "data-v-7f0c6493"]]);
+}, ds = /* @__PURE__ */ _e(Ul, [["__scopeId", "data-v-7e18fac6"]]);
 export {
   Oe as ButtonWithDropdown,
   yn as HeaderCell,
