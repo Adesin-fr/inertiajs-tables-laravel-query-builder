@@ -36,7 +36,6 @@ class UserTableView
                 'language_code',
                 $globalSearch,
                 AllowedFilter::custom('created_at', new FiltersDate()),
-                //NumberRangeFilter::getQueryBuilderFilter('score'),
                 NumberFilter::getQueryBuilderFilter('score')
             ]);
 
@@ -44,14 +43,14 @@ class UserTableView
             ->name('users-table')
             ->resourceName('users')
             ->withQueryBuilder($queryBuilder)
-            ->paginateMethod($paginateMethod)
-            ->withResource($resource ? UserResource::class : null)
+//            ->paginateMethod($paginateMethod)
+//            ->withResource($resource ? UserResource::class : null)
             ->withGlobalSearch()
             ->defaultSort('name')
             ->column(key: 'name', searchable: true, sortable: true, canBeHidden: false)
             ->column(key: 'email', searchable: true, sortable: true, headerClass: 'hidden md:table-cell', bodyClass: 'hidden md:table-cell')
             ->column(key: 'score', searchable: true, sortable: true, headerClass: 'hidden md:table-cell', bodyClass: 'hidden md:table-cell')
-            ->column(key: 'language_code', label: 'Language')
+            ->column(key: 'language_code', label: 'Language', sortable: true)
             ->column(key: 'created_at', sortable: true, label: 'Created at')
             ->column(label: 'Actions')
             ->dateFilter(key: 'created_at', label: 'Date de création', format: 'Y-m-d')
@@ -60,6 +59,7 @@ class UserTableView
                 'nl' => 'Dutch',
             ], label: 'Language')
             ->numberFilter(key: 'score', label: 'Filtrer le score')
+            ->withInfiniteScrolling()
             ->render('Users');
     }
 }

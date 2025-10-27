@@ -14,6 +14,7 @@ This package is a fork of [protonemedia/inertiajs-tables-laravel-query-builder],
 ## Features
 
 -   **Fluent API**: New intuitive API for single and multiple tables ✅ **NEW!**
+-   **Infinite Scrolling**: Automatic infinite scrolling with seamless data loading ✅ **NEW!**
 -   **CSV Export**: Automatic CSV export with all filtered data ✅ **NEW!**
 -   **Number Filters**: Advanced number filtering with multiple comparison operators ✅ **NEW!**
 -   **Multiple Tables**: Support for multiple independent tables in a single view ✅ **NEW!**
@@ -1405,6 +1406,176 @@ const themeVariables = {
 	},
 }
 ```
+
+## Infinite Scrolling ✨ **NEW!**
+
+The package now supports infinite scrolling, allowing you to load data progressively as the user scrolls down the table. This provides a seamless experience for large datasets without traditional pagination.
+
+### How to Enable Infinite Scrolling
+
+Simply call `->withInfiniteScrolling()` before `->render()`:
+
+```php
+use AdesinFr\LaravelQueryBuilderInertiaJs\InertiaTable;
+use Spatie\QueryBuilder\QueryBuilder;
+
+return InertiaTable::make()
+    ->name('users')
+    ->column('id', 'ID', sortable: true)
+    ->column('name', 'Name', sortable: true, searchable: true)
+    ->column('email', 'Email', sortable: true, searchable: true)
+    ->column('created_at', 'Created At', sortable: true)
+    ->withGlobalSearch('Search users...')
+    ->defaultSort('-created_at')
+    ->perPageOptions([15, 30, 50, 100])
+    ->withQueryBuilder(
+        QueryBuilder::for(User::class)
+            ->allowedFilters(['name', 'email'])
+            ->allowedSorts(['name', 'email', 'created_at'])
+            ->defaultSort('-created_at')
+    )
+    ->withInfiniteScrolling()  // Enable infinite scrolling
+    ->render('Users/Index');
+```
+
+### How It Works
+
+#### Backend
+1. When `->withInfiniteScrolling()` is called, the backend automatically detects JSON requests
+2. For JSON requests, it returns paginated data as JSON instead of an Inertia response
+3. Standard Laravel pagination continues to work normally
+
+#### Frontend
+1. The `Table` component automatically detects the `infiniteScrolling` prop from backend
+2. An `IntersectionObserver` is set up to detect when the user scrolls near the bottom
+3. When triggered, it fetches the next page via a JSON request
+4. New data is appended to existing data (accumulation)
+5. The process continues until all data is loaded
+
+### Features
+
+- **Automatic Loading**: Data loads automatically as you scroll
+- **Loading Indicator**: Shows a spinner while fetching more data
+- **End Indicator**: Displays a message when all data is loaded
+- **Works with Filters**: Resets and works with search, filters, and sorting
+- **No Frontend Changes**: Just enable on backend, frontend adapts automatically
+- **Configurable Trigger**: Loads before reaching the bottom (100px margin)
+
+### Complete Example
+
+```php
+// UserController.php
+public function index(Request $request)
+{
+    $queryBuilder = QueryBuilder::for(User::class)
+        ->allowedFilters([
+            'name',
+            'email',
+            AllowedFilter::exact('status'),
+        ])
+        ->allowedSorts(['id', 'name', 'email', 'created_at'])
+        ->defaultSort('-created_at');
+
+    return InertiaTable::make()
+        ->name('users')
+        ->column('id', 'ID', canBeHidden: false, sortable: true)
+        ->column('name', 'Name', sortable: true, searchable: true)
+        ->column('email', 'Email', sortable: true, searchable: true)
+        ->column('status', 'Status', sortable: true)
+        ->column('created_at', 'Created At', sortable: true)
+        ->withGlobalSearch('Search...')
+        ->selectFilter('status', [
+            'active' => 'Active',
+            'pending' => 'Pending',
+            'inactive' => 'Inactive',
+        ], 'Status')
+        ->defaultSort('-created_at')
+        ->perPageOptions([20, 50, 100])
+        ->withQueryBuilder($queryBuilder)
+        ->withInfiniteScrolling()  // Enable infinite scrolling
+        ->render('Users/Index', [
+            'title' => 'Users',
+        ]);
+}
+```
+
+```vue
+<!-- Users/Index.vue -->
+<script setup>
+import { Head } from '@inertiajs/vue3';
+import Table from '@/Components/Table.vue';
+
+defineProps({
+    title: String,
+});
+</script>
+
+<template>
+    <Head :title="title" />
+    
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <h1 class="text-2xl font-bold mb-6">{{ title }}</h1>
+            
+            <!-- The Table component automatically handles infinite scrolling -->
+            <Table name="users" striped>
+                <!-- Custom cell templates -->
+                <template #cell(name)="{ item }">
+                    <div class="font-semibold">{{ item.name }}</div>
+                </template>
+                
+                <template #cell(email)="{ item }">
+                    <a :href="`mailto:${item.email}`" class="text-blue-600 hover:underline">
+                        {{ item.email }}
+                    </a>
+                </template>
+            </Table>
+        </div>
+    </div>
+</template>
+```
+
+### With Export
+
+Infinite scrolling works seamlessly with CSV export:
+
+```php
+return InertiaTable::make()
+    ->withQueryBuilder($queryBuilder)
+    ->column('name', 'Name')
+    ->column('email', 'Email')
+    ->withInfiniteScrolling()
+    ->handleExport(true)  // Enable export
+    ->render('Users/Index');
+```
+
+The export button will export ALL data based on current filters, not just the loaded/visible data.
+
+### With Resource Transformation
+
+You can also use Laravel API Resources with infinite scrolling:
+
+```php
+return InertiaTable::make()
+    ->withQueryBuilder($queryBuilder)
+    ->column('name', 'Name')
+    ->column('email', 'Email')
+    ->withResource(\App\Http\Resources\UserResource::class)
+    ->withInfiniteScrolling()
+    ->render('Users/Index');
+```
+
+### Technical Details
+
+**Browser Compatibility**: Uses the `IntersectionObserver` API, which is supported in all modern browsers.
+
+**Performance**: Only loads data when needed, reducing initial load time and server load.
+
+**State Management**: Automatically resets accumulated data when filters, search, or sort changes.
+
+**Error Handling**: Gracefully handles network errors and continues to allow retry on scroll.
+
+See the [examples directory](./examples/InfiniteScrollingExample.md) for more detailed examples and use cases.
 
 ## CSV Export ✨ **NEW!**
 

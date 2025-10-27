@@ -11,6 +11,7 @@ use AdesinFr\LaravelQueryBuilderInertiaJs\Filters\NumberFilter;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Inertia\Response;
 use Inertia\Inertia;
@@ -36,6 +37,7 @@ class InertiaTable
     private string $paginateMethod = 'paginate';
     private ?string $resourceClass = null;
     private string $resourceName = 'data';
+    private bool $infiniteScrolling = false;
 
     private static bool|string $defaultGlobalSearch = false;
     private static array $defaultQueryBuilderConfig = [];
@@ -171,6 +173,18 @@ class InertiaTable
         return $this;
     }
 
+    /**
+     * Enable infinite scrolling for this table.
+     *
+     * @return self
+     */
+    public function withInfiniteScrolling(): self
+    {
+        $this->infiniteScrolling = true;
+
+        return $this;
+    }
+
     public function __construct(Request $request)
     {
         $this->request      = $request;
@@ -217,15 +231,28 @@ class InertiaTable
      */
     public static function updateQueryBuilderParameters(string $name)
     {
-        if (empty(static::$defaultQueryBuilderConfig)) {
-            static::$defaultQueryBuilderConfig = config('query-builder.parameters');
+        if ($name === 'default') {
+            // Pour la table par défaut, utiliser les noms de paramètres standards
+            config(['query-builder.parameters.filter' => 'filter']);
+            config(['query-builder.parameters.sort' => 'sort']);
+            config(['query-builder.parameters.fields' => 'fields']);
+            config(['query-builder.parameters.append' => 'append']);
+            config(['query-builder.parameters.include' => 'include']);
+        } else {
+            // Pour les tables nommées, préfixer les paramètres
+            config(['query-builder.parameters.filter' => $name . '_filter']);
+            config(['query-builder.parameters.sort' => $name . '_sort']);
+            config(['query-builder.parameters.fields' => $name . '_fields']);
+            config(['query-builder.parameters.append' => $name . '_append']);
+            config(['query-builder.parameters.include' => $name . '_include']);
         }
 
-        $newConfig = collect(static::$defaultQueryBuilderConfig)->map(function ($value) use ($name) {
-            return "{$name}_{$value}";
-        })->all();
-
-        config(['query-builder.parameters' => $newConfig]);
+        // Log pour debug
+        Log::debug('QueryBuilder parameters updated', [
+            'table_name' => $name,
+            'filter_param' => config('query-builder.parameters.filter'),
+            'sort_param' => config('query-builder.parameters.sort'),
+        ]);
     }
 
     /**
@@ -312,12 +339,13 @@ class InertiaTable
 
             'globalSearch' => $this->searchInputs->firstWhere('key', 'global'),
 
-            'cursor'         => $this->query('cursor'),
-            'sort'           => $this->query('sort', $this->defaultSort) ?: null,
-            'defaultSort'    => $this->defaultSort,
-            'page'           => Paginator::resolveCurrentPage($this->pageName),
-            'pageName'       => $this->pageName,
-            'perPageOptions' => $this->perPageOptions,
+            'cursor'            => $this->query('cursor'),
+            'sort'              => $this->query('sort', $this->defaultSort) ?: null,
+            'defaultSort'       => $this->defaultSort,
+            'page'              => Paginator::resolveCurrentPage($this->pageName),
+            'pageName'          => $this->pageName,
+            'perPageOptions'    => $this->perPageOptions,
+            'infiniteScrolling' => $this->infiniteScrolling,
         ];
     }
 
@@ -646,12 +674,13 @@ class InertiaTable
      *
      * @param string $view
      * @param array $props
-     * @return \Inertia\Response|\Symfony\Component\HttpFoundation\Response
+     * @return \Inertia\Response|\Symfony\Component\HttpFoundation\Response|\Illuminate\Http\JsonResponse
      */
     public function render(string $view, array $props = [])
     {
         // Get the QueryBuilder (creating it if needed)
         $queryBuilder = $this->getQueryBuilder();
+
 
         // If we have a QueryBuilder, handle pagination internally
         if ($queryBuilder) {
@@ -683,12 +712,18 @@ class InertiaTable
             } else {
                 $props[$this->resourceName] = $paginatedData;
             }
+
+            // If infinite scrolling is enabled and this is a JSON request, return JSON
+            if ($this->infiniteScrolling && $this->request->wantsJson()) {
+                return response()->json($paginatedData);
+            }
         } else {
             // Check if this is an export request
             if ($this->handleExport && $this->request->get('do_export') === '1') {
                 return $this->handleCsvExport();
             }
         }
+
 
         $this->data = array_merge($this->data, $props);
 
@@ -718,6 +753,9 @@ class InertiaTable
      */
     private function getQueryBuilder(): ?QueryBuilder
     {
+        // Always update query builder parameters based on table name
+        static::updateQueryBuilderParameters($this->name);
+
         if ($this->queryBuilder) {
             return $this->queryBuilder;
         }

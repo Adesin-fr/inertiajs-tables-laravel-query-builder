@@ -56,8 +56,8 @@
                 </slot>
 
                 <!-- Export CSV Button -->
-                <slot v-if="showExportButton" name="exportButton" :export-url="exportUrl" :translations="translations">
-                    <a :href="exportUrl"
+                <slot v-if="showExportButton" name="exportButton" :export-url="exportUrlWithParams" :translations="translations">
+                    <a :href="exportUrlWithParams"
                         class="relative flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -144,15 +144,17 @@
                         </div>
                     </slot>
 
-                    <slot name="pagination" :on-click="visitPageFromUrl" :has-data="hasData" :meta="resourceMeta"
+                    <div ref="intersectElement" />
+
+                    <slot v-if="!queryBuilderProps.infiniteScrolling" name="pagination" :on-click="visitPageFromUrl" :has-data="hasData" :meta="resourceMeta"
                         :per-page-options="queryBuilderProps.perPageOptions" :on-per-page-change="onPerPageChange"
-                        :show-export-button="showExportButton" :export-url="exportUrlWithParams">
+                        :show-export-button="showExportButton">
                         <div class="flex justify-between bg-white px-2 py-3 items-center border-t border-gray-200">
                             <span class="italic text-sm px-2" v-if="hasCheckboxes">{{ lineCountLabel }}</span>
                             <Pagination :on-click="visitPageFromUrl" :has-data="hasData" :meta="resourceMeta"
                                 :per-page-options="queryBuilderProps.perPageOptions"
                                 :on-per-page-change="onPerPageChange" :color="color"
-                                :show-export-button="showExportButton" :export-url="exportUrlWithParams">
+                                :show-export-button="showExportButton">
                                 <!-- Slot pour personnaliser le bouton export -->
                                 <template #exportButton="exportProps">
                                     <slot name="exportButton" v-bind="exportProps" />
@@ -160,6 +162,12 @@
                             </Pagination>
                         </div>
                     </slot>
+
+                    <!-- Loading indicator for infinite scrolling -->
+                    <div v-if="queryBuilderProps.infiniteScrolling && isLoadingMore" class="flex justify-center py-4">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                    </div>
+
                 </TableWrapper>
             </slot>
         </fieldset>
@@ -187,7 +195,6 @@ import map from "lodash-es/map";
 import pickBy from "lodash-es/pickBy";
 import { router, usePage } from "@inertiajs/vue3";
 import GroupedActions from "./GroupedActions.vue";
-import BulkActions from "./BulkActions.vue";
 import { getTranslations } from "../translations.js";
 import { useColumnResize } from "../composables/useColumnResize.js";
 
@@ -269,6 +276,13 @@ const props = defineProps({
         required: false,
     },
 
+
+    withInfiniteScrolling: {
+        type: Boolean,
+        default: false,
+        required: false,
+    },
+
     color: {
         type: String,
         default: "primary",
@@ -322,6 +336,14 @@ const queryBuilderProps = computed(() => {
 
 const queryBuilderData = ref(queryBuilderProps.value);
 
+// Infinite scrolling state
+const allData = ref([]);
+const nextPageUrl = ref(null);
+const intersectElement = ref(null);
+const isLoadingMore = ref(false);
+let infiniteScrollObserver;
+
+
 const pageName = computed(() => {
     return queryBuilderProps.value.pageName;
 });
@@ -349,6 +371,12 @@ const hasOnlyData = computed(() => {
 });
 
 const resourceData = computed(() => {
+    // If infinite scrolling is enabled, ALWAYS use accumulated data
+    // This ensures the table empties when sorting/filtering changes
+    if (queryBuilderProps.value.infiniteScrolling) {
+        return allData.value;
+    }
+
     if (Object.keys(props.resource).length === 0) {
         return props.data;
     }
@@ -845,7 +873,75 @@ function rowClicked(event, item, key) {
     emit("rowClicked", event, item, key);
 }
 
+// Infinite scrolling function
+async function loadMore() {
+    if (isLoadingMore.value || !nextPageUrl.value) {
+        return;
+    }
+
+    isLoadingMore.value = true;
+
+    try {
+        const response = await fetch(nextPageUrl.value, {
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const json = await response.json();
+
+        // Add new data to existing data
+        allData.value = [...allData.value, ...json.data];
+
+        // Update next page URL
+        nextPageUrl.value = json.next_page_url;
+    } catch (error) {
+        console.error('Error loading more data:', error);
+    } finally {
+        isLoadingMore.value = false;
+    }
+}
+
+// Initialize infinite scrolling observer
+function initInfiniteScrolling() {
+    if (!queryBuilderProps.value.infiniteScrolling || !intersectElement.value) {
+        return;
+    }
+
+    // Initialize data from initial props only if allData is empty
+    if (props.resource && props.resource.data && allData.value.length === 0) {
+        allData.value = [...props.resource.data];
+        nextPageUrl.value = resourceMeta.value.next_page_url || null;
+    }
+
+    // Create intersection observer
+    infiniteScrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting ) {
+                    loadMore();
+                }
+            });
+        },
+        {
+            rootMargin: '0px 0px 10px 0px',
+        }
+    );
+
+    infiniteScrollObserver.observe(intersectElement.value);
+}
+
 watch(queryBuilderData, () => {
+    // Reset infinite scrolling data when query changes
+    if (queryBuilderProps.value.infiniteScrolling) {
+        allData.value = [];
+        nextPageUrl.value = null;
+    }
+
     visit(location.pathname + "?" + generateNewQueryString());
 
     headerCheckboxSelected.value = false;
@@ -856,6 +952,21 @@ watch(props.resource, () => {
     const selectedItems = props.resource.data.filter((item) => item.__itSelected);
 
     emit("selectionChanged", selectedItems);
+
+    // Update infinite scrolling data when new data arrives
+    if (queryBuilderProps.value.infiniteScrolling) {
+        // This is a fresh load (not a "load more"), so reset the data
+        allData.value = [...props.resource.data];
+        nextPageUrl.value = resourceMeta.value.next_page_url || null;
+        
+        // Reinitialize the observer after new data is loaded
+        // Use nextTick to ensure DOM is updated
+        setTimeout(() => {
+            if (intersectElement.value && !infiniteScrollObserver) {
+                initInfiniteScrolling();
+            }
+        }, 100);
+    }
 }, { deep: true });
 
 const inertiaListener = () => {
@@ -867,6 +978,15 @@ const inertiaListener = () => {
                 columnResize.initializeColumnWidths(tableElement);
             }
         }, 0);
+    }
+
+    // Reinitialize infinite scrolling observer after Inertia navigation
+    if (queryBuilderProps.value.infiniteScrolling) {
+        setTimeout(() => {
+            if (intersectElement.value && !infiniteScrollObserver) {
+                initInfiniteScrolling();
+            }
+        }, 100);
     }
 }; onMounted(() => {
     document.addEventListener("inertia:success", inertiaListener);
@@ -883,14 +1003,17 @@ const inertiaListener = () => {
             }
         }, 0);
     }
+
+    // Initialize infinite scrolling
+    if (queryBuilderProps.value.infiniteScrolling) {
+            initInfiniteScrolling();
+    }
 });
 
 function loadColumnsFromStorage() {
     if (!props.name || props.name === 'default') {
         return;
     }
-
-    console.log('Loading columns from storage for table:', props.name);
 
     const savedColumns = localStorage.getItem(`columns-${props.name}`);
     if (!savedColumns) {
@@ -947,7 +1070,6 @@ onUnmounted(() => {
     document.removeEventListener("inertia:success", inertiaListener);
 });
 
-//
 
 function sortBy(column) {
     if (queryBuilderData.value.sort == column) {
