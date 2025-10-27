@@ -171,7 +171,7 @@ return InertiaTable::make()
 
 ## Traditional API (Legacy)
 
-You can still use the traditional callback-based API if needed:
+You can still use the traditional callbackF-based API if needed:
 
 ```php
 return Inertia::render('Users/Index')->table(function (InertiaTable $table) {

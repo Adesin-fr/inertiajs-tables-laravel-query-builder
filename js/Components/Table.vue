@@ -2,9 +2,9 @@
     <Transition>
         <fieldset ref="tableFieldset" :key="`table-${name}`" :dusk="`table-${name}`" class="min-w-0"
             :class="{ 'opacity-75': isVisiting }">
-            <div class="flex flex-row flex-wrap sm:flex-nowrap justify-start px-4 sm:px-0">
+            <div class="flex flex-row flex-wrap sm:flex-nowrap justify-start px-4 sm:px-0 space-x-2">
                 <div v-if="queryBuilderProps.globalSearch"
-                    class="flex flex-row w-full sm:w-auto sm:grow mb-2 sm:mb-0 sm:mr-4">
+                    class="flex flex-row w-full sm:w-auto sm:grow mb-2 sm:mb-0">
                     <slot name="tableGlobalSearch" :has-global-search="queryBuilderProps.globalSearch"
                         :label="queryBuilderProps.globalSearch ? queryBuilderProps.globalSearch.label : null"
                         :value="queryBuilderProps.globalSearch ? queryBuilderProps.globalSearch.value : null"
@@ -15,7 +15,7 @@
                     </slot>
                 </div>
 
-                <div class="mr-2 sm:mr-4">
+                <div>
                     <slot name="tableFilter" :has-filters="queryBuilderProps.hasFilters"
                         :has-enabled-filters="queryBuilderProps.hasEnabledFilters" :filters="queryBuilderProps.filters"
                         :on-filter-change="changeFilterValue">
@@ -29,7 +29,7 @@
                     :has-search-inputs="queryBuilderProps.hasSearchInputs"
                     :has-search-inputs-without-value="queryBuilderProps.hasSearchInputsWithoutValue"
                     :search-inputs="queryBuilderProps.searchInputsWithoutGlobal" :on-add="showSearchInput">
-                    <TableAddSearchRow v-if="queryBuilderProps.hasSearchInputs" class="mr-2 sm:mr-4"
+                    <TableAddSearchRow v-if="queryBuilderProps.hasSearchInputs"
                         :search-inputs="queryBuilderProps.searchInputsWithoutGlobal"
                         :has-search-inputs-without-value="queryBuilderProps.hasSearchInputsWithoutValue"
                         :on-add="showSearchInput" :color="color" />
@@ -38,7 +38,7 @@
                 <slot v-if="!withGroupedMenu" name="tableColumns" :has-columns="queryBuilderProps.hasToggleableColumns"
                     :columns="queryBuilderData.columns" :has-hidden-columns="queryBuilderProps.hasHiddenColumns"
                     :on-change="changeColumnStatus">
-                    <TableColumns v-if="queryBuilderProps.hasToggleableColumns" :class="{ 'mr-2 sm:mr-4': canBeReset }"
+                    <TableColumns v-if="queryBuilderProps.hasToggleableColumns" 
                         :columns="queryBuilderData.columns" :has-hidden-columns="queryBuilderProps.hasHiddenColumns"
                         :on-change="changeColumnStatus" :table-name="name" :color="color" />
                 </slot>
@@ -54,6 +54,18 @@
                         <TableReset :on-click="resetQuery" :color="color" />
                     </div>
                 </slot>
+
+                <!-- Export CSV Button -->
+                <slot v-if="showExportButton" name="exportButton" :export-url="exportUrl" :translations="translations">
+                    <a :href="exportUrl"
+                        class="relative flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </a>
+                </slot>
+
             </div>
 
             <slot v-if="!hideSearchInputsAboveTable" name="tableSearchRows"
