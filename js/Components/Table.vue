@@ -913,6 +913,12 @@ function initInfiniteScrolling() {
         return;
     }
 
+    // Disconnect existing observer if it exists
+    if (infiniteScrollObserver) {
+        infiniteScrollObserver.disconnect();
+        infiniteScrollObserver = null;
+    }
+
     // Initialize data from initial props only if allData is empty
     if (props.resource && props.resource.data && allData.value.length === 0) {
         allData.value = [...props.resource.data];
@@ -948,21 +954,37 @@ watch(queryBuilderData, () => {
 
 }, { deep: true });
 
-watch(props.resource, () => {
-    const selectedItems = props.resource.data.filter((item) => item.__itSelected);
+// Watch for resource changes (used when not using infinite scrolling)
+watch(() => props.resource, () => {
+    if (!queryBuilderProps.value.infiniteScrolling && props.resource?.data) {
+        const selectedItems = props.resource.data.filter((item) => item.__itSelected);
+        emit("selectionChanged", selectedItems);
+    }
+}, { deep: true });
 
-    emit("selectionChanged", selectedItems);
+// Watch for new data in infinite scrolling mode
+watch(() => queryBuilderProps.value, (newProps) => {
+    if (!queryBuilderProps.value.infiniteScrolling) {
+        return;
+    }
 
-    // Update infinite scrolling data when new data arrives
-    if (queryBuilderProps.value.infiniteScrolling) {
+    // Check if we have new data from the resource
+    const newData = props.resource?.data || [];
+    
+    // Only update if we actually have data
+    if (newData.length > 0) {
         // This is a fresh load (not a "load more"), so reset the data
-        allData.value = [...props.resource.data];
+        allData.value = [...newData];
         nextPageUrl.value = resourceMeta.value.next_page_url || null;
         
+        // Handle selection changes
+        const selectedItems = newData.filter((item) => item.__itSelected);
+        emit("selectionChanged", selectedItems);
+        
         // Reinitialize the observer after new data is loaded
-        // Use nextTick to ensure DOM is updated
+        // Always reinitialize to ensure it's properly set up with new data
         setTimeout(() => {
-            if (intersectElement.value && !infiniteScrollObserver) {
+            if (intersectElement.value) {
                 initInfiniteScrolling();
             }
         }, 100);
@@ -983,7 +1005,7 @@ const inertiaListener = () => {
     // Reinitialize infinite scrolling observer after Inertia navigation
     if (queryBuilderProps.value.infiniteScrolling) {
         setTimeout(() => {
-            if (intersectElement.value && !infiniteScrollObserver) {
+            if (intersectElement.value) {
                 initInfiniteScrolling();
             }
         }, 100);
@@ -1068,6 +1090,12 @@ function loadColumnsFromStorage() {
 
 onUnmounted(() => {
     document.removeEventListener("inertia:success", inertiaListener);
+    
+    // Clean up infinite scrolling observer
+    if (infiniteScrollObserver) {
+        infiniteScrollObserver.disconnect();
+        infiniteScrollObserver = null;
+    }
 });
 
 
