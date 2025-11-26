@@ -246,13 +246,6 @@ class InertiaTable
             config(['query-builder.parameters.append' => $name . '_append']);
             config(['query-builder.parameters.include' => $name . '_include']);
         }
-
-        // Log pour debug
-        Log::debug('QueryBuilder parameters updated', [
-            'table_name' => $name,
-            'filter_param' => config('query-builder.parameters.filter'),
-            'sort_param' => config('query-builder.parameters.sort'),
-        ]);
     }
 
     /**
