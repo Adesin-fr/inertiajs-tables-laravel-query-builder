@@ -144,7 +144,7 @@
                         </div>
                     </slot>
 
-                    <div ref="intersectElement" />
+                    <div ref="intersectElement" style="height: 1px; width: 100%;" />
 
                     <slot v-if="!queryBuilderProps.infiniteScrolling" name="pagination" :on-click="visitPageFromUrl" :has-data="hasData" :meta="resourceMeta"
                         :per-page-options="queryBuilderProps.perPageOptions" :on-per-page-change="onPerPageChange"
@@ -928,13 +928,14 @@ function initInfiniteScrolling() {
     // Create intersection observer
     infiniteScrollObserver = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
-                if (entry.isIntersecting ) {
+                if (entry.isIntersecting) {
                     loadMore();
                 }
             });
         },
         {
-            rootMargin: '0px 0px 10px 0px',
+            rootMargin: '0px 0px 100px 0px',
+            threshold: 0.1,
         }
     );
 
