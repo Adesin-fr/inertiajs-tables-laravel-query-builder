@@ -23,8 +23,8 @@
     "eslint": "./node_modules/.bin/eslint app/resources/js/ js/ --ext .js,.vue --fix"
   },
   "peerDependencies": {
-    "@inertiajs/vue3": "^1.0.16",
-    "tailwind-merge": "^2.2.0",
+    "@inertiajs/vue3": "*",
+    "tailwind-merge": "*",
     "vue": "^3.4.27",
     "vuedraggable": "^4.1.0"
   },
