@@ -170,6 +170,10 @@
 
                 </TableWrapper>
             </slot>
+
+            <!-- Summary/Totals slot - provides access to all loaded data including lazy-loaded items -->
+            <slot name="tableSummary" :data="resourceData" :meta="resourceMeta" :selected-items="selectedItems">
+            </slot>
         </fieldset>
     </Transition>
 </template>
@@ -1271,8 +1275,12 @@ const totalTableWidth = computed(() => {
     return 'max(100%, ' + (totalWidth > 0 ? totalWidth + 'px' : '800px') + ')';
 });
 
+const selectedItems = computed(() => {
+    return resourceData.value.filter((item) => item.__itSelected);
+});
+
 const selectedLineCount = computed(() => {
-    return props.resource.data.filter((item) => item.__itSelected).length;
+    return selectedItems.value.length;
 });
 
 const lineCountLabel = computed(() => {

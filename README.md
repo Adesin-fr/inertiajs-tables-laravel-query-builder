@@ -730,6 +730,7 @@ The `Table` has some additional properties to tweak its front-end behaviour.
 | preventOverlappingRequests | Cancels a previous visit on new user input to prevent an inconsistent state.                                                                                                                              | `true`  |
 | inputDebounceMs            | Number of ms to wait before refreshing the table on user input.                                                                                                                                           | 350     |
 | preserveScroll             | Configures the [Scroll preservation](https://inertiajs.com/scroll-management#scroll-preservation) behavior. You may also pass `table-top` to this property to scroll to the top of the table on new data. | false   |
+| hasCheckboxes              | Enables row selection with checkboxes. Adds a checkbox column on the left side of the table with a "select all" checkbox in the header. Selected items are tracked via the `__itSelected` property.       | `false` |
 | rowClass                   | A function that receives the row item as parameter and returns a CSS class string to apply to the table row. Useful for conditional row styling.                                                          | `null`  |
 | paginationClickCallback    | A function that receives the pagination URL as parameter and handles custom pagination logic instead of the default Inertia navigation.                                                                   | `null`  |
 
@@ -801,6 +802,45 @@ const handleCustomPagination = async (url) => {
 -   **Performance Optimization**: Implement custom caching or data optimization strategies
 
 For a complete example, see [examples/PaginationCallbackExample.vue](examples/PaginationCallbackExample.vue).
+
+#### Row Selection with Checkboxes
+
+The `hasCheckboxes` property enables row selection with checkboxes. When enabled, a checkbox column is added on the left side of the table with a "select all" checkbox in the header.
+
+```vue
+<template>
+    <Table
+        :resource="users"
+        :has-checkboxes="true"
+        @selection-changed="handleSelectionChange"
+    />
+</template>
+
+<script setup>
+import { ref } from "vue";
+
+const selectedUsers = ref([]);
+
+const handleSelectionChange = (selectedItems) => {
+    selectedUsers.value = selectedItems;
+    console.log("Selected users:", selectedItems);
+};
+</script>
+```
+
+**Features:**
+
+-   **Select All**: The header checkbox allows selecting/deselecting all visible rows at once
+-   **Individual Selection**: Each row has its own checkbox for individual selection
+-   **Selection Tracking**: Selected items are tracked via the `__itSelected` property on each item
+-   **Selection Event**: The `selectionChanged` event is emitted whenever the selection changes, providing the array of selected items
+-   **Selection Counter**: A label displays the number of selected lines (e.g., "3 line(s) selected")
+
+**Use Cases:**
+
+-   Bulk operations (delete, export, status change)
+-   Multi-select for batch processing
+-   Comparison between multiple items
 
 The `Table` has some events that you can use
 
@@ -1093,6 +1133,7 @@ The `Table.vue` has several slots that you can use to inject your own implementa
 | exportButton      | The CSV export button. Provides `exportUrl` and `translations` as slot props.          |
 | with-grouped-menu | Use the grouped menu instead of multiple buttons                                       |
 | pagination        | The location of the paginator.                                                         |
+| tableSummary      | A slot below the table for totals/summary. Provides `data`, `meta`, and `selectedItems` as slot props. Works with lazy-loaded data. |
 | color             | The style of the table                                                                 |
 
 Each slot is provided with props to interact with the parent `Table` component.
@@ -1109,6 +1150,71 @@ Each slot is provided with props to interact with the parent `Table` component.
     </Table>
 </template>
 ```
+
+#### Table Summary Slot
+
+The `tableSummary` slot allows you to add a summary section below the table (e.g., totals, averages, or any aggregated data). This slot receives all loaded data, including items loaded via infinite scrolling (lazy loading).
+
+```vue
+<template>
+    <Table :resource="invoices" :has-checkboxes="true">
+        <!-- Custom cell templates -->
+        <template #cell(amount)="{ item }">
+            {{ formatCurrency(item.amount) }}
+        </template>
+
+        <!-- Summary section with totals -->
+        <template #tableSummary="{ data, meta, selectedItems }">
+            <div class="bg-gray-50 border-t border-gray-200 px-4 py-3">
+                <div class="flex justify-between items-center">
+                    <div class="text-sm text-gray-600">
+                        <span class="font-medium">{{ data.length }}</span> items loaded
+                        <span v-if="meta.total"> of {{ meta.total }} total</span>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm text-gray-600">
+                            Total: <span class="font-bold text-gray-900">{{ calculateTotal(data) }}</span>
+                        </div>
+                        <div v-if="selectedItems.length > 0" class="text-sm text-blue-600">
+                            Selected total: <span class="font-bold">{{ calculateTotal(selectedItems) }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </Table>
+</template>
+
+<script setup>
+const formatCurrency = (value) => {
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+    }).format(value);
+};
+
+const calculateTotal = (items) => {
+    const total = items.reduce((sum, item) => sum + (item.amount || 0), 0);
+    return formatCurrency(total);
+};
+</script>
+```
+
+**Slot Props:**
+
+| Prop           | Type   | Description                                                                                      |
+| -------------- | ------ | ------------------------------------------------------------------------------------------------ |
+| data           | Array  | All currently loaded table data (includes lazy-loaded items when using infinite scrolling)       |
+| meta           | Object | Pagination metadata (total, current_page, per_page, etc.)                                        |
+| selectedItems  | Array  | Array of currently selected items (when `hasCheckboxes` is enabled)                              |
+
+**Use Cases:**
+
+-   **Totals Row**: Display sum of numeric columns (amounts, quantities, etc.)
+-   **Averages**: Show average values across all loaded data
+-   **Selection Summary**: Display aggregated info about selected rows
+-   **Statistics**: Show min/max values, counts, or other statistics
+-   **Infinite Scrolling Support**: Works seamlessly with lazy-loaded data, updating as more items are loaded
 
 #### Customizing the Export Button
 
