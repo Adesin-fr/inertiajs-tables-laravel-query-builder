@@ -319,12 +319,29 @@ const props = defineProps({
         default: null,
         required: false,
     },
+    localStorageName: {
+        type: String,
+        default: null,
+        required: false,
+    },
+});
+
+// Computed property pour la clé localStorage
+const storageKey = computed(() => {
+    if (props.localStorageName) {
+        return props.localStorageName;
+    }
+    // Fallback sur le nom de la table si pas de localStorageName
+    if (props.name && props.name !== 'default') {
+        return `table-${props.name}`;
+    }
+    return null;
 });
 
 const app = getCurrentInstance();
 
 // Initialize column resizing only if enabled
-const columnResize = props.resizeableColumns ? useColumnResize(props.name) : null;
+const columnResize = props.resizeableColumns ? useColumnResize(storageKey) : null;
 
 // Provide resize context to child components
 provide('columnResize', columnResize);
@@ -618,7 +635,9 @@ function resetQuery() {
     });
 
     // Reset the columns visibility in the local storage
-    localStorage.removeItem(`columns-${props.name}`);
+    if (storageKey.value) {
+        localStorage.removeItem(`${storageKey.value}-columns`);
+    }
 
     // Reset column widths
     if (props.resizeableColumns && columnResize) {
@@ -686,17 +705,18 @@ function changeColumnStatus(keyOrColumns) {
 }
 
 function saveColumnsToStorage() {
-    if (props.name && props.name !== 'default') {
-        const columns = queryBuilderData.value.columns.map((column, index) => {
-            return {
-                key: column.key,
-                hidden: column.hidden,
-                pinned: column.pinned || false,
-                order: index
-            };
-        });
-        localStorage.setItem(`columns-${props.name}`, JSON.stringify(columns));
+    if (!storageKey.value) {
+        return;
     }
+    const columns = queryBuilderData.value.columns.map((column, index) => {
+        return {
+            key: column.key,
+            hidden: column.hidden,
+            pinned: column.pinned || false,
+            order: index
+        };
+    });
+    localStorage.setItem(`${storageKey.value}-columns`, JSON.stringify(columns));
 }
 
 function getFilterForQuery() {
@@ -1038,11 +1058,11 @@ const inertiaListener = () => {
 });
 
 function loadColumnsFromStorage() {
-    if (!props.name || props.name === 'default') {
+    if (!storageKey.value) {
         return;
     }
 
-    const savedColumns = localStorage.getItem(`columns-${props.name}`);
+    const savedColumns = localStorage.getItem(`${storageKey.value}-columns`);
     if (!savedColumns) {
         return;
     }

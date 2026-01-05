@@ -647,6 +647,56 @@ The column reordering and pinning features work automatically once you configure
 
 The column state is automatically synchronized between the frontend and backend through the query string and local storage.
 
+#### localStorage Persistence ✨ **NEW!**
+
+The table component stores all customizations (column visibility, order, pinned state, and column widths) in the browser's localStorage. By default, the storage key is based on the table name, but you can customize it using the `localStorageName` prop.
+
+##### Default Behavior
+
+Without specifying `localStorageName`, the table uses `table-{name}` as the storage key:
+
+```vue
+<template>
+    <!-- Storage keys: "table-users-columns" and "table-users-columnWidths" -->
+    <Table :resource="users" name="users" />
+</template>
+```
+
+##### Custom Storage Key
+
+Use `localStorageName` to specify a custom key for localStorage:
+
+```vue
+<template>
+    <!-- Storage keys: "admin-dashboard-users-columns" and "admin-dashboard-users-columnWidths" -->
+    <Table
+        :resource="users"
+        name="users"
+        local-storage-name="admin-dashboard-users"
+    />
+</template>
+```
+
+##### Use Cases
+
+-   **Multiple Instances**: When using the same table component on different pages with different configurations
+-   **User-Specific Settings**: Combine with user ID for per-user preferences (e.g., `user-123-products-table`)
+-   **Environment Separation**: Separate settings between development and production
+-   **Feature Flags**: Different configurations for different feature variants
+
+##### Storage Structure
+
+The table stores two separate entries in localStorage:
+
+| Key                            | Content                                          |
+| ------------------------------ | ------------------------------------------------ |
+| `{localStorageName}-columns`   | Column visibility, order, and pinned state       |
+| `{localStorageName}-columnWidths` | Column width preferences (when resizing is enabled) |
+
+##### Reset Behavior
+
+When the user clicks the "Reset" button, all customizations stored in localStorage for that table are cleared, and columns return to their default state.
+
 ### Client-side installation (Inertia)
 
 You can install the package via either `npm` or `yarn`:
@@ -733,6 +783,7 @@ The `Table` has some additional properties to tweak its front-end behaviour.
 | hasCheckboxes              | Enables row selection with checkboxes. Adds a checkbox column on the left side of the table with a "select all" checkbox in the header. Selected items are tracked via the `__itSelected` property.       | `false` |
 | rowClass                   | A function that receives the row item as parameter and returns a CSS class string to apply to the table row. Useful for conditional row styling.                                                          | `null`  |
 | paginationClickCallback    | A function that receives the pagination URL as parameter and handles custom pagination logic instead of the default Inertia navigation.                                                                   | `null`  |
+| localStorageName           | Custom key for storing table customizations (column visibility, order, pinned state, and widths) in localStorage. If not provided, falls back to `table-{name}`.                                          | `null`  |
 
 #### Custom Pagination Callback ✨ **NEW!**
 
@@ -1422,7 +1473,7 @@ const themeVariables = {
 					},
 				},
 		},
-		togle_filter: {
+		toggle_filter: {
 			toggle: {
 				base: "w-11 h-6 rounded-full after:border after:rounded-full after:h-5 after:w-5",
 				color: {

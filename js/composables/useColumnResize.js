@@ -1,20 +1,27 @@
-import { ref, reactive, onMounted, onUnmounted } from 'vue';
+import { ref, reactive, onMounted, onUnmounted, isRef, unref } from 'vue';
 
-export function useColumnResize(tableName) {
+export function useColumnResize(storageKeyOrRef) {
     const isResizing = ref(false);
     const resizingColumn = ref(null);
     const startX = ref(0);
     const startWidth = ref(0);
     const columnWidths = reactive({});
 
+    // Helper pour obtenir la clé de stockage actuelle
+    const getStorageKey = () => {
+        const key = isRef(storageKeyOrRef) ? unref(storageKeyOrRef) : storageKeyOrRef;
+        return key ? `${key}-columnWidths` : null;
+    };
+
     // Load saved widths from localStorage
     const loadColumnWidths = () => {
-        // Don't load widths if table name is "default"
-        if (tableName === 'default') {
+        const storageKey = getStorageKey();
+        // Don't load widths if no storage key
+        if (!storageKey) {
             return;
         }
 
-        const saved = localStorage.getItem(`table-column-widths-${tableName}`);
+        const saved = localStorage.getItem(storageKey);
 
         if (saved) {
             try {
@@ -28,12 +35,13 @@ export function useColumnResize(tableName) {
 
     // Save widths to localStorage
     const saveColumnWidths = () => {
-        // Don't save widths if table name is "default"
-        if (tableName === 'default') {
+        const storageKey = getStorageKey();
+        // Don't save widths if no storage key
+        if (!storageKey) {
             return;
         }
 
-        localStorage.setItem(`table-column-widths-${tableName}`, JSON.stringify(columnWidths));
+        localStorage.setItem(storageKey, JSON.stringify(columnWidths));
     };
 
     // Initialize resize
@@ -184,9 +192,10 @@ export function useColumnResize(tableName) {
             delete columnWidths[key];
         });
 
-        // Only remove from localStorage if the table name is not "default"
-        if (tableName !== 'default') {
-            localStorage.removeItem(`table-column-widths-${tableName}`);
+        const storageKey = getStorageKey();
+        // Remove from localStorage if we have a storage key
+        if (storageKey) {
+            localStorage.removeItem(storageKey);
         }
     };
 
