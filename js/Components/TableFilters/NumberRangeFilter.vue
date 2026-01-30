@@ -1,54 +1,51 @@
 <template>
-    <div ref="range" class="flex w-full my-4 items-center justify-center" unselectable="on"
-        onselectstart="return false;">
-        <div class="py-1 relative min-w-full">
-            <div :class="getTheme('main_bar')">
-                <div class="absolute" :class="getTheme('selected_bar')"
+    <div ref="range" class="ijt-range-filter" unselectable="on" onselectstart="return false;">
+        <div class="ijt-range-filter__container">
+            <div class="ijt-range-filter__track">
+                <div class="ijt-range-filter__selected"
                     :style="`width: ${rangeWidth}% !important; left: ${currentMinValueInPercent}% !important;`" />
-                <div :class="getTheme('button')"
-                    class="absolute flex items-center justify-center -ml-2 top-0 cursor-pointer"
+                <div class="ijt-range-filter__handle"
                     :style="`left: ${currentMinValueInPercent}%;`" @mousedown="handleMouseDown($event, true)">
-                    <div class="z-40">
-                        <div ref="popover_min" class="relative shadow-md">
-                            <div :class="getTheme('popover')" :style="getMarginTop(hasOverlap && displayFirstDown)">
+                    <div style="z-index: 40;">
+                        <div ref="popover_min" class="ijt-range-filter__popover">
+                            <div class="ijt-range-filter__popover-content" :style="getMarginTop(hasOverlap && displayFirstDown)">
                                 <span v-if="prefix">{{ prefix }}</span>
                                 {{ currentMinValue ?? 0 }}
                                 <span v-if="suffix">{{ suffix }}</span>
                             </div>
-                            <svg class="absolute w-full h-2 left-0" x="0px" y="0px" viewBox="0 0 255 255"
+                            <svg class="ijt-range-filter__popover-arrow" x="0px" y="0px" viewBox="0 0 255 255"
                                 xml:space="preserve"
-                                :class="[hasOverlap && displayFirstDown ? 'bottom-6 rotate-180' : 'top-100', getTheme('popover_arrow')]">
+                                :class="[hasOverlap && displayFirstDown ? 'bottom-6 rotate-180' : 'top-100']">
                                 <polygon class="fill-current" points="0,0 127.5,127.5 255,0" />
                             </svg>
                         </div>
                     </div>
                 </div>
-                <div :class="getTheme('button')"
-                    class="absolute flex items-center justify-center -ml-2 top-0 cursor-pointer"
+                <div class="ijt-range-filter__handle"
                     :style="`left: ${currentMaxValueInPercent}%;`" @mousedown="handleMouseDown($event, false)">
-                    <div class="z-40">
-                        <div ref="popover_max" class="relative shadow-md">
-                            <div :class="getTheme('popover')" :style="getMarginTop(hasOverlap && !displayFirstDown)">
+                    <div style="z-index: 40;">
+                        <div ref="popover_max" class="ijt-range-filter__popover">
+                            <div class="ijt-range-filter__popover-content" :style="getMarginTop(hasOverlap && !displayFirstDown)">
                                 <span v-if="prefix">{{ prefix }}</span>
                                 {{ currentMaxValue ?? 0 }}
                                 <span v-if="suffix">{{ suffix }}</span>
                             </div>
                             <div draggable="true">
-                                <svg class="absolute w-full h-2 left-0 top-100" x="0px" y="0px" viewBox="0 0 255 255"
+                                <svg class="ijt-range-filter__popover-arrow" x="0px" y="0px" viewBox="0 0 255 255"
                                     xml:space="preserve"
-                                    :class="[hasOverlap && !displayFirstDown ? 'bottom-6 rotate-180' : 'top-100', getTheme('popover_arrow')]">
+                                    :class="[hasOverlap && !displayFirstDown ? 'bottom-6 rotate-180' : 'top-100']">
                                     <polygon class="fill-current" points="0,0 127.5,127.5 255,0" />
                                 </svg>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="absolute -ml-1 bottom-0 left-0 -mb-6" :class="getTheme('text')">
+                <div class="ijt-range-filter__label ijt-range-filter__label--min">
                     <span v-if="prefix">{{ prefix }}</span>
                     {{ min ?? 0 }}
                     <span v-if="suffix">{{ suffix }}</span>
                 </div>
-                <div class="absolute -mr-1 bottom-0 right-0 -mb-6" :class="getTheme('text')">
+                <div class="ijt-range-filter__label ijt-range-filter__label--max">
                     <span v-if="prefix">{{ prefix }}</span>
                     {{ max ?? 0 }}
                     <span v-if="suffix">{{ suffix }}</span>
@@ -59,12 +56,8 @@
 </template>
 
 <script>
-import { twMerge } from "tailwind-merge";
-import { get_theme_part } from "../../helpers.js";
-
 export default {
     name: "SimpleMultiRange",
-    inject: ["themeVariables"],
     props: {
         max: {
             required: true,
@@ -94,16 +87,6 @@ export default {
             type: Number,
             default: 1,
         },
-        color: {
-            required: false,
-            type: String,
-            default: "primary",
-        },
-        ui: {
-            required: false,
-            type: Object,
-            default: {},
-        },
     },
     data() {
         return {
@@ -112,7 +95,6 @@ export default {
             moveMax: false,
             hasOverlap: false,
             internalValue: this.modelValue ? [...this.modelValue] : null,
-            fallbackTheme: null,
         };
     },
     computed: {
@@ -171,63 +153,11 @@ export default {
     mounted() {
         this.detectIfOverlap();
     },
-    beforeMount() {
-        this.fallbackTheme = {
-            main_bar: {
-                base: "h-2 rounded-full",
-                color: {
-                    primary: "bg-gray-200",
-                    dootix: "bg-gray-200",
-                },
-            },
-            selected_bar: {
-                base: "h-2 rounded-full",
-                color: {
-                    primary: "bg-indigo-600",
-                    dootix: "bg-gradient-to-r from-cyan-500 to-blue-600",
-                },
-            },
-            button: {
-                base: "h-4 w-4 rounded-full shadow border",
-                color: {
-                    primary: "bg-white border-gray-300",
-                    dootix: "bg-white border-gray-300",
-                },
-            },
-            popover: {
-                base: "truncate text-xs rounded py-1 px-4",
-                color: {
-                    primary: "bg-gray-600 text-white",
-                    dootix: "bg-gray-600 text-white",
-                },
-            },
-            popover_arrow: {
-                color: {
-                    primary: "text-gray-600",
-                    dootix: "text-gray-600",
-                },
-            },
-            text: {
-                color: {
-                    primary: "text-gray-700",
-                    dootix: "text-gray-700",
-                },
-            },
-        };
-    },
     methods: {
         getMarginTop(isDown) {
-            const buttonTheme = this.getTheme("button");
-            const regex = /h-(\d+)/;
-            const match = buttonTheme.match(regex);
             const defaultNumber = 4;
-            let number = null;
+            let number = 4;
 
-            if (match && 1 in match) {
-                number = match[1];
-            } else {
-                number = defaultNumber;
-            }
             if (isDown) {
                 return `margin-top: ${((number - defaultNumber) + 12) * 0.25}rem`;
             }
@@ -278,12 +208,21 @@ export default {
             window.removeEventListener("mouseup", this.handleMouseUp);
             this.$emit("update:modelValue", [this.currentMinValue, this.currentMaxValue]);
         },
-        getTheme(item) {
-            return twMerge(
-                get_theme_part([item, "base"], this.fallbackTheme, this.themeVariables?.inertia_table?.table_filter?.number_range_filter, this.ui),
-                get_theme_part([item, "color", this.color], this.fallbackTheme, this.themeVariables?.inertia_table?.table_filter?.number_range_filter, this.ui),
-            );
-        },
     },
 };
 </script>
+
+<style scoped>
+.bottom-6 {
+    bottom: 1.5rem;
+}
+.rotate-180 {
+    transform: rotate(180deg);
+}
+.top-100 {
+    top: 100%;
+}
+.fill-current {
+    fill: currentColor;
+}
+</style>

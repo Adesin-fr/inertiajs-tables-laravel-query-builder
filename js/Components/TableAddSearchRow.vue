@@ -3,14 +3,12 @@
     ref="dropdown"
     dusk="add-search-row-dropdown"
     :disabled="!hasSearchInputsWithoutValue"
-    class="w-auto"
-    :color="color"
+    class="ijt-dropdown--auto-width"
   >
     <template #button>
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="h-5 w-5 text-gray-400"
-
+        class="ijt-button__icon"
         viewBox="0 0 20 20"
         fill="currentColor"
       >
@@ -26,13 +24,13 @@
       role="menu"
       aria-orientation="horizontal"
       aria-labelledby="add-search-input-menu"
-      class="min-w-max"
+      class="ijt-dropdown__content"
     >
       <button
         v-for="(searchInput, key) in searchInputs"
         :key="key"
         :dusk="`add-search-row-${searchInput.key}`"
-        class="text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+        class="ijt-dropdown__item"
         role="menuitem"
         @click.prevent="enableSearch(searchInput.key)"
       >
@@ -60,12 +58,6 @@ const props = defineProps({
     onAdd: {
         type: Function,
         required: true,
-    },
-
-    color: {
-        type: String,
-        default: "primary",
-        required: false,
     },
 });
 

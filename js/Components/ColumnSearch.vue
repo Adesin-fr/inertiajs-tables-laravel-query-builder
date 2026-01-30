@@ -1,13 +1,9 @@
 <template>
-    <div class="relative inline-block">
-        <button ref="trigger" @click="toggleDropdown" :class="[
-            'p-1 rounded hover:bg-gray-100 transition-colors duration-150',
-            {
-                'text-blue-500': hasActiveSearch,
-                'text-gray-400 hover:text-gray-600': !hasActiveSearch
-            }
-        ]" :dusk="`column-search-${columnKey}`">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+    <div class="ijt-filter">
+        <button ref="trigger" @click="toggleDropdown" class="ijt-filter__button"
+            :class="{ 'ijt-filter__button--active': hasActiveSearch }"
+            :dusk="`column-search-${columnKey}`">
+            <svg xmlns="http://www.w3.org/2000/svg" class="ijt-filter__button-icon" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd"
                     d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                     clip-rule="evenodd" />
@@ -17,26 +13,24 @@
         <!-- Teleported Dropdown with Popper -->
         <Teleport to="body">
             <div v-if="isDropdownOpen" ref="container"
-                class="bg-white border border-gray-200 rounded-md shadow-lg z-[9999] min-w-max"
+                class="ijt-filter__dropdown ijt-column-search" style="z-index: 9999;"
                 @click.stop>
-                <div class="p-3">
-                    <h3 class="text-xs uppercase tracking-wide text-gray-600 mb-2">
-                        {{ translations.search }} {{ columnLabel }}
-                    </h3>
-                    <div class="space-y-2">
-                        <input ref="searchInput" type="text" :value="currentSearchValue" :class="getTheme('input')"
-                            :placeholder="`${translations.search} ${columnLabel.toLowerCase()}...`"
-                            @input="onSearchInput" @keydown.enter="closeDropdown" @keydown.escape="closeDropdown" />
-                        <div v-if="currentSearchValue && currentSearchValue !== ''" class="flex justify-end">
-                            <button type="button" :class="getTheme('reset_button')" @click="onSearchChange('')">
-                                <span class="sr-only">{{ translations.reset }}</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
+                <h3 class="ijt-column-search__header">
+                    {{ translations.search }} {{ columnLabel }}
+                </h3>
+                <div class="ijt-column-search__content">
+                    <input ref="searchInput" type="text" :value="currentSearchValue" class="ijt-column-search__input"
+                        :placeholder="`${translations.search} ${columnLabel.toLowerCase()}...`"
+                        @input="onSearchInput" @keydown.enter="closeDropdown" @keydown.escape="closeDropdown" />
+                    <div v-if="currentSearchValue && currentSearchValue !== ''" class="ijt-column-search__reset">
+                        <button type="button" class="ijt-search-row__remove-button" @click="onSearchChange('')">
+                            <span class="ijt-sr-only">{{ translations.reset }}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="ijt-search-row__remove-icon" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -44,15 +38,13 @@
 
         <!-- Backdrop -->
         <Teleport to="body">
-            <div v-if="isDropdownOpen" class="fixed inset-0 z-[9998]" @click="closeDropdown" />
+            <div v-if="isDropdownOpen" class="ijt-filter__backdrop" style="z-index: 9998;" @click="closeDropdown" />
         </Teleport>
     </div>
 </template>
 
 <script setup>
-import { computed, ref, inject, onMounted, onUnmounted, Teleport, nextTick } from "vue";
-import { twMerge } from "tailwind-merge";
-import { get_theme_part } from "../helpers.js";
+import { computed, ref, onMounted, onUnmounted, Teleport, nextTick } from "vue";
 import { getTranslations } from "../translations.js";
 import { usePopper } from "../composables/usePopper.js";
 
@@ -72,16 +64,6 @@ const props = defineProps({
     onSearchChange: {
         type: Function,
         required: true,
-    },
-    color: {
-        type: String,
-        default: "primary",
-        required: false,
-    },
-    ui: {
-        required: false,
-        type: Object,
-        default: {},
     },
 });
 
@@ -142,32 +124,6 @@ function onSearchInput(event) {
 function onSearchChange(value) {
     props.onSearchChange(props.columnKey, value);
 }
-
-// Theme
-const fallbackTheme = {
-    input: {
-        base: "block w-full shadow-sm text-sm rounded-md min-w-[200px]",
-        color: {
-            primary: "border-gray-300 focus:ring-indigo-500 focus:border-indigo-500",
-            dootix: "border-gray-300 focus:ring-cyan-500 focus:border-blue-500",
-        },
-    },
-    reset_button: {
-        base: "rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2",
-        color: {
-            primary: "text-gray-400 hover:text-gray-500 focus:ring-indigo-500",
-            dootix: "text-gray-400 hover:text-gray-500 focus:ring-cyan-500",
-        },
-    },
-};
-
-const themeVariables = inject("themeVariables");
-const getTheme = (item) => {
-    return twMerge(
-        get_theme_part([item, "base"], fallbackTheme, themeVariables?.inertia_table?.table_search?.column_search, props.ui),
-        get_theme_part([item, "color", props.color], fallbackTheme, themeVariables?.inertia_table?.table_search?.column_search, props.ui),
-    );
-};
 
 // Close the dropdown when clicking outside
 function handleClickOutside(event) {

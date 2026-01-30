@@ -1,17 +1,17 @@
 <template>
     <Transition>
-        <fieldset ref="tableFieldset" :key="`table-${name}`" :dusk="`table-${name}`" class="min-w-0"
-            :class="{ 'opacity-75': isVisiting }">
-            <div class="flex flex-row flex-wrap sm:flex-nowrap justify-start px-4 sm:px-0 space-x-2">
+        <fieldset ref="tableFieldset" :key="`table-${name}`" :dusk="`table-${name}`" class="ijt-table-fieldset"
+            :class="{ 'ijt-table-fieldset--loading': isVisiting }">
+            <div class="ijt-toolbar">
                 <div v-if="queryBuilderProps.globalSearch"
-                    class="flex flex-row w-full sm:w-auto sm:grow mb-2 sm:mb-0">
+                    class="ijt-toolbar__section ijt-toolbar__section--grow ijt-toolbar__section--mb">
                     <slot name="tableGlobalSearch" :has-global-search="queryBuilderProps.globalSearch"
                         :label="queryBuilderProps.globalSearch ? queryBuilderProps.globalSearch.label : null"
                         :value="queryBuilderProps.globalSearch ? queryBuilderProps.globalSearch.value : null"
                         :on-change="changeGlobalSearchValue">
-                        <TableGlobalSearch v-if="queryBuilderProps.globalSearch" class="grow"
+                        <TableGlobalSearch v-if="queryBuilderProps.globalSearch" class="ijt-global-search--grow"
                             :label="queryBuilderProps.globalSearch.label" :value="queryBuilderProps.globalSearch.value"
-                            :on-change="changeGlobalSearchValue" :color="color" />
+                            :on-change="changeGlobalSearchValue" />
                     </slot>
                 </div>
 
@@ -21,7 +21,7 @@
                         :on-filter-change="changeFilterValue">
                         <TableFilter v-if="queryBuilderProps.hasFilters"
                             :has-enabled-filters="queryBuilderProps.hasEnabledFilters"
-                            :filters="queryBuilderProps.filters" :on-filter-change="changeFilterValue" :color="color" />
+                            :filters="queryBuilderProps.filters" :on-filter-change="changeFilterValue" />
                     </slot>
                 </div>
 
@@ -32,34 +32,33 @@
                     <TableAddSearchRow v-if="queryBuilderProps.hasSearchInputs"
                         :search-inputs="queryBuilderProps.searchInputsWithoutGlobal"
                         :has-search-inputs-without-value="queryBuilderProps.hasSearchInputsWithoutValue"
-                        :on-add="showSearchInput" :color="color" />
+                        :on-add="showSearchInput" />
                 </slot>
 
                 <slot v-if="!withGroupedMenu" name="tableColumns" :has-columns="queryBuilderProps.hasToggleableColumns"
                     :columns="queryBuilderData.columns" :has-hidden-columns="queryBuilderProps.hasHiddenColumns"
                     :on-change="changeColumnStatus">
-                    <TableColumns v-if="queryBuilderProps.hasToggleableColumns" 
+                    <TableColumns v-if="queryBuilderProps.hasToggleableColumns"
                         :columns="queryBuilderData.columns" :has-hidden-columns="queryBuilderProps.hasHiddenColumns"
-                        :on-change="changeColumnStatus" :table-name="name" :color="color" />
+                        :on-change="changeColumnStatus" :table-name="name" />
                 </slot>
 
                 <slot v-if="withGroupedMenu" name="groupedAction" :actions="defaultActions">
-                    <GroupedActions :color="color" :actions="defaultActions">
+                    <GroupedActions :actions="defaultActions">
                         <slot name="bulk-actions" />
                     </GroupedActions>
                 </slot>
 
                 <slot v-if="!withGroupedMenu" name="tableReset" :can-be-reset="canBeReset" :on-click="resetQuery">
-                    <div v-if="canBeReset" class="mr-4 sm:mr-0">
-                        <TableReset :on-click="resetQuery" :color="color" />
+                    <div v-if="canBeReset">
+                        <TableReset :on-click="resetQuery" />
                     </div>
                 </slot>
 
                 <!-- Export CSV Button -->
                 <slot v-if="showExportButton" name="exportButton" :export-url="exportUrlWithParams" :translations="translations">
-                    <a :href="exportUrlWithParams"
-                        class="relative flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a :href="exportUrlWithParams" class="ijt-export">
+                        <svg class="ijt-export__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
@@ -76,27 +75,27 @@
                     v-if="queryBuilderProps.hasSearchInputsWithValue || forcedVisibleSearchInputs.length > 0"
                     :search-inputs="queryBuilderProps.searchInputsWithoutGlobal"
                     :forced-visible-search-inputs="forcedVisibleSearchInputs" :on-change="changeSearchInputValue"
-                    :on-remove="disableSearchInput" :color="color" />
+                    :on-remove="disableSearchInput" />
             </slot>
 
             <slot name="tableWrapper" :meta="resourceMeta">
-                <TableWrapper :class="{ 'mt-3': !hasOnlyData }">
+                <TableWrapper :class="{ 'ijt-wrapper--mt': !hasOnlyData }">
                     <slot name="table">
-                        <div class="overflow-x-auto">
-                            <table class="divide-y divide-gray-300" style="table-layout: fixed; min-width: 100%;"
+                        <div class="ijt-table-container">
+                            <table class="ijt-table" style="table-layout: fixed; min-width: 100%;"
                                 :style="{ width: totalTableWidth }"
                                 @mouseenter="resizeableColumns ? showResizeIndicators : null"
                                 @mouseleave="resizeableColumns ? hideResizeIndicators : null"
-                                :class="{ 'show-resize-indicators': resizeableColumns && showIndicators }">
-                                <thead class="bg-gray-50">
+                                :class="{ 'ijt-table--show-resize-indicators': resizeableColumns && showIndicators }">
+                                <thead class="ijt-table__thead">
                                     <slot name="head" :show="show" :sort-by="sortBy" :header="header">
-                                        <tr>
+                                        <tr class="ijt-table__tr">
                                             <th v-if="hasCheckboxes"
-                                                class="text-left text-sm font-semibold text-gray-900 relative resize-border pinned-checkbox-header"
+                                                class="ijt-table__th ijt-table__th--pinned-checkbox"
                                                 style="width: 60px;">
                                                 <input type="checkbox" :id="`table-${name}-select-header`"
                                                     @change="toggleSelection" v-model="headerCheckboxSelected"
-                                                    class="rounded-sm mr-1 border-gray-300 m-1" />
+                                                    class="ijt-table__checkbox" />
                                             </th>
                                             <template v-for="column in queryBuilderData.columns">
                                                 <HeaderCell :cell="header(column.key)"
@@ -111,21 +110,24 @@
                                         </tr>
                                     </slot>
                                 </thead>
-                                <tbody class="divide-y divide-gray-200 bg-white">
+                                <tbody class="ijt-table__tbody">
                                     <slot name="body" :show="show">
                                         <tr v-for="(item, key) in resourceData" :key="`table-${name}-row-${key}`"
+                                            class="ijt-table__tr"
                                             :class="getRowClass(item, key)">
-                                            <td class="whitespace-nowrap text-sm text-gray-500 pinned-checkbox"
+                                            <td class="ijt-table__td ijt-table__td--pinned-checkbox"
                                                 v-if="hasCheckboxes" style="width: 60px;">
                                                 <input type="checkbox" :id="`table-${name}-select-${key}`"
-                                                    class="rounded-sm m-1 border-gray-300"
+                                                    class="ijt-table__checkbox"
                                                     v-model="item.__itSelected" />
                                             </td>
 
                                             <td v-for="(column, colIndex) in queryBuilderData.columns"
                                                 v-show="show(column.key)"
                                                 :key="`table-${name}-row-${key}-column-${column.key}`"
-                                                @click="rowClicked($event, item, column.key)" :class="column.body_class"
+                                                @click="rowClicked($event, item, column.key)"
+                                                class="ijt-table__td"
+                                                :class="column.body_class"
                                                 :data-column-key="column.key" :style="{
                                                     width: getColumnWidthForBody(column.key),
                                                     overflow: 'hidden',
@@ -149,11 +151,11 @@
                     <slot v-if="!queryBuilderProps.infiniteScrolling" name="pagination" :on-click="visitPageFromUrl" :has-data="hasData" :meta="resourceMeta"
                         :per-page-options="queryBuilderProps.perPageOptions" :on-per-page-change="onPerPageChange"
                         :show-export-button="showExportButton">
-                        <div class="flex justify-between bg-white px-2 py-3 items-center border-t border-gray-200">
-                            <span class="italic text-sm px-2" v-if="hasCheckboxes">{{ lineCountLabel }}</span>
+                        <div class="ijt-footer">
+                            <span class="ijt-footer__selection-info" v-if="hasCheckboxes">{{ lineCountLabel }}</span>
                             <Pagination :on-click="visitPageFromUrl" :has-data="hasData" :meta="resourceMeta"
                                 :per-page-options="queryBuilderProps.perPageOptions"
-                                :on-per-page-change="onPerPageChange" :color="color"
+                                :on-per-page-change="onPerPageChange"
                                 :show-export-button="showExportButton">
                                 <!-- Slot pour personnaliser le bouton export -->
                                 <template #exportButton="exportProps">
@@ -164,8 +166,8 @@
                     </slot>
 
                     <!-- Loading indicator for infinite scrolling -->
-                    <div v-if="queryBuilderProps.infiniteScrolling && isLoadingMore" class="flex justify-center py-4">
-                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                    <div v-if="queryBuilderProps.infiniteScrolling && isLoadingMore" class="ijt-loading">
+                        <div class="ijt-loading__spinner"></div>
                     </div>
 
                 </TableWrapper>
@@ -284,12 +286,6 @@ const props = defineProps({
     withInfiniteScrolling: {
         type: Boolean,
         default: false,
-        required: false,
-    },
-
-    color: {
-        type: String,
-        default: "primary",
         required: false,
     },
 
@@ -504,13 +500,7 @@ const getRowClass = (item, index) => {
 
     // Default striped and hover classes
     if (props.striped && index % 2) {
-        classes.push('bg-gray-50');
-    }
-
-    if (props.striped) {
-        classes.push('hover:bg-gray-100');
-    } else {
-        classes.push('hover:bg-gray-50');
+        classes.push('ijt-table__tr--striped');
     }
 
     // Custom row class function
@@ -995,17 +985,17 @@ watch(() => queryBuilderProps.value, (newProps) => {
 
     // Check if we have new data from the resource
     const newData = props.resource?.data || [];
-    
+
     // Only update if we actually have data
     if (newData.length > 0) {
         // This is a fresh load (not a "load more"), so reset the data
         allData.value = [...newData];
         nextPageUrl.value = resourceMeta.value.next_page_url || null;
-        
+
         // Handle selection changes
         const selectedItems = newData.filter((item) => item.__itSelected);
         emit("selectionChanged", selectedItems);
-        
+
         // Reinitialize the observer after new data is loaded
         // Always reinitialize to ensure it's properly set up with new data
         setTimeout(() => {
@@ -1115,7 +1105,7 @@ function loadColumnsFromStorage() {
 
 onUnmounted(() => {
     document.removeEventListener("inertia:success", inertiaListener);
-    
+
     // Clean up infinite scrolling observer
     if (infiniteScrollObserver) {
         infiniteScrollObserver.disconnect();
@@ -1173,9 +1163,6 @@ function header(key) {
 
     // Ajouter la fonction de changement de recherche
     columnData.onSearchChange = changeSearchInputValue;
-
-    // Ajouter la couleur pour le thème
-    columnData.color = props.color;
 
     return columnData;
 }
@@ -1238,7 +1225,7 @@ function getPinnedColumnStyle(columnKey) {
         position: 'sticky',
         left: getPinnedColumnLeft(columnKey),
         zIndex: 10,
-        backgroundColor: 'white',
+        backgroundColor: 'var(--ijt-color-bg, white)',
         boxShadow: '2px 0 4px -2px rgba(0, 0, 0, 0.1)'
     };
 }
@@ -1253,7 +1240,7 @@ function getPinnedHeaderStyle(columnKey) {
         position: 'sticky',
         left: getPinnedColumnLeft(columnKey),
         zIndex: 11,
-        backgroundColor: '#f9fafb',
+        backgroundColor: 'var(--ijt-color-bg-secondary, #f9fafb)',
         boxShadow: '2px 0 4px -2px rgba(0, 0, 0, 0.1)'
     };
 }
@@ -1329,67 +1316,11 @@ function hideResizeIndicators() {
 </script>
 
 <style scoped>
-.resize-border::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 25%;
-    height: 50%;
-    width: 2px;
-    background-color: #e5e7eb;
-    /* border-gray-200 */
-    transition: background-color 0.15s ease-in-out;
+.ijt-wrapper--mt {
+    margin-top: 0.75rem;
 }
 
-.resize-border:hover::after {
-    background-color: #9ca3af;
-    /* border-gray-400 */
-}
-
-.pinned-column {
-    position: sticky !important;
-    background: white;
-    z-index: 10;
-    box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.1);
-    border-right: 1px solid #e5e7eb;
-}
-
-.pinned-column-header {
-    position: sticky !important;
-    background: #f9fafb;
-    /* bg-gray-50 */
-    z-index: 11;
-    box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.1);
-    border-right: 1px solid #e5e7eb;
-}
-
-/* Style pour la colonne checkbox épinglée */
-.pinned-checkbox {
-    position: sticky !important;
-    left: 0 !important;
-    background: white;
-    z-index: 12;
-    border-right: 1px solid #e5e7eb;
-    box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.1);
-}
-
-.pinned-checkbox-header {
-    position: sticky !important;
-    left: 0 !important;
-    background: #f9fafb !important;
-    z-index: 13;
-    border-right: 1px solid #e5e7eb;
-    box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.1);
-}
-
-/* Transition pour un effet plus fluide */
-.pinned-column,
-.pinned-column-header {
-    transition: box-shadow 0.2s ease-in-out;
-}
-
-.pinned-column:hover,
-.pinned-column-header:hover {
-    box-shadow: 2px 0 8px -2px rgba(0, 0, 0, 0.15);
+.ijt-global-search--grow {
+    flex-grow: 1;
 }
 </style>

@@ -1,25 +1,29 @@
 <template>
-  <div class="w-full flex gap-2 justify-between items-center">
-    <label class="relative inline-flex items-center cursor-pointer">
+  <div class="ijt-toggle-filter">
+    <label class="ijt-toggle-filter__switch">
       <input
         type="checkbox"
         :checked="filter.value"
-        class="sr-only peer"
+        class="ijt-toggle-filter__input"
         @change="onFilterChange(filter.key, $event.target.checked ? '1' : '0')"
       >
       <div
-        class="peer-focus:outline-none peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:transition-all"
-        :class="getTheme('toggle')"
+        class="ijt-toggle-filter__track"
+        :class="{
+          'ijt-toggle-filter__track--on': filter.value === '1' || filter.value === 1 || filter.value === true,
+          'ijt-toggle-filter__track--off': filter.value === '0' || filter.value === 0 || filter.value === false,
+          'ijt-toggle-filter__track--disabled': filter.value === null
+        }"
       />
     </label>
     <button
-      :class="getTheme('reset_button')"
+      class="ijt-toggle-filter__reset"
       @click.prevent="onFilterChange(filter.key, null)"
     >
-      <span class="sr-only">Remove search</span>
+      <span class="ijt-sr-only">Remove search</span>
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="h-5 w-5"
+        class="ijt-toggle-filter__reset-icon"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -36,10 +40,6 @@
 </template>
 
 <script setup>
-import { inject } from "vue";
-import { twMerge } from "tailwind-merge";
-import { get_theme_part } from "../../helpers.js";
-
 const props = defineProps({
     filter: {
         type: Object,
@@ -50,47 +50,5 @@ const props = defineProps({
         type: Function,
         required: true,
     },
-
-    color: {
-        type: String,
-        default: "primary",
-        required: false,
-    },
-
-    ui: {
-        required: false,
-        type: Object,
-        default: {},
-    },
 });
-
-// Theme
-const fallbackTheme = {
-    toggle: {
-        base: "w-11 h-6 rounded-full after:border after:rounded-full after:h-5 after:w-5",
-        color: {
-            primary: "after:bg-white after:border-white peer-checked:bg-indigo-500 bg-red-500",
-            dootix: "after:bg-white after:border-white peer-checked:bg-gradient-to-r peer-checked:from-cyan-500 peer-checked:to-blue-600 bg-red-500",
-            disabled: "after:bg-white after:border-white bg-gray-200",
-        },
-    },
-    reset_button: {
-        base: "rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2",
-        color: {
-            primary: "text-gray-400 hover:text-gray-500 focus:ring-indigo-500",
-            dootix: "text-gray-400 hover:text-gray-500 focus:ring-cyan-500",
-        },
-    },
-};
-const themeVariables = inject("themeVariables");
-const getTheme = (item) => {
-    let color = props.color;
-    if (item === "toggle" && props.filter.value === null) {
-        color = "disabled";
-    }
-    return twMerge(
-        get_theme_part([item, "base"], fallbackTheme, themeVariables?.inertia_table?.table_filter?.toggle_filter, props.ui),
-        get_theme_part([item, "color", color], fallbackTheme, themeVariables?.inertia_table?.table_filter?.toggle_filter, props.ui),
-    );
-};
 </script>

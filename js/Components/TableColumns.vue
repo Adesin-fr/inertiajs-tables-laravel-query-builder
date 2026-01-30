@@ -1,17 +1,15 @@
 <template>
-  <ButtonWithDropdown placement="bottom-end" dusk="columns-dropdown" :color="color">
+  <ButtonWithDropdown placement="bottom-end" dusk="columns-dropdown">
     <template #button>
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5" viewBox="0 0 48 48">
+      <svg xmlns="http://www.w3.org/2000/svg" class="ijt-button__icon" viewBox="0 0 48 48">
         <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"
           d="m5 10l3 3l6-6M5 24l3 3l6-6M5 38l3 3l6-6m7-11h22M21 38h22M21 10h22" />
       </svg>
-      <span v-if="hasHiddenColumns" class="ml-1">({{ hiddenColumnsCount }})</span>
+      <span v-if="hasHiddenColumns" class="ijt-button__badge">({{ hiddenColumnsCount }})</span>
     </template>
 
-    <div role="menu" aria-orientation="horizontal" aria-labelledby="toggle-columns-menu" class="min-w-max">
-      <div class="px-2">
-        <ColumnManager :columns="localColumns" :can-sort="true" @columns-changed="onColumnsChanged" />
-      </div>
+    <div role="menu" aria-orientation="horizontal" aria-labelledby="toggle-columns-menu" class="ijt-dropdown__content">
+      <ColumnManager :columns="localColumns" :can-sort="true" @columns-changed="onColumnsChanged" />
     </div>
   </ButtonWithDropdown>
 </template>
@@ -42,12 +40,6 @@ const props = defineProps({
     default: "default",
     required: false,
   },
-
-  color: {
-    type: String,
-    default: "primary",
-    required: false,
-  },
 });
 
 // Créer une copie locale des colonnes pour le drag and drop
@@ -70,18 +62,3 @@ function onColumnsChanged(updatedColumns) {
   props.onChange(updatedColumns);
 }
 </script>
-
-<style scoped>
-.drag-handle:hover {
-  color: #4f46e5;
-}
-
-.sortable-ghost {
-  opacity: 0.5;
-  background: #f3f4f6;
-}
-
-.sortable-chosen {
-  background: #e0e7ff;
-}
-</style>

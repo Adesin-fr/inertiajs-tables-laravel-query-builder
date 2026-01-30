@@ -1,20 +1,19 @@
 <template>
-    <ButtonWithDropdown ref="dropdown" dusk="grouped-actions-dropdown" class="w-auto" :color="color"
-        @closed="menuClosed">
+    <ButtonWithDropdown ref="dropdown" dusk="grouped-actions-dropdown" @closed="menuClosed">
         <template #button>
             <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                class="h-5 w-5 text-gray-400">
+                class="ijt-button__icon">
                 <path
                     d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
             </svg>
         </template>
 
-        <div role="menu" aria-orientation="horizontal" aria-labelledby="grouped-actions-menu" class="w-56">
+        <div role="menu" aria-orientation="horizontal" aria-labelledby="grouped-actions-menu" class="ijt-dropdown__content" style="min-width: 14rem;">
             <div v-show="!isToggleColumnsDisplayed && !isSearchFieldsDisplayed">
                 <button v-if="'searchFields' in actions && actions.searchFields.show" dusk="add-search-fields-button"
-                    class="text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex gap-2 items-center"
+                    class="ijt-dropdown__item"
                     role="menuitem" @click="isSearchFieldsDisplayed = true">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ijt-dropdown__item-icon" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd"
                             d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                             clip-rule="evenodd" />
@@ -22,9 +21,9 @@
                     <span>{{ translations.add_search_fields ?? 'Add search field' }}</span>
                 </button>
                 <button v-if="'toggleColumns' in actions && actions.toggleColumns.show" dusk="toggle-column-button"
-                    class="text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex gap-2 items-center"
+                    class="ijt-dropdown__item"
                     role="menuitem" @click="isToggleColumnsDisplayed = true">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ijt-dropdown__item-icon" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                         <path fill-rule="evenodd"
                             d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
@@ -32,11 +31,11 @@
                     </svg>
                     <span>{{ translations.show_hide_columns ?? 'Show / Hide columns' }}</span>
                 </button>
-                <hr>
+                <div class="ijt-dropdown__divider"></div>
                 <button v-if="'reset' in actions" dusk="reset-button"
-                    class="text-left w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 hover:text-red-700 flex gap-2 items-center"
+                    class="ijt-dropdown__item ijt-dropdown__item--danger"
                     role="menuitem" @click="actions.reset?.onClick">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ijt-dropdown__item-icon" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd"
                             d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
                             clip-rule="evenodd" />
@@ -47,9 +46,9 @@
 
             <div v-show="isSearchFieldsDisplayed">
                 <button type="button"
-                    class="text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex gap-2 items-center"
+                    class="ijt-dropdown__item"
                     @click="isSearchFieldsDisplayed = false">
-                    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4">
+                    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="ijt-dropdown__item-icon">
                         <path d="M5 12H19M5 12L11 6M5 12L11 18" stroke="#000000" stroke-width="2" stroke-linecap="round"
                             stroke-linejoin="round" />
                     </svg>
@@ -57,7 +56,7 @@
                 </button>
                 <button v-for="(searchInput, key) in actions.searchFields.searchInputs" :key="key"
                     :dusk="`add-search-row-${searchInput.key}`"
-                    class="text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                    class="ijt-dropdown__item"
                     role="menuitem" @click.prevent="actions.searchFields.onClick(searchInput.key)">
                     {{ searchInput.label }}
                 </button>
@@ -65,16 +64,15 @@
 
             <div v-show="isToggleColumnsDisplayed">
                 <button type="button"
-                    class="text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex gap-2 items-center"
+                    class="ijt-dropdown__item"
                     @click="isToggleColumnsDisplayed = false">
-                    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4">
+                    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="ijt-dropdown__item-icon">
                         <path d="M5 12H19M5 12L11 6M5 12L11 18" stroke="#000000" stroke-width="2" stroke-linecap="round"
                             stroke-linejoin="round" />
                     </svg>
                     <span>{{ translations.show_hide_columns ?? 'Show / Hide columns' }}</span>
                 </button>
-                <div class="px-2">
-
+                <div class="ijt-dropdown__content">
                     <ColumnManager :columns="actions.toggleColumns.columns" :can-sort="true"
                         @columns-changed="onColumnsChanged" />
                 </div>
@@ -90,7 +88,7 @@
 import ButtonWithDropdown from "./ButtonWithDropdown.vue";
 import ColumnManager from "./ColumnManager.vue";
 import { getTranslations } from "../translations.js";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 
 const translations = getTranslations();
 
@@ -98,12 +96,6 @@ const props = defineProps({
     actions: {
         type: Object,
         required: true,
-    },
-
-    color: {
-        type: String,
-        default: "primary",
-        required: false,
     },
 });
 

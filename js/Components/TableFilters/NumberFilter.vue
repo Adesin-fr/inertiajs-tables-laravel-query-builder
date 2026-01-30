@@ -1,11 +1,11 @@
 <template>
-    <div class="space-y-4">
+    <div class="ijt-number-filter">
         <!-- Type Selector -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
+            <label class="ijt-number-filter__label">
                 {{ translations.filter_type }}
             </label>
-            <select v-model="filterType" :class="getTheme('select')" @change="onTypeChange">
+            <select v-model="filterType" class="ijt-select" @change="onTypeChange">
                 <option value="">{{ translations.no_filter }}</option>
                 <option value="exact">{{ translations.exact_number }}</option>
                 <option value="less_than">{{ translations.less_than }}</option>
@@ -17,53 +17,53 @@
         </div>
 
         <!-- Number Inputs -->
-        <div v-if="filterType && filterType !== ''" class="space-y-3">
+        <div v-if="filterType && filterType !== ''">
             <!-- Single Number Input (exact, less_than, greater_than, etc.) -->
             <div
                 v-if="['exact', 'less_than', 'greater_than', 'less_than_or_equal', 'greater_than_or_equal'].includes(filterType)">
-                <label class="block text-sm font-medium text-gray-700 mb-1">
+                <label class="ijt-number-filter__label">
                     {{ getNumberLabel() }}
                 </label>
-                <div class="flex items-center">
-                    <span v-if="filter.prefix" class="text-sm text-gray-500 mr-1">{{ filter.prefix }}</span>
+                <div class="ijt-number-filter__input-wrapper">
+                    <span v-if="filter.prefix" class="ijt-number-filter__prefix">{{ filter.prefix }}</span>
                     <input type="number" v-model.number="singleNumber" :step="filter.step || 1"
-                        :class="getTheme('input')" @input="onNumberChange" placeholder="0" />
-                    <span v-if="filter.suffix" class="text-sm text-gray-500 ml-1">{{ filter.suffix }}</span>
+                        class="ijt-input" @input="onNumberChange" placeholder="0" />
+                    <span v-if="filter.suffix" class="ijt-number-filter__suffix">{{ filter.suffix }}</span>
                 </div>
             </div>
 
             <!-- Number Range Inputs (between) -->
-            <div v-if="filterType === 'between'" class="space-y-3">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
+            <div v-if="filterType === 'between'">
+                <div style="margin-bottom: 0.75rem;">
+                    <label class="ijt-number-filter__label">
                         {{ translations.start_number }}
                     </label>
-                    <div class="flex items-center">
-                        <span v-if="filter.prefix" class="text-sm text-gray-500 mr-1">{{ filter.prefix }}</span>
+                    <div class="ijt-number-filter__input-wrapper">
+                        <span v-if="filter.prefix" class="ijt-number-filter__prefix">{{ filter.prefix }}</span>
                         <input type="number" v-model.number="startNumber" :step="filter.step || 1"
-                            :class="getTheme('input')" @input="onNumberChange" placeholder="0" />
-                        <span v-if="filter.suffix" class="text-sm text-gray-500 ml-1">{{ filter.suffix }}</span>
+                            class="ijt-input" @input="onNumberChange" placeholder="0" />
+                        <span v-if="filter.suffix" class="ijt-number-filter__suffix">{{ filter.suffix }}</span>
                     </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                    <label class="ijt-number-filter__label">
                         {{ translations.end_number }}
                     </label>
-                    <div class="flex items-center">
-                        <span v-if="filter.prefix" class="text-sm text-gray-500 mr-1">{{ filter.prefix }}</span>
+                    <div class="ijt-number-filter__input-wrapper">
+                        <span v-if="filter.prefix" class="ijt-number-filter__prefix">{{ filter.prefix }}</span>
                         <input type="number" v-model.number="endNumber" :step="filter.step || 1"
-                            :class="getTheme('input')" @input="onNumberChange" placeholder="0" />
-                        <span v-if="filter.suffix" class="text-sm text-gray-500 ml-1">{{ filter.suffix }}</span>
+                            class="ijt-input" @input="onNumberChange" placeholder="0" />
+                        <span v-if="filter.suffix" class="ijt-number-filter__suffix">{{ filter.suffix }}</span>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Reset Button -->
-        <div v-if="hasValue" class="flex justify-end">
-            <button type="button" :class="getTheme('reset_button')" @click="resetFilter">
-                <span class="sr-only">{{ translations.reset_filter }}</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+        <div v-if="hasValue" class="ijt-number-filter__reset">
+            <button type="button" class="ijt-number-filter__reset-button" @click="resetFilter">
+                <span class="ijt-sr-only">{{ translations.reset_filter }}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="ijt-number-filter__reset-icon" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -73,9 +73,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, inject, onMounted } from "vue";
-import { twMerge } from "tailwind-merge";
-import { get_theme_part } from "../../helpers.js";
+import { ref, computed, watch, onMounted } from "vue";
 import { getTranslations } from "../../translations.js";
 
 const props = defineProps({
@@ -86,16 +84,6 @@ const props = defineProps({
     onFilterChange: {
         type: Function,
         required: true,
-    },
-    color: {
-        type: String,
-        default: "primary",
-        required: false,
-    },
-    ui: {
-        required: false,
-        type: Object,
-        default: {},
     },
 });
 
@@ -223,37 +211,4 @@ watch(() => props.filter.value, (newValue) => {
         }
     }
 }, { deep: true });
-
-// Theme
-const fallbackTheme = {
-    select: {
-        base: "block w-full shadow-sm text-sm rounded-md",
-        color: {
-            primary: "border-gray-300 focus:ring-indigo-500 focus:border-indigo-500",
-            dootix: "border-gray-300 focus:ring-cyan-500 focus:border-blue-500",
-        },
-    },
-    input: {
-        base: "block w-full shadow-sm text-sm rounded-md",
-        color: {
-            primary: "border-gray-300 focus:ring-indigo-500 focus:border-indigo-500",
-            dootix: "border-gray-300 focus:ring-cyan-500 focus:border-blue-500",
-        },
-    },
-    reset_button: {
-        base: "rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2",
-        color: {
-            primary: "text-gray-400 hover:text-gray-500 focus:ring-indigo-500",
-            dootix: "text-gray-400 hover:text-gray-500 focus:ring-cyan-500",
-        },
-    },
-};
-
-const themeVariables = inject("themeVariables");
-const getTheme = (item) => {
-    return twMerge(
-        get_theme_part([item, "base"], fallbackTheme, themeVariables?.inertia_table?.table_filter?.number_filter, props.ui),
-        get_theme_part([item, "color", props.color], fallbackTheme, themeVariables?.inertia_table?.table_filter?.number_filter, props.ui),
-    );
-};
 </script>

@@ -1,13 +1,9 @@
 <template>
-    <div class="relative inline-block">
-        <button ref="trigger" @click="toggleDropdown" :class="[
-            'p-1 rounded hover:bg-gray-100 transition-colors duration-150',
-            {
-                'text-blue-500': hasActiveFilter,
-                'text-gray-400 hover:text-gray-600': !hasActiveFilter
-            }
-        ]" :dusk="`column-filter-${columnKey}`">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+    <div class="ijt-filter">
+        <button ref="trigger" @click="toggleDropdown" class="ijt-filter__button"
+            :class="{ 'ijt-filter__button--active': hasActiveFilter }"
+            :dusk="`column-filter-${columnKey}`">
+            <svg xmlns="http://www.w3.org/2000/svg" class="ijt-filter__button-icon" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd"
                     d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
                     clip-rule="evenodd" />
@@ -17,30 +13,30 @@
         <!-- Teleported Dropdown with Popper -->
         <Teleport to="body">
             <div v-if="isDropdownOpen" ref="container"
-                class="bg-white border border-gray-200 rounded-md shadow-lg z-[9999] min-w-max" @click.stop>
+                class="ijt-filter__dropdown" style="z-index: 9999;" @click.stop>
                 <div v-for="filter in columnFilters" :key="filter.key">
-                    <h3 class="text-xs uppercase tracking-wide bg-gray-100 p-3">
+                    <h3 class="ijt-dropdown__header">
                         {{ filter.label }}
                     </h3>
-                    <div class="p-2">
+                    <div class="ijt-dropdown__content">
                         <select v-if="filter.type === 'select'" :name="filter.key" :value="filter.value"
-                            :class="getTheme('select')" @change="onFilterChange(filter.key, $event.target.value)">
+                            class="ijt-select" @change="onFilterChange(filter.key, $event.target.value)">
                             <option v-for="(option, optionKey) in filter.options" :key="optionKey" :value="optionKey">
                                 {{ option }}
                             </option>
                         </select>
                         <ToggleFilter v-if="filter.type === 'toggle'" :filter="filter"
-                            :on-filter-change="onFilterChange" :color="color" />
-                        <div v-if="filter.type === 'number'" class="py-4 px-8" style="min-width: 300px;">
-                            <NumberFilter :filter="filter" :on-filter-change="onFilterChange" :color="color" />
+                            :on-filter-change="onFilterChange" />
+                        <div v-if="filter.type === 'number'" style="min-width: 300px;">
+                            <NumberFilter :filter="filter" :on-filter-change="onFilterChange" />
                         </div>
-                        <div v-if="filter.type === 'number_range'" class="py-4 px-8" style="min-width: 250px;">
+                        <div v-if="filter.type === 'number_range'" style="min-width: 250px;">
                             <NumberRangeFilter v-model="filter.value" :max="filter.max" :min="filter.min"
-                                :prefix="filter.prefix" :suffix="filter.suffix" :step="filter.step" :color="color"
+                                :prefix="filter.prefix" :suffix="filter.suffix" :step="filter.step"
                                 @update:model-value="updateNumberRangeFilter(filter)" />
                         </div>
-                        <div v-if="filter.type === 'date'" class="py-4 px-8" style="min-width: 300px;">
-                            <DateFilter :filter="filter" :on-filter-change="onFilterChange" :color="color" />
+                        <div v-if="filter.type === 'date'" style="min-width: 300px;">
+                            <DateFilter :filter="filter" :on-filter-change="onFilterChange" />
                         </div>
                     </div>
                 </div>
@@ -49,19 +45,17 @@
 
         <!-- Backdrop -->
         <Teleport to="body">
-            <div v-if="isDropdownOpen" class="fixed inset-0 z-[9998]" @click="closeDropdown" />
+            <div v-if="isDropdownOpen" class="ijt-filter__backdrop" style="z-index: 9998;" @click="closeDropdown" />
         </Teleport>
     </div>
 </template>
 
 <script setup>
-import { computed, ref, inject, onMounted, onUnmounted, Teleport } from "vue";
+import { computed, ref, onMounted, onUnmounted, Teleport } from "vue";
 import ToggleFilter from "./TableFilters/ToggleFilter.vue";
 import NumberRangeFilter from "./TableFilters/NumberRangeFilter.vue";
 import NumberFilter from "./TableFilters/NumberFilter.vue";
 import DateFilter from "./TableFilters/DateFilter.vue";
-import { twMerge } from "tailwind-merge";
-import { get_theme_part } from "../helpers.js";
 import { usePopper } from "../composables/usePopper.js";
 
 const props = defineProps({
@@ -77,20 +71,9 @@ const props = defineProps({
         type: Function,
         required: true,
     },
-    color: {
-        type: String,
-        default: "primary",
-        required: false,
-    },
-    ui: {
-        required: false,
-        type: Object,
-        default: {},
-    },
 });
 
 const isDropdownOpen = ref(false);
-const dropdown = ref(null);
 
 // Configuration Popper.js
 const [trigger, container] = usePopper({
@@ -106,10 +89,6 @@ const [trigger, container] = usePopper({
 // Filter les filtres pour cette colonne uniquement
 const columnFilters = computed(() => {
     return props.filters.filter(filter => {
-        // Logiques d'association possibles :
-        // 1. La key du filtre correspond exactement à la key de la colonne
-        // 2. La key du filtre commence par la key de la colonne (ex: "status_active" pour colonne "status")
-        // 3. La key du filtre contient la key de la colonne
         return filter.key === props.columnKey ||
             filter.key.startsWith(props.columnKey + '_') ||
             filter.key.includes(props.columnKey);
@@ -162,25 +141,6 @@ function updateNumberRangeFilter(filter) {
     }
     props.onFilterChange(filter.key, value);
 }
-
-// Theme
-const fallbackTheme = {
-    select: {
-        base: "block w-full shadow-sm text-sm rounded-md",
-        color: {
-            primary: "border-gray-300 focus:ring-indigo-500 focus:border-indigo-500",
-            dootix: "border-gray-300 focus:ring-cyan-500 focus:border-blue-500",
-        },
-    },
-};
-
-const themeVariables = inject("themeVariables");
-const getTheme = (item) => {
-    return twMerge(
-        get_theme_part([item, "base"], fallbackTheme, themeVariables?.inertia_table?.table_filter?.select_filter, props.ui),
-        get_theme_part([item, "color", props.color], fallbackTheme, themeVariables?.inertia_table?.table_filter?.select_filter, props.ui),
-    );
-};
 
 // Fermer le dropdown quand on clique en dehors
 function handleClickOutside(event) {

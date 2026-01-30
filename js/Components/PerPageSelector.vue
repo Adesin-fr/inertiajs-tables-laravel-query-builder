@@ -3,7 +3,7 @@
     name="per_page"
     :dusk="dusk"
     :value="value"
-    :class="getTheme('select')"
+    class="ijt-per-page"
     @change="onChange($event.target.value)"
   >
     <option
@@ -17,11 +17,9 @@
 </template>
 
 <script setup>
-import { computed, inject } from "vue";
+import { computed } from "vue";
 import uniq from "lodash-es/uniq";
 import { getTranslations } from "../translations.js";
-import { twMerge } from "tailwind-merge";
-import { get_theme_part } from "../helpers.js";
 
 const translations = getTranslations();
 
@@ -50,18 +48,6 @@ const props = defineProps({
         type: Function,
         required: true,
     },
-
-    color: {
-        type: String,
-        default: "primary",
-        required: false,
-    },
-
-    ui: {
-        required: false,
-        type: Object,
-        default: {},
-    },
 });
 
 const perPageOptions = computed(() => {
@@ -71,22 +57,4 @@ const perPageOptions = computed(() => {
 
     return uniq(options).sort((a, b) => a - b);
 });
-
-// Theme
-const fallbackTheme = {
-    select: {
-        base: "block min-w-max shadow-sm text-sm rounded-md",
-        color: {
-            primary: "border-gray-300 focus:ring-indigo-500 focus:border-indigo-500",
-            dootix: "border-gray-300 focus:ring-cyan-500 focus:border-blue-500",
-        },
-    },
-};
-const themeVariables = inject("themeVariables");
-const getTheme = (item) => {
-    return twMerge(
-        get_theme_part([item, "base"], fallbackTheme, themeVariables?.inertia_table?.per_page_selector, props.ui),
-        get_theme_part([item, "color", props.color], fallbackTheme, themeVariables?.inertia_table?.per_page_selector, props.ui),
-    );
-};
 </script>

@@ -3,17 +3,16 @@
     v-for="(searchInput, key) in searchInputs"
     v-show="searchInput.value !== null || isForcedVisible(searchInput.key)"
     :key="key"
-    class="px-4 sm:px-0"
+    class="ijt-search-row"
   >
-    <div class="flex rounded-md shadow-sm relative mt-3">
+    <div class="ijt-search-row__container">
       <label
         :for="searchInput.key"
-        class="inline-flex items-center px-4 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"
+        class="ijt-search-row__label"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 mr-2 text-gray-400"
-
+          class="ijt-search-row__label-icon"
           viewBox="0 0 20 20"
           fill="currentColor"
         >
@@ -31,21 +30,21 @@
         :name="searchInput.key"
         :value="searchInput.value"
         type="text"
-        :class="getTheme('input')"
+        class="ijt-search-row__input"
         @input="onChange(searchInput.key, $event.target.value)"
       >
       <div
-        class="absolute inset-y-0 right-0 pr-3 flex items-center"
+        class="ijt-search-row__remove"
       >
         <button
-          :class="getTheme('remove_button')"
+          class="ijt-search-row__remove-button"
           :dusk="`remove-search-row-${searchInput.key}`"
           @click.prevent="onRemove(searchInput.key)"
         >
-          <span class="sr-only">Remove search</span>
+          <span class="ijt-sr-only">Remove search</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
+            class="ijt-search-row__remove-icon"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -64,10 +63,8 @@
 </template>
 
 <script setup>
-import { computed, ref, watch, nextTick, inject } from "vue";
+import { computed, ref, watch, nextTick } from "vue";
 import find from "lodash-es/find";
-import { twMerge } from "tailwind-merge";
-import { get_theme_part } from "../helpers.js";
 
 const skipUnwrap = { el: ref([]) };
 let el = computed(() => skipUnwrap.el.value);
@@ -92,18 +89,6 @@ const props = defineProps({
         type: Function,
         required: true,
     },
-
-    color: {
-        type: String,
-        default: "primary",
-        required: false,
-    },
-
-    ui: {
-        required: false,
-        type: Object,
-        default: {},
-    },
 });
 
 function isForcedVisible(key) {
@@ -127,29 +112,4 @@ watch(props.forcedVisibleSearchInputs, (inputs) => {
         }
     });
 }, { immediate: true });
-
-// Theme
-const fallbackTheme = {
-    input: {
-        base: "flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md text-sm",
-        color: {
-            primary: "border-gray-300 focus:ring-indigo-500 focus:border-indigo-500",
-            dootix: "border-gray-300 focus:ring-cyan-500 focus:border-blue-500",
-        },
-    },
-    remove_button: {
-        base: "rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2",
-        color: {
-            primary: "text-gray-400 hover:text-gray-500 focus:ring-indigo-500",
-            dootix: "text-gray-400 hover:text-gray-500 focus:ring-cyan-500",
-        },
-    },
-};
-const themeVariables = inject("themeVariables");
-const getTheme = (item) => {
-    return twMerge(
-        get_theme_part([item, "base"], fallbackTheme, themeVariables?.inertia_table?.table_search_rows, props.ui),
-        get_theme_part([item, "color", props.color], fallbackTheme, themeVariables?.inertia_table?.table_search_rows, props.ui),
-    );
-};
 </script>

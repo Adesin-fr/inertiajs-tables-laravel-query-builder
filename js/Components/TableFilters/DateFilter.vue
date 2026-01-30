@@ -1,11 +1,11 @@
 <template>
-    <div class="space-y-2">
+    <div class="ijt-date-filter">
         <!-- Type Selector -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
+            <label class="ijt-date-filter__label">
                 {{ translations.filter_type }}
             </label>
-            <select v-model="filterType" :class="getTheme('select')" @change="onTypeChange">
+            <select v-model="filterType" class="ijt-select" @change="onTypeChange">
                 <option value="">{{ translations.no_filter }}</option>
                 <option value="exact">{{ translations.exact_date }}</option>
                 <option value="before">{{ translations.before_date }}</option>
@@ -15,37 +15,37 @@
         </div>
 
         <!-- Date Inputs -->
-        <div v-if="filterType && filterType !== ''" class="space-y-3">
+        <div v-if="filterType && filterType !== ''">
             <!-- Single Date Input (exact, before, after) -->
             <div v-if="['exact', 'before', 'after'].includes(filterType)">
-                <label class="block text-sm font-medium text-gray-700 mb-1">
+                <label class="ijt-date-filter__label">
                     {{ getDateLabel() }}
                 </label>
-                <input type="date" v-model="singleDate" :class="getTheme('input')" @change="onDateChange" />
+                <input type="date" v-model="singleDate" class="ijt-input" @change="onDateChange" />
             </div>
 
             <!-- Date Range Inputs (between) -->
-            <div v-if="filterType === 'between'" class="space-y-3">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
+            <div v-if="filterType === 'between'">
+                <div style="margin-bottom: 0.75rem;">
+                    <label class="ijt-date-filter__label">
                         {{ translations.start_date }}
                     </label>
-                    <input type="date" v-model="startDate" :class="getTheme('input')" @change="onDateChange" />
+                    <input type="date" v-model="startDate" class="ijt-input" @change="onDateChange" />
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                    <label class="ijt-date-filter__label">
                         {{ translations.end_date }}
                     </label>
-                    <input type="date" v-model="endDate" :class="getTheme('input')" @change="onDateChange" />
+                    <input type="date" v-model="endDate" class="ijt-input" @change="onDateChange" />
                 </div>
             </div>
         </div>
 
         <!-- Reset Button -->
-        <div v-if="hasValue" class="flex justify-end">
-            <button type="button" :class="getTheme('reset_button')" @click="resetFilter">
-                <span class="sr-only">{{ translations.reset_filter }}</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+        <div v-if="hasValue" class="ijt-date-filter__reset">
+            <button type="button" class="ijt-date-filter__reset-button" @click="resetFilter">
+                <span class="ijt-sr-only">{{ translations.reset_filter }}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="ijt-date-filter__reset-icon" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -55,9 +55,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, inject, onMounted } from "vue";
-import { twMerge } from "tailwind-merge";
-import { get_theme_part } from "../../helpers.js";
+import { ref, computed, watch, onMounted } from "vue";
 import { getTranslations } from "../../translations.js";
 
 const props = defineProps({
@@ -68,16 +66,6 @@ const props = defineProps({
     onFilterChange: {
         type: Function,
         required: true,
-    },
-    color: {
-        type: String,
-        default: "primary",
-        required: false,
-    },
-    ui: {
-        required: false,
-        type: Object,
-        default: {},
     },
 });
 
@@ -197,37 +185,4 @@ watch(() => props.filter.value, (newValue) => {
         }
     }
 }, { deep: true });
-
-// Theme
-const fallbackTheme = {
-    select: {
-        base: "block w-full shadow-sm text-sm rounded-md",
-        color: {
-            primary: "border-gray-300 focus:ring-indigo-500 focus:border-indigo-500",
-            dootix: "border-gray-300 focus:ring-cyan-500 focus:border-blue-500",
-        },
-    },
-    input: {
-        base: "block w-full shadow-sm text-sm rounded-md",
-        color: {
-            primary: "border-gray-300 focus:ring-indigo-500 focus:border-indigo-500",
-            dootix: "border-gray-300 focus:ring-cyan-500 focus:border-blue-500",
-        },
-    },
-    reset_button: {
-        base: "rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2",
-        color: {
-            primary: "text-gray-400 hover:text-gray-500 focus:ring-indigo-500",
-            dootix: "text-gray-400 hover:text-gray-500 focus:ring-cyan-500",
-        },
-    },
-};
-
-const themeVariables = inject("themeVariables");
-const getTheme = (item) => {
-    return twMerge(
-        get_theme_part([item, "base"], fallbackTheme, themeVariables?.inertia_table?.table_filter?.date_filter, props.ui),
-        get_theme_part([item, "color", props.color], fallbackTheme, themeVariables?.inertia_table?.table_filter?.date_filter, props.ui),
-    );
-};
 </script>

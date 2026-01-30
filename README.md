@@ -717,6 +717,110 @@ module.exports = {
 };
 ```
 
+#### Default Stylesheet
+
+The package now includes a default stylesheet that is **automatically imported** when you use the components. This provides a fully styled table out of the box without requiring Tailwind CSS classes.
+
+The default styles use CSS variables, making it easy to customize the appearance of your tables.
+
+##### Customizing the Default Styles
+
+There are three ways to customize the default styles:
+
+**1. Override CSS Variables**
+
+The easiest way to customize the table appearance is by overriding CSS variables in your own CSS file:
+
+```css
+:root {
+    /* Change primary color to blue */
+    --ijt-color-primary: #3b82f6;
+    --ijt-color-primary-hover: #2563eb;
+    --ijt-color-primary-light: #dbeafe;
+
+    /* Change border radius */
+    --ijt-radius-md: 0.5rem;
+    --ijt-radius-lg: 0.75rem;
+
+    /* Change spacing */
+    --ijt-spacing-md: 1.25rem;
+}
+```
+
+**Available CSS Variables:**
+
+| Variable                       | Description                | Default Value       |
+| ------------------------------ | -------------------------- | ------------------- |
+| `--ijt-color-primary`          | Primary accent color       | `#4f46e5` (indigo)  |
+| `--ijt-color-primary-hover`    | Primary hover state        | `#4338ca`           |
+| `--ijt-color-primary-light`    | Light primary background   | `#e0e7ff`           |
+| `--ijt-color-success`          | Success color              | `#22c55e`           |
+| `--ijt-color-danger`           | Danger/error color         | `#ef4444`           |
+| `--ijt-color-text`             | Main text color            | `#374151`           |
+| `--ijt-color-text-light`       | Secondary text color       | `#6b7280`           |
+| `--ijt-color-text-muted`       | Muted text color           | `#9ca3af`           |
+| `--ijt-color-bg`               | Background color           | `#ffffff`           |
+| `--ijt-color-bg-secondary`     | Secondary background       | `#f9fafb`           |
+| `--ijt-color-bg-hover`         | Hover background           | `#f3f4f6`           |
+| `--ijt-color-border`           | Border color               | `#e5e7eb`           |
+| `--ijt-color-border-dark`      | Darker border color        | `#d1d5db`           |
+| `--ijt-radius-sm`              | Small border radius        | `0.25rem`           |
+| `--ijt-radius-md`              | Medium border radius       | `0.375rem`          |
+| `--ijt-radius-lg`              | Large border radius        | `0.5rem`            |
+| `--ijt-spacing-xs`             | Extra small spacing        | `0.25rem`           |
+| `--ijt-spacing-sm`             | Small spacing              | `0.5rem`            |
+| `--ijt-spacing-md`             | Medium spacing             | `1rem`              |
+| `--ijt-spacing-lg`             | Large spacing              | `1.5rem`            |
+| `--ijt-shadow-sm`              | Small shadow               | `0 1px 2px ...`     |
+| `--ijt-shadow-md`              | Medium shadow              | `0 4px 6px ...`     |
+| `--ijt-font-size-sm`           | Small font size            | `0.875rem`          |
+| `--ijt-font-size-base`         | Base font size             | `1rem`              |
+
+**2. Override Specific Classes**
+
+You can override specific `.ijt-*` classes in your CSS:
+
+```css
+/* Custom table header styling */
+.ijt-table__th {
+    background-color: #1e3a5f;
+    color: white;
+}
+
+/* Custom button styling */
+.ijt-button {
+    background: linear-gradient(to right, #4f46e5, #7c3aed);
+    color: white;
+    border: none;
+}
+
+/* Custom pagination styling */
+.ijt-pagination__button--active {
+    background-color: #4f46e5;
+    color: white;
+}
+```
+
+**3. Create Your Own Theme**
+
+For complete control, you can create your own theme file from scratch. Simply don't import the default styles and write your own CSS targeting the `.ijt-*` classes used by the components.
+
+```js
+// In your main.js, import components without the default styles
+import {
+    Table,
+    Pagination,
+    // ... other components
+} from "@adesin-fr/inertiajs-tables-laravel-query-builder";
+
+// Then import your custom stylesheet
+import "./styles/my-custom-table-theme.css";
+```
+
+##### Disabling Default Styles
+
+If you prefer to use only Tailwind classes or your own styling system, you can prevent the default styles from being loaded by importing components individually without the main entry point, or by overriding the styles with higher specificity CSS rules.
+
 #### Table component
 
 To use the `Table` component and all its related features, you must import the `Table` component and pass the `users` data to the component.

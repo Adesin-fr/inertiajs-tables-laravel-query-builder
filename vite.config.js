@@ -25,8 +25,15 @@ export default defineConfig({
                 globals: {
                     vue: "Vue",
                     vuedraggable: "vuedraggable"
+                },
+                assetFileNames: (assetInfo) => {
+                    if (assetInfo.name === 'style.css') {
+                        return 'style.css';
+                    }
+                    return assetInfo.name;
                 }
             }
-        }
+        },
+        cssCodeSplit: false
     }
 })

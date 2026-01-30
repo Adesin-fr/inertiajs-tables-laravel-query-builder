@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Example of Custom Styles for InertiaJS Tables */
+.ijt-table__th{
+    @apply bg-gray-500 text-gray-100 font-medium;
+}

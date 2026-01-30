@@ -1,3 +1,4 @@
+import "./styles/default.css";
 import ButtonWithDropdown from "./Components/ButtonWithDropdown.vue";
 import HeaderCell from "./Components/HeaderCell.vue";
 import OnClickOutside from "./Components/OnClickOutside.vue";
