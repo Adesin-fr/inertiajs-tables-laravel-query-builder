@@ -8,6 +8,9 @@
   "type": "module",
   "main": "./dist/inertiajs-tables-laravel-query-builder.umd.js",
   "module": "./dist/inertiajs-tables-laravel-query-builder.es.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist",
     "js/styles"
@@ -23,6 +26,7 @@
   "scripts": {
     "dev": "vite build --watch",
     "build": "vite build",
+    "prepublishOnly": "npm run build",
     "eslint": "./node_modules/.bin/eslint app/resources/js/ js/ --ext .js,.vue --fix"
   },
   "peerDependencies": {
