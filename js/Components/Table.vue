@@ -38,9 +38,9 @@
                 <slot v-if="!withGroupedMenu" name="tableColumns" :has-columns="queryBuilderProps.hasToggleableColumns"
                     :columns="queryBuilderData.columns" :has-hidden-columns="queryBuilderProps.hasHiddenColumns"
                     :on-change="changeColumnStatus">
-                    <TableColumns v-if="queryBuilderProps.hasToggleableColumns"
-                        :columns="queryBuilderData.columns" :has-hidden-columns="queryBuilderProps.hasHiddenColumns"
-                        :on-change="changeColumnStatus" :table-name="name" />
+                    <TableColumns v-if="queryBuilderProps.hasToggleableColumns" :columns="queryBuilderData.columns"
+                        :has-hidden-columns="queryBuilderProps.hasHiddenColumns" :on-change="changeColumnStatus"
+                        :table-name="name" />
                 </slot>
 
                 <slot v-if="withGroupedMenu" name="groupedAction" :actions="defaultActions">
@@ -56,7 +56,8 @@
                 </slot>
 
                 <!-- Export CSV Button -->
-                <slot v-if="showExportButton" name="exportButton" :export-url="exportUrlWithParams" :translations="translations">
+                <slot v-if="showExportButton" name="exportButton" :export-url="exportUrlWithParams"
+                    :translations="translations">
                     <a :href="exportUrlWithParams" class="ijt-export">
                         <svg class="ijt-export__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -113,22 +114,18 @@
                                 <tbody class="ijt-table__tbody">
                                     <slot name="body" :show="show">
                                         <tr v-for="(item, key) in resourceData" :key="`table-${name}-row-${key}`"
-                                            class="ijt-table__tr"
-                                            :class="getRowClass(item, key)">
+                                            class="ijt-table__tr" :class="getRowClass(item, key)">
                                             <td class="ijt-table__td ijt-table__td--pinned-checkbox"
                                                 v-if="hasCheckboxes" style="width: 60px;">
                                                 <input type="checkbox" :id="`table-${name}-select-${key}`"
-                                                    class="ijt-table__checkbox"
-                                                    v-model="item.__itSelected" />
+                                                    class="ijt-table__checkbox" v-model="item.__itSelected" />
                                             </td>
 
                                             <td v-for="(column, colIndex) in queryBuilderData.columns"
                                                 v-show="show(column.key)"
                                                 :key="`table-${name}-row-${key}-column-${column.key}`"
-                                                @click="rowClicked($event, item, column.key)"
-                                                class="ijt-table__td"
-                                                :class="column.body_class"
-                                                :data-column-key="column.key" :style="{
+                                                @click="rowClicked($event, item, column.key)" class="ijt-table__td"
+                                                :class="column.body_class" :data-column-key="column.key" :style="{
                                                     width: getColumnWidthForBody(column.key),
                                                     overflow: 'hidden',
                                                     textOverflow: 'ellipsis',
@@ -146,17 +143,14 @@
                         </div>
                     </slot>
 
-                    <div ref="intersectElement" style="height: 1px; width: 100%;" />
-
-                    <slot v-if="!queryBuilderProps.infiniteScrolling" name="pagination" :on-click="visitPageFromUrl" :has-data="hasData" :meta="resourceMeta"
-                        :per-page-options="queryBuilderProps.perPageOptions" :on-per-page-change="onPerPageChange"
-                        :show-export-button="showExportButton">
+                    <slot v-if="!infiniteScrollingEnabled" name="pagination" :on-click="visitPageFromUrl"
+                        :has-data="hasData" :meta="resourceMeta" :per-page-options="queryBuilderProps.perPageOptions"
+                        :on-per-page-change="onPerPageChange" :show-export-button="showExportButton">
                         <div class="ijt-footer">
                             <span class="ijt-footer__selection-info" v-if="hasCheckboxes">{{ lineCountLabel }}</span>
                             <Pagination :on-click="visitPageFromUrl" :has-data="hasData" :meta="resourceMeta"
                                 :per-page-options="queryBuilderProps.perPageOptions"
-                                :on-per-page-change="onPerPageChange"
-                                :show-export-button="showExportButton">
+                                :on-per-page-change="onPerPageChange" :show-export-button="showExportButton">
                                 <!-- Slot pour personnaliser le bouton export -->
                                 <template #exportButton="exportProps">
                                     <slot name="exportButton" v-bind="exportProps" />
@@ -166,12 +160,15 @@
                     </slot>
 
                     <!-- Loading indicator for infinite scrolling -->
-                    <div v-if="queryBuilderProps.infiniteScrolling && isLoadingMore" class="ijt-loading">
+                    <div v-if="infiniteScrollingEnabled && isLoadingMore" class="ijt-loading">
                         <div class="ijt-loading__spinner"></div>
                     </div>
 
                 </TableWrapper>
             </slot>
+
+            <!-- Sentinel for infinite scrolling: placed OUTSIDE TableWrapper to avoid overflow:hidden clipping -->
+            <div v-if="infiniteScrollingEnabled" ref="intersectElement" style="height: 20px; width: 100%;" />
 
             <!-- Summary/Totals slot - provides access to all loaded data including lazy-loaded items -->
             <slot name="tableSummary" :data="resourceData" :meta="resourceMeta" :selected-items="selectedItems">
@@ -353,6 +350,20 @@ const queryBuilderProps = computed(() => {
 
 const queryBuilderData = ref(queryBuilderProps.value);
 
+const infiniteScrollingEnabled = computed(() => {
+    return Boolean(props.withInfiniteScrolling || queryBuilderProps.value.infiniteScrolling);
+});
+
+function getNextPageUrlFromResource() {
+    return (
+        resourceMeta.value?.next_page_url ??
+        props.resource?.next_page_url ??
+        props.resource?.links?.next ??
+        props.resource?.meta?.next_page_url ??
+        null
+    );
+}
+
 // Infinite scrolling state
 const allData = ref([]);
 const nextPageUrl = ref(null);
@@ -390,7 +401,7 @@ const hasOnlyData = computed(() => {
 const resourceData = computed(() => {
     // If infinite scrolling is enabled, ALWAYS use accumulated data
     // This ensures the table empties when sorting/filtering changes
-    if (queryBuilderProps.value.infiniteScrolling) {
+    if (infiniteScrollingEnabled.value) {
         return allData.value;
     }
 
@@ -910,10 +921,14 @@ async function loadMore() {
         const json = await response.json();
 
         // Add new data to existing data
-        allData.value = [...allData.value, ...json.data];
+        allData.value = [...allData.value, ...(json.data || [])];
 
-        // Update next page URL
-        nextPageUrl.value = json.next_page_url;
+        // Update next page URL (support multiple paginator payload shapes)
+        nextPageUrl.value =
+            json.next_page_url ??
+            json.links?.next ??
+            json.meta?.next_page_url ??
+            null;
     } catch (error) {
         console.error('Error loading more data:', error);
     } finally {
@@ -923,7 +938,7 @@ async function loadMore() {
 
 // Initialize infinite scrolling observer
 function initInfiniteScrolling() {
-    if (!queryBuilderProps.value.infiniteScrolling || !intersectElement.value) {
+    if (!infiniteScrollingEnabled.value || !intersectElement.value) {
         return;
     }
 
@@ -936,29 +951,29 @@ function initInfiniteScrolling() {
     // Initialize data from initial props only if allData is empty
     if (props.resource && props.resource.data && allData.value.length === 0) {
         allData.value = [...props.resource.data];
-        nextPageUrl.value = resourceMeta.value.next_page_url || null;
+        nextPageUrl.value = getNextPageUrlFromResource();
     }
 
     // Create intersection observer
     infiniteScrollObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    loadMore();
-                }
-            });
-        },
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                loadMore();
+            }
+        });
+    },
         {
-            rootMargin: '0px 0px 100px 0px',
-            threshold: 0.1,
+            rootMargin: '0px 0px 500px 0px',
         }
     );
 
     infiniteScrollObserver.observe(intersectElement.value);
+
 }
 
 watch(queryBuilderData, () => {
     // Reset infinite scrolling data when query changes
-    if (queryBuilderProps.value.infiniteScrolling) {
+    if (infiniteScrollingEnabled.value) {
         allData.value = [];
         nextPageUrl.value = null;
     }
@@ -971,7 +986,7 @@ watch(queryBuilderData, () => {
 
 // Watch for resource changes (used when not using infinite scrolling)
 watch(() => props.resource, () => {
-    if (!queryBuilderProps.value.infiniteScrolling && props.resource?.data) {
+    if (!infiniteScrollingEnabled.value && props.resource?.data) {
         const selectedItems = props.resource.data.filter((item) => item.__itSelected);
         emit("selectionChanged", selectedItems);
     }
@@ -979,7 +994,7 @@ watch(() => props.resource, () => {
 
 // Watch for new data in infinite scrolling mode
 watch(() => queryBuilderProps.value, (newProps) => {
-    if (!queryBuilderProps.value.infiniteScrolling) {
+    if (!infiniteScrollingEnabled.value) {
         return;
     }
 
@@ -990,7 +1005,7 @@ watch(() => queryBuilderProps.value, (newProps) => {
     if (newData.length > 0) {
         // This is a fresh load (not a "load more"), so reset the data
         allData.value = [...newData];
-        nextPageUrl.value = resourceMeta.value.next_page_url || null;
+        nextPageUrl.value = getNextPageUrlFromResource();
 
         // Handle selection changes
         const selectedItems = newData.filter((item) => item.__itSelected);
@@ -1018,14 +1033,16 @@ const inertiaListener = () => {
     }
 
     // Reinitialize infinite scrolling observer after Inertia navigation
-    if (queryBuilderProps.value.infiniteScrolling) {
+    if (infiniteScrollingEnabled.value) {
         setTimeout(() => {
             if (intersectElement.value) {
                 initInfiniteScrolling();
             }
         }, 100);
     }
-}; onMounted(() => {
+};
+
+onMounted(() => {
     document.addEventListener("inertia:success", inertiaListener);
 
     // Charger l'ordre et la visibilité des colonnes depuis le localStorage
@@ -1042,8 +1059,8 @@ const inertiaListener = () => {
     }
 
     // Initialize infinite scrolling
-    if (queryBuilderProps.value.infiniteScrolling) {
-            initInfiniteScrolling();
+    if (infiniteScrollingEnabled.value) {
+        initInfiniteScrolling();
     }
 });
 
