@@ -441,7 +441,7 @@ class InertiaTable
      * @param bool $searchable
      * @return self
      */
-    public function column(string $key = null, string $label = null, bool $canBeHidden = true, bool $hidden = false, bool $sortable = false, bool $searchable = false, string $headerClass = '', string $bodyClass = ''): self
+    public function column(?string $key = null, ?string $label = null, bool $canBeHidden = true, bool $hidden = false, bool $sortable = false, bool $searchable = false, string $headerClass = '', string $bodyClass = ''): self
     {
         $key   = $key ?: Str::kebab($label);
         $label = $label ?: Str::headline($key);
@@ -472,7 +472,7 @@ class InertiaTable
      * @param string|null $label
      * @return self
      */
-    public function withGlobalSearch(string $label = null): self
+    public function withGlobalSearch(?string $label = null): self
     {
         return $this->searchInput('global', $label ?: __('Search...'));
     }
@@ -485,7 +485,7 @@ class InertiaTable
      * @param string|null $defaultValue
      * @return self
      */
-    public function searchInput(string $key, string $label = null, string $defaultValue = null): self
+    public function searchInput(string $key, ?string $label = null, ?string $defaultValue = null): self
     {
         $this->searchInputs = $this->searchInputs->reject(function (SearchInput $searchInput) use ($key) {
             return $searchInput->key === $key;
@@ -510,7 +510,7 @@ class InertiaTable
      * @param string|null $column_key
      * @return self
      */
-    public function selectFilter(string $key, array $options, string $label = null, string $defaultValue = null, bool $noFilterOption = true, string $noFilterOptionLabel = null): self
+    public function selectFilter(string $key, array $options, ?string $label = null, ?string $defaultValue = null, bool $noFilterOption = true, ?string $noFilterOptionLabel = null): self
     {
         $this->filters = $this->filters->reject(function (Filterable $filter) use ($key) {
             return $filter->key === $key;
@@ -536,7 +536,7 @@ class InertiaTable
      * @param string|null $column_key
      * @return self
      */
-    public function toggleFilter(string $key, string $label = null, bool $defaultValue = null): self
+    public function toggleFilter(string $key, ?string $label = null, ?bool $defaultValue = null): self
     {
         $this->filters = $this->filters->reject(function (Filterable $filter) use ($key) {
             return $filter->key === $key;
@@ -563,7 +563,7 @@ class InertiaTable
      * @param string|null $column_key
      * @return self
      */
-    public function numberRangeFilter(string $key, float $max, float $min = 0, string $prefix = '', string $suffix = '', float $step = 1, string $label = null, array $defaultValue = null): self
+    public function numberRangeFilter(string $key, float $max, float $min = 0, string $prefix = '', string $suffix = '', float $step = 1, ?string $label = null, ?array $defaultValue = null): self
     {
         $this->filters = $this->filters->reject(function (Filterable $filter) use ($key) {
             //return $filter->key === $key;
@@ -590,7 +590,7 @@ class InertiaTable
      * @param string $format
      * @return self
      */
-    public function dateFilter(string $key, string $label = null, array $defaultValue = null, string $format = 'Y-m-d'): self
+    public function dateFilter(string $key, ?string $label = null, ?array $defaultValue = null, string $format = 'Y-m-d'): self
     {
         $this->filters = $this->filters->reject(function (Filterable $filter) use ($key) {
             return $filter->key === $key;
@@ -613,7 +613,7 @@ class InertiaTable
      * @param float $step
      * @return self
      */
-    public function numberFilter(string $key, string $label = null, array $defaultValue = null, string $prefix = '', string $suffix = '', float $step = 1): self
+    public function numberFilter(string $key, ?string $label = null, ?array $defaultValue = null, string $prefix = '', string $suffix = '', float $step = 1): self
     {
         $this->filters = $this->filters->reject(function (Filterable $filter) use ($key) {
             return $filter->key === $key;
