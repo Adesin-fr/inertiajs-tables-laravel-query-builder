@@ -144,11 +144,15 @@ function onDateChange() {
     props.onFilterChange(props.filter.key, value);
 }
 
-function resetFilter() {
+function clearInputs() {
     filterType.value = '';
     singleDate.value = '';
     startDate.value = '';
     endDate.value = '';
+}
+
+function resetFilter() {
+    clearInputs();
     props.onFilterChange(props.filter.key, null);
 }
 
@@ -170,10 +174,11 @@ onMounted(() => {
     }
 });
 
-// Watch for external changes
+// Watch for external changes. The parent already holds the empty value : notifying it
+// again would reset its pagination each time the filter prop is replaced.
 watch(() => props.filter.value, (newValue) => {
     if (!newValue) {
-        resetFilter();
+        clearInputs();
     } else if (newValue.type) {
         filterType.value = newValue.type;
 
