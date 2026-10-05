@@ -35,6 +35,11 @@ const translationsObject = {
         add_search_fields: "Add search field",
         show_hide_columns: "Show / Hide columns",
         grouped_reset: "Reset",
+        sort_by: "Sort by",
+        default_sort: "Default order",
+        ascending: "Ascending",
+        descending: "Descending",
+        select_row: "Select row",
     }
 };
 

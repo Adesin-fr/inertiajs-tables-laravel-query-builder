@@ -15,56 +15,74 @@
                     </slot>
                 </div>
 
-                <div>
-                    <slot name="tableFilter" :has-filters="queryBuilderProps.hasFilters"
-                        :has-enabled-filters="queryBuilderProps.hasEnabledFilters" :filters="queryBuilderProps.filters"
-                        :on-filter-change="changeFilterValue">
-                        <TableFilter v-if="queryBuilderProps.hasFilters"
-                            :has-enabled-filters="queryBuilderProps.hasEnabledFilters"
-                            :filters="queryBuilderProps.filters" :on-filter-change="changeFilterValue" />
+                <div v-if="mobileSortableColumns.length" class="ijt-toolbar__mobile-sort">
+                    <label :for="`table-${name}-mobile-sort`" class="ijt-toolbar__mobile-sort-label">
+                        {{ translations.sort_by }}
+                    </label>
+                    <select :id="`table-${name}-mobile-sort`" class="ijt-toolbar__mobile-sort-select"
+                        :value="mobileSortValue" :aria-label="translations.sort_by"
+                        @change="changeMobileSort($event.target.value)">
+                        <option value="">{{ translations.default_sort }}</option>
+                        <template v-for="column in mobileSortableColumns" :key="column.key">
+                            <option :value="column.key">{{ column.label }} ({{ translations.ascending }})</option>
+                            <option :value="`-${column.key}`">{{ column.label }} ({{ translations.descending }})</option>
+                        </template>
+                    </select>
+                </div>
+
+                <div class="ijt-toolbar__actions">
+                    <div>
+                        <slot name="tableFilter" :has-filters="queryBuilderProps.hasFilters"
+                            :has-enabled-filters="queryBuilderProps.hasEnabledFilters" :filters="queryBuilderProps.filters"
+                            :on-filter-change="changeFilterValue">
+                            <TableFilter v-if="queryBuilderProps.hasFilters"
+                                :has-enabled-filters="queryBuilderProps.hasEnabledFilters"
+                                :filters="queryBuilderProps.filters" :on-filter-change="changeFilterValue" />
+                        </slot>
+                    </div>
+
+                    <slot v-if="!withGroupedMenu && !hideSearchInputsAboveTable" name="tableAddSearchRow"
+                        :has-search-inputs="queryBuilderProps.hasSearchInputs"
+                        :has-search-inputs-without-value="queryBuilderProps.hasSearchInputsWithoutValue"
+                        :search-inputs="queryBuilderProps.searchInputsWithoutGlobal" :on-add="showSearchInput">
+                        <TableAddSearchRow v-if="queryBuilderProps.hasSearchInputs"
+                            :search-inputs="queryBuilderProps.searchInputsWithoutGlobal"
+                            :has-search-inputs-without-value="queryBuilderProps.hasSearchInputsWithoutValue"
+                            :on-add="showSearchInput" />
+                    </slot>
+
+                    <slot v-if="!withGroupedMenu" name="tableColumns" :has-columns="queryBuilderProps.hasToggleableColumns"
+                        :columns="queryBuilderData.columns" :has-hidden-columns="queryBuilderProps.hasHiddenColumns"
+                        :on-change="changeColumnStatus">
+                        <TableColumns v-if="queryBuilderProps.hasToggleableColumns" :columns="queryBuilderData.columns"
+                            :has-hidden-columns="queryBuilderProps.hasHiddenColumns" :on-change="changeColumnStatus"
+                            :table-name="name" />
+                    </slot>
+
+                    <slot v-if="withGroupedMenu" name="groupedAction" :actions="defaultActions">
+                        <GroupedActions :actions="defaultActions">
+                            <slot name="bulk-actions" />
+                        </GroupedActions>
+                    </slot>
+
+                    <slot v-if="!withGroupedMenu" name="tableReset" :can-be-reset="canBeReset" :on-click="resetQuery">
+                        <div v-if="canBeReset">
+                            <TableReset :on-click="resetQuery" />
+                        </div>
+                    </slot>
+
+                    <!-- Export CSV Button -->
+                    <slot v-if="showExportButton" name="exportButton" :export-url="exportUrlWithParams"
+                        :translations="translations">
+                        <a :href="exportUrlWithParams" class="ijt-export">
+                            <svg class="ijt-export__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                        </a>
                     </slot>
                 </div>
 
-                <slot v-if="!withGroupedMenu && !hideSearchInputsAboveTable" name="tableAddSearchRow"
-                    :has-search-inputs="queryBuilderProps.hasSearchInputs"
-                    :has-search-inputs-without-value="queryBuilderProps.hasSearchInputsWithoutValue"
-                    :search-inputs="queryBuilderProps.searchInputsWithoutGlobal" :on-add="showSearchInput">
-                    <TableAddSearchRow v-if="queryBuilderProps.hasSearchInputs"
-                        :search-inputs="queryBuilderProps.searchInputsWithoutGlobal"
-                        :has-search-inputs-without-value="queryBuilderProps.hasSearchInputsWithoutValue"
-                        :on-add="showSearchInput" />
-                </slot>
-
-                <slot v-if="!withGroupedMenu" name="tableColumns" :has-columns="queryBuilderProps.hasToggleableColumns"
-                    :columns="queryBuilderData.columns" :has-hidden-columns="queryBuilderProps.hasHiddenColumns"
-                    :on-change="changeColumnStatus">
-                    <TableColumns v-if="queryBuilderProps.hasToggleableColumns" :columns="queryBuilderData.columns"
-                        :has-hidden-columns="queryBuilderProps.hasHiddenColumns" :on-change="changeColumnStatus"
-                        :table-name="name" />
-                </slot>
-
-                <slot v-if="withGroupedMenu" name="groupedAction" :actions="defaultActions">
-                    <GroupedActions :actions="defaultActions">
-                        <slot name="bulk-actions" />
-                    </GroupedActions>
-                </slot>
-
-                <slot v-if="!withGroupedMenu" name="tableReset" :can-be-reset="canBeReset" :on-click="resetQuery">
-                    <div v-if="canBeReset">
-                        <TableReset :on-click="resetQuery" />
-                    </div>
-                </slot>
-
-                <!-- Export CSV Button -->
-                <slot v-if="showExportButton" name="exportButton" :export-url="exportUrlWithParams"
-                    :translations="translations">
-                    <a :href="exportUrlWithParams" class="ijt-export">
-                        <svg class="ijt-export__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                    </a>
-                </slot>
 
             </div>
 
@@ -94,9 +112,12 @@
                                             <th v-if="hasCheckboxes"
                                                 class="ijt-table__th ijt-table__th--pinned-checkbox"
                                                 style="width: 60px;">
+                                                <label :for="`table-${name}-select-header`" class="ijt-sr-only">
+                                                    {{ translations.select_row }}
+                                                </label>
                                                 <input type="checkbox" :id="`table-${name}-select-header`"
                                                     @change="toggleSelection" v-model="headerCheckboxSelected"
-                                                    class="ijt-table__checkbox" />
+                                                    class="ijt-table__checkbox" :aria-label="translations.select_row" />
                                             </th>
                                             <template v-for="column in queryBuilderData.columns">
                                                 <HeaderCell :cell="header(column.key)"
@@ -114,27 +135,45 @@
                                 <tbody class="ijt-table__tbody">
                                     <slot name="body" :show="show">
                                         <tr v-for="(item, key) in resourceData" :key="`table-${name}-row-${key}`"
-                                            class="ijt-table__tr" :class="getRowClass(item, key)">
+                                            class="ijt-table__tr" :class="[getRowClass(item, key), {
+                                                'ijt-table__tr--has-actions': hasVisibleActionsColumn,
+                                                'ijt-table__tr--has-checkboxes': hasCheckboxes,
+                                                'ijt-table__tr--has-card-controls': hasVisibleActionsColumn || hasCheckboxes
+                                            }]">
                                             <td class="ijt-table__td ijt-table__td--pinned-checkbox"
-                                                v-if="hasCheckboxes" style="width: 60px;">
-                                                <input type="checkbox" :id="`table-${name}-select-${key}`"
-                                                    class="ijt-table__checkbox" v-model="item.__itSelected" />
+                                                v-if="hasCheckboxes" style="width: 60px;"
+                                                :data-column-label="translations.select_row">
+                                                <div class="ijt-sr-only">{{ translations.select_row }}</div>
+                                                <div class="ijt-table__td-content">
+                                                    <label :for="`table-${name}-select-${key}`" class="ijt-sr-only">
+                                                        {{ translations.select_row }}
+                                                    </label>
+                                                    <input type="checkbox" :id="`table-${name}-select-${key}`"
+                                                        class="ijt-table__checkbox" v-model="item.__itSelected"
+                                                        :aria-label="translations.select_row" />
+                                                </div>
                                             </td>
 
-                                            <td v-for="(column, colIndex) in queryBuilderData.columns"
-                                                v-show="show(column.key)"
+                                            <td v-for="column in visibleColumns"
                                                 :key="`table-${name}-row-${key}-column-${column.key}`"
                                                 @click="rowClicked($event, item, column.key)" class="ijt-table__td"
-                                                :class="column.body_class" :data-column-key="column.key" :style="{
+                                                :class="[column.body_class, {
+                                                    'ijt-table__td--empty': isEmptyCell(item, column.key)
+                                                }]" :data-column-key="column.key"
+                                                :data-column-label="column.label || column.key"
+                                                :data-column-hidden="column.hidden ? 'true' : 'false'" :style="{
                                                     width: getColumnWidthForBody(column.key),
                                                     overflow: 'hidden',
                                                     textOverflow: 'ellipsis',
                                                     ...getPinnedColumnStyle(column.key)
                                                 }">
 
-                                                <slot :name="`cell(${column.key})`" :item="item">
-                                                    {{ item[column.key] }}
-                                                </slot>
+                                                <div class="ijt-table__td-label">{{ column.label || column.key }}</div>
+                                                <div class="ijt-table__td-content">
+                                                    <slot :name="`cell(${column.key})`" :item="item">
+                                                        {{ item[column.key] }}
+                                                    </slot>
+                                                </div>
                                             </td>
                                         </tr>
                                     </slot>
@@ -187,7 +226,7 @@ import TableGlobalSearch from "./TableGlobalSearch.vue";
 import TableSearchRows from "./TableSearchRows.vue";
 import TableReset from "./TableReset.vue";
 import TableWrapper from "./TableWrapper.vue";
-import { computed, onMounted, ref, watch, onUnmounted, getCurrentInstance, Transition, provide } from "vue";
+import { computed, onMounted, ref, watch, onUnmounted, getCurrentInstance, Transition, provide, useSlots } from "vue";
 import qs from "qs";
 import clone from "lodash-es/clone";
 import filter from "lodash-es/filter";
@@ -203,6 +242,7 @@ import { useColumnResize } from "../composables/useColumnResize.js";
 
 
 const translations = getTranslations();
+const slots = useSlots();
 
 const emit = defineEmits(["rowClicked", 'selectionChanged']);
 
@@ -349,6 +389,30 @@ const queryBuilderProps = computed(() => {
 });
 
 const queryBuilderData = ref(queryBuilderProps.value);
+
+const visibleColumns = computed(() => {
+    return queryBuilderData.value.columns.filter((column) => !column.hidden);
+});
+
+const mobileSortableColumns = computed(() => {
+    return visibleColumns.value.filter((column) => column.sortable && !isHiddenOnMobile(column));
+});
+
+const hasVisibleActionsColumn = computed(() => {
+    return visibleColumns.value.some((column) => column.key === "actions");
+});
+
+function isHiddenOnMobile(column) {
+    const classes = String(column.body_class || "").split(/\s+/);
+
+    return classes.includes("hidden") || classes.includes("ijt-hidden");
+}
+
+const mobileSortValue = computed(() => {
+    const sort = queryBuilderData.value.sort;
+
+    return sort && sort !== queryBuilderProps.value.defaultSort ? sort : "";
+});
 
 const infiniteScrollingEnabled = computed(() => {
     return Boolean(props.withInfiniteScrolling || queryBuilderProps.value.infiniteScrolling);
@@ -1140,6 +1204,24 @@ function sortBy(column) {
 
     queryBuilderData.value.cursor = null;
     queryBuilderData.value.page = 1;
+}
+
+function changeMobileSort(sort) {
+    queryBuilderData.value.sort = sort || null;
+    queryBuilderData.value.cursor = null;
+    queryBuilderData.value.page = 1;
+}
+
+function isEmptyCell(item, key) {
+    // A custom cell slot may render actions or a component even when the raw
+    // value is empty, so it must remain visible.
+    if (slots[`cell(${key})`]) {
+        return false;
+    }
+
+    const value = item[key];
+
+    return value === null || value === undefined || (typeof value === "string" && value.trim() === "");
 }
 
 function show(key) {

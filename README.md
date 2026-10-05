@@ -33,6 +33,10 @@ This package is a fork of [protonemedia/inertiajs-tables-laravel-query-builder],
 -   **Custom row styling**: Apply conditional CSS classes to table rows based on data
 -   Resizeable columns ✅
 
+## Mobile card rendering
+
+The standard `Table` component automatically renders each row as a card below 640 px, while preserving the existing table rendering from 640 px upward. Visible cells show their column label and retain their existing cell slots, including custom actions and components. Fully custom rendering through the `table`, `head`, or `body` slots remains the integrator's responsibility.
+
 ## Compatibility
 
 -   [Vue 3](https://v3.vuejs.org/guide/installation.html)
