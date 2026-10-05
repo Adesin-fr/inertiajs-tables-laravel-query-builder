@@ -1,7 +1,7 @@
 # Inertia.js Tables for Laravel Query Builder
 
-[![Latest Version on NPM](https://img.shields.io/npm/v/@adesin-fr/inertiajs-tables-laravel-query-builder.svg?style=flat-square)](https://npmjs.com/package/@adesin-fr/inertiajs-tables-laravel-query-builder)
-[![npm](https://img.shields.io/npm/dt/@adesin-fr/inertiajs-tables-laravel-query-builder.svg?style=flat-square)](https://www.npmjs.com/package/@adesin-fr/inertiajs-tables-laravel-query-builder)
+[![Latest Version on NPM](https://img.shields.io/npm/v/@adesin/inertiajs-tables-laravel-query-builder.svg?style=flat-square)](https://npmjs.com/package/@adesin/inertiajs-tables-laravel-query-builder)
+[![npm](https://img.shields.io/npm/dt/@adesin/inertiajs-tables-laravel-query-builder.svg?style=flat-square)](https://www.npmjs.com/package/@adesin/inertiajs-tables-laravel-query-builder)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/adesin-fr/inertiajs-tables-laravel-query-builder.svg?style=flat-square)](https://packagist.org/packages/adesin-fr/inertiajs-tables-laravel-query-builder)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
@@ -706,9 +706,9 @@ When the user clicks the "Reset" button, all customizations stored in localStora
 You can install the package via either `npm` or `yarn`:
 
 ```bash
-npm install @adesin-fr/inertiajs-tables-laravel-query-builder --save
+npm install @adesin/inertiajs-tables-laravel-query-builder --save
 
-yarn add @adesin-fr/inertiajs-tables-laravel-query-builder
+yarn add @adesin/inertiajs-tables-laravel-query-builder
 ```
 
 Add the repository path to the `content` array of your [Tailwind configuration file](https://tailwindcss.com/docs/content-configuration). This ensures that the styling also works on production builds.
@@ -716,7 +716,7 @@ Add the repository path to the `content` array of your [Tailwind configuration f
 ```js
 module.exports = {
     content: [
-        "./node_modules/@adesin-fr/inertiajs-tables-laravel-query-builder/**/*.{js,vue}",
+        "./node_modules/@adesin/inertiajs-tables-laravel-query-builder/**/*.{js,vue}",
     ],
 };
 ```
@@ -815,7 +815,7 @@ import {
     Table,
     Pagination,
     // ... other components
-} from "@adesin-fr/inertiajs-tables-laravel-query-builder";
+} from "@adesin/inertiajs-tables-laravel-query-builder";
 
 // Then import your custom stylesheet
 import "./styles/my-custom-table-theme.css";
@@ -831,7 +831,7 @@ To use the `Table` component and all its related features, you must import the `
 
 ```vue
 <script setup>
-import { Table } from "@adesin-fr/inertiajs-tables-laravel-query-builder";
+import { Table } from "@adesin/inertiajs-tables-laravel-query-builder";
 
 defineProps(["users"]);
 </script>
@@ -1172,7 +1172,7 @@ Lastly, pass the correct `name` property to each table in the Vue template. Opti
 
 ```vue
 <script setup>
-import { Table } from "@adesin-fr/inertiajs-tables-laravel-query-builder";
+import { Table } from "@adesin/inertiajs-tables-laravel-query-builder";
 
 defineProps(["companies", "users"]);
 </script>
@@ -1189,7 +1189,7 @@ defineProps(["companies", "users"]);
 You can override the default pagination translations with the `setTranslations` method. You can do this in your main JavaScript file:
 
 ```js
-import { setTranslations } from "@adesin-fr/inertiajs-tables-laravel-query-builder";
+import { setTranslations } from "@adesin/inertiajs-tables-laravel-query-builder";
 
 setTranslations({
     // Pagination translations
