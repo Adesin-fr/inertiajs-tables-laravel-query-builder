@@ -1,9 +1,9 @@
-import { ref as S, onMounted as Z, onBeforeUnmount as Qe, openBlock as s, createElementBlock as h, renderSlot as z, watch as J, nextTick as Se, createBlock as F, withCtx as O, createElementVNode as n, normalizeClass as P, withModifiers as R, withDirectives as A, vShow as ae, createStaticVNode as jt, normalizeStyle as Y, toDisplayString as _, createCommentVNode as b, createTextVNode as te, computed as M, unref as $, vModelSelect as Ye, vModelText as ie, watchEffect as Ct, onUnmounted as me, Teleport as fe, Fragment as U, renderList as K, createVNode as H, withKeys as He, inject as $t, resolveDynamicComponent as re, reactive as St, isRef as Mt, useSlots as qt, getCurrentInstance as It, provide as Nt, Transition as zt, vModelCheckbox as Ke, normalizeProps as Ft, guardReactiveProps as Vt } from "vue";
+import { ref as S, onMounted as Z, onBeforeUnmount as Qe, openBlock as s, createElementBlock as f, renderSlot as N, watch as G, nextTick as Se, createBlock as F, withCtx as E, createElementVNode as t, normalizeClass as P, withModifiers as R, withDirectives as A, vShow as ae, createStaticVNode as jt, normalizeStyle as J, toDisplayString as _, createCommentVNode as b, createTextVNode as te, computed as I, unref as C, vModelSelect as Ye, vModelText as ie, watchEffect as Ct, onUnmounted as me, Teleport as fe, Fragment as U, renderList as K, createVNode as H, withKeys as He, inject as $t, resolveDynamicComponent as re, reactive as St, isRef as Mt, useSlots as qt, getCurrentInstance as It, provide as zt, Transition as Nt, vModelCheckbox as Ke, normalizeProps as Ft, guardReactiveProps as Vt } from "vue";
 import { createPopper as Pt } from "@popperjs/core/lib/popper-lite";
 import Bt from "@popperjs/core/lib/modifiers/preventOverflow";
 import Lt from "@popperjs/core/lib/modifiers/flip";
-import Ot from "@popperjs/core/lib/modifiers/eventListeners";
-import { createPopper as Et } from "@popperjs/core";
+import Et from "@popperjs/core/lib/modifiers/eventListeners";
+import { createPopper as Ot } from "@popperjs/core";
 import Rt from "lodash-es/uniq";
 import Tt from "vuedraggable";
 import At from "lodash-es/find";
@@ -24,19 +24,19 @@ const Qt = {
       required: !0
     }
   },
-  setup(t) {
-    const u = t, l = S(null), c = S(null);
+  setup(n) {
+    const i = n, a = S(null), d = S(null);
     return Z(() => {
-      l.value = (d) => {
-        d.target === c.value || c.value.contains(d.target) || u.do();
-      }, document.addEventListener("click", l.value), document.addEventListener("touchstart", l.value);
+      a.value = (v) => {
+        v.target === d.value || d.value.contains(v.target) || i.do();
+      }, document.addEventListener("click", a.value), document.addEventListener("touchstart", a.value);
     }), Qe(() => {
-      document.removeEventListener("click", l.value), document.removeEventListener("touchstart", l.value);
-    }), (d, e) => (s(), h("div", {
+      document.removeEventListener("click", a.value), document.removeEventListener("touchstart", a.value);
+    }), (v, e) => (s(), f("div", {
       ref_key: "root",
-      ref: c
+      ref: d
     }, [
-      z(d.$slots, "default")
+      N(v.$slots, "default")
     ], 512));
   }
 }, Yt = { class: "ijt-dropdown" }, Jt = ["dusk", "disabled"], pe = {
@@ -64,60 +64,60 @@ const Qt = {
     }
   },
   emits: ["closed", "opened"],
-  setup(t, { expose: u, emit: l }) {
-    const c = l, d = t, e = S(!1), f = S(null), p = {
+  setup(n, { expose: i, emit: a }) {
+    const d = a, v = n, e = S(!1), c = S(null), p = {
       name: "setDropdownMaxHeight",
       enabled: !0,
       phase: "write",
-      fn({ state: j }) {
-        const v = j.elements.popper;
-        if (!v)
+      fn({ state: w }) {
+        const m = w.elements.popper;
+        if (!m)
           return;
-        const C = 12, x = v.getBoundingClientRect(), I = j.placement || "bottom";
-        let q;
-        I.startsWith("top") ? q = x.bottom - C : q = window.innerHeight - x.top - C;
-        const L = Math.max(q, 160);
-        v.style.maxHeight = `${L}px`, v.style.overflowY = "auto", v.style.overscrollBehavior = "contain", v.style.webkitOverflowScrolling = "touch";
+        const j = 12, $ = m.getBoundingClientRect(), q = w.placement || "bottom";
+        let M;
+        q.startsWith("top") ? M = $.bottom - j : M = window.innerHeight - $.top - j;
+        const B = Math.max(M, 160);
+        m.style.maxHeight = `${B}px`, m.style.overflowY = "auto", m.style.overscrollBehavior = "contain", m.style.webkitOverflowScrolling = "touch";
       }
     };
     function y() {
       e.value = !e.value;
     }
-    function m() {
+    function h() {
       e.value = !1;
     }
-    J(e, () => {
-      e.value && f.value && Se(() => f.value.update()), e.value || c("closed"), e.value && c("opened");
+    G(e, () => {
+      e.value && c.value && Se(() => c.value.update()), e.value || d("closed"), e.value && d("opened");
     });
-    const r = S(null), w = S(null);
+    const r = S(null), x = S(null);
     return Z(() => {
-      f.value = Pt(r.value, w.value, {
-        placement: d.placement,
-        modifiers: [Ot, Lt, Bt, p]
+      c.value = Pt(r.value, x.value, {
+        placement: v.placement,
+        modifiers: [Et, Lt, Bt, p]
       });
     }), Qe(() => {
-      f.value && (f.value.destroy(), f.value = null);
-    }), u({ hide: m }), (j, v) => (s(), F(Qt, { do: m }, {
-      default: O(() => [
-        n("div", Yt, [
-          n("button", {
+      c.value && (c.value.destroy(), c.value = null);
+    }), i({ hide: h }), (w, m) => (s(), F(Qt, { do: h }, {
+      default: E(() => [
+        t("div", Yt, [
+          t("button", {
             ref_key: "button",
             ref: r,
             type: "button",
-            dusk: t.dusk,
-            disabled: t.disabled,
-            class: P(["ijt-dropdown__trigger", { "ijt-dropdown__trigger--disabled": t.disabled }]),
+            dusk: n.dusk,
+            disabled: n.disabled,
+            class: P(["ijt-dropdown__trigger", { "ijt-dropdown__trigger--disabled": n.disabled }]),
             "aria-haspopup": "true",
             onClick: R(y, ["prevent"])
           }, [
-            z(j.$slots, "button")
+            N(w.$slots, "button")
           ], 10, Jt),
-          A(n("div", {
+          A(t("div", {
             ref_key: "tooltip",
-            ref: w,
+            ref: x,
             class: "ijt-dropdown__panel"
           }, [
-            z(j.$slots, "default")
+            N(w.$slots, "default")
           ], 512), [
             [ae, e.value]
           ])
@@ -142,17 +142,17 @@ const Qt = {
       default: !1
     }
   },
-  setup(t) {
-    const u = t, l = (c) => {
-      u.onResize(c, u.columnKey);
+  setup(n) {
+    const i = n, a = (d) => {
+      i.onResize(d, i.columnKey);
     };
-    return (c, d) => (s(), h("div", {
+    return (d, v) => (s(), f("div", {
       class: P(["ijt-resize-handle", {
-        "ijt-resize-handle--active": t.isActive,
-        "ijt-resize-handle--visible": t.isActive
+        "ijt-resize-handle--active": n.isActive,
+        "ijt-resize-handle--visible": n.isActive
       }]),
-      onMousedown: l
-    }, [...d[0] || (d[0] = [
+      onMousedown: a
+    }, [...v[0] || (v[0] = [
       jt('<div class="ijt-resize-handle__separator"></div><div class="ijt-resize-handle__grip"><div class="ijt-resize-handle__grip-dots"><div class="ijt-resize-handle__grip-dot"></div><div class="ijt-resize-handle__grip-dot"></div><div class="ijt-resize-handle__grip-dot"></div></div></div>', 2)
     ])], 34));
   }
@@ -168,36 +168,36 @@ const Qt = {
       required: !0
     }
   },
-  setup(t) {
-    return (u, l) => (s(), h("div", en, [
-      n("label", tn, [
-        n("input", {
+  setup(n) {
+    return (i, a) => (s(), f("div", en, [
+      t("label", tn, [
+        t("input", {
           type: "checkbox",
-          checked: t.filter.value,
+          checked: n.filter.value,
           class: "ijt-toggle-filter__input",
-          onChange: l[0] || (l[0] = (c) => t.onFilterChange(t.filter.key, c.target.checked ? "1" : "0"))
+          onChange: a[0] || (a[0] = (d) => n.onFilterChange(n.filter.key, d.target.checked ? "1" : "0"))
         }, null, 40, nn),
-        n("div", {
+        t("div", {
           class: P(["ijt-toggle-filter__track", {
-            "ijt-toggle-filter__track--on": t.filter.value === "1" || t.filter.value === 1 || t.filter.value === !0,
-            "ijt-toggle-filter__track--off": t.filter.value === "0" || t.filter.value === 0 || t.filter.value === !1,
-            "ijt-toggle-filter__track--disabled": t.filter.value === null
+            "ijt-toggle-filter__track--on": n.filter.value === "1" || n.filter.value === 1 || n.filter.value === !0,
+            "ijt-toggle-filter__track--off": n.filter.value === "0" || n.filter.value === 0 || n.filter.value === !1,
+            "ijt-toggle-filter__track--disabled": n.filter.value === null
           }])
         }, null, 2)
       ]),
-      n("button", {
+      t("button", {
         class: "ijt-toggle-filter__reset",
-        onClick: l[1] || (l[1] = R((c) => t.onFilterChange(t.filter.key, null), ["prevent"]))
-      }, [...l[2] || (l[2] = [
-        n("span", { class: "ijt-sr-only" }, "Remove search", -1),
-        n("svg", {
+        onClick: a[1] || (a[1] = R((d) => n.onFilterChange(n.filter.key, null), ["prevent"]))
+      }, [...a[2] || (a[2] = [
+        t("span", { class: "ijt-sr-only" }, "Remove search", -1),
+        t("svg", {
           xmlns: "http://www.w3.org/2000/svg",
           class: "ijt-toggle-filter__reset-icon",
           fill: "none",
           viewBox: "0 0 24 24",
           stroke: "currentColor"
         }, [
-          n("path", {
+          t("path", {
             "stroke-linecap": "round",
             "stroke-linejoin": "round",
             "stroke-width": "2",
@@ -208,11 +208,11 @@ const Qt = {
     ]));
   }
 };
-const Me = (t, u) => {
-  const l = t.__vccOpts || t;
-  for (const [c, d] of u)
-    l[c] = d;
-  return l;
+const Me = (n, i) => {
+  const a = n.__vccOpts || n;
+  for (const [d, v] of i)
+    a[d] = v;
+  return a;
 }, ln = {
   name: "SimpleMultiRange",
   props: {
@@ -258,10 +258,10 @@ const Me = (t, u) => {
     currentMinValue() {
       try {
         if (Array.isArray(this.internalValue) && this.internalValue.length === 2) {
-          let t = Number(Math.min(...this.internalValue));
-          if (Number.isNaN(t))
+          let n = Number(Math.min(...this.internalValue));
+          if (Number.isNaN(n))
             throw !0;
-          return this.checkedValue(t);
+          return this.checkedValue(n);
         } else
           throw !0;
       } catch {
@@ -271,10 +271,10 @@ const Me = (t, u) => {
     currentMaxValue() {
       try {
         if (Array.isArray(this.internalValue) && this.internalValue.length === 2) {
-          let t = Number(Math.max(...this.internalValue));
-          if (Number.isNaN(t))
+          let n = Number(Math.max(...this.internalValue));
+          if (Number.isNaN(n))
             throw !0;
-          return this.checkedValue(t);
+          return this.checkedValue(n);
         } else
           throw !0;
       } catch {
@@ -303,25 +303,25 @@ const Me = (t, u) => {
     this.detectIfOverlap();
   },
   methods: {
-    getMarginTop(t) {
-      let l = 4;
-      return t ? `margin-top: ${(l - 4 + 12) * 0.25}rem` : `margin-top: -${((l - 4) / 2 + 9) * 0.25}rem`;
+    getMarginTop(n) {
+      let a = 4;
+      return n ? `margin-top: ${(a - 4 + 12) * 0.25}rem` : `margin-top: -${((a - 4) / 2 + 9) * 0.25}rem`;
     },
-    checkedValue(t) {
-      return t < Number(this.min) ? (console.warn("SimpleMultiRange: Your value need to be gte than your min range"), Number(this.min)) : t > Number(this.max) ? (console.warn("SimpleMultiRange: Your value need to be lte than your max range"), Number(this.max)) : t;
+    checkedValue(n) {
+      return n < Number(this.min) ? (console.warn("SimpleMultiRange: Your value need to be gte than your min range"), Number(this.min)) : n > Number(this.max) ? (console.warn("SimpleMultiRange: Your value need to be lte than your max range"), Number(this.max)) : n;
     },
     detectIfOverlap() {
-      let t = this.$refs.popover_min.getClientRects()[0], u = this.$refs.popover_max.getClientRects()[0];
-      t && u && (this.hasOverlap = t.right > u.left);
+      let n = this.$refs.popover_min.getClientRects()[0], i = this.$refs.popover_max.getClientRects()[0];
+      n && i && (this.hasOverlap = n.right > i.left);
     },
-    handleMouseDown(t, u) {
-      this.moveMin = u, this.moveMax = !u, this.rangePositions = this.$refs.range.getClientRects()[0], window.addEventListener("mousemove", this.handleMouseMove), window.addEventListener("mouseup", this.handleMouseUp);
+    handleMouseDown(n, i) {
+      this.moveMin = i, this.moveMax = !i, this.rangePositions = this.$refs.range.getClientRects()[0], window.addEventListener("mousemove", this.handleMouseMove), window.addEventListener("mouseup", this.handleMouseUp);
     },
-    handleMouseMove(t) {
-      let c = (t.clientX - this.rangePositions.x) / this.rangePositions.width * 100 / 100 * (Number(this.max) - Number(this.min)) + Number(this.min), d = Number(Math.round(c / this.step) * this.step).toFixed(2);
-      d >= this.min && d <= this.max && (this.moveMin && d !== this.currentMinValue && d <= this.currentMaxValue && (this.internalValue = [d, this.currentMaxValue]), this.moveMax && d !== this.currentMaxValue && d >= this.currentMinValue && (this.internalValue = [this.currentMinValue, d])), this.detectIfOverlap();
+    handleMouseMove(n) {
+      let d = (n.clientX - this.rangePositions.x) / this.rangePositions.width * 100 / 100 * (Number(this.max) - Number(this.min)) + Number(this.min), v = Number(Math.round(d / this.step) * this.step).toFixed(2);
+      v >= this.min && v <= this.max && (this.moveMin && v !== this.currentMinValue && v <= this.currentMaxValue && (this.internalValue = [v, this.currentMaxValue]), this.moveMax && v !== this.currentMaxValue && v >= this.currentMinValue && (this.internalValue = [this.currentMinValue, v])), this.detectIfOverlap();
     },
-    handleMouseUp(t) {
+    handleMouseUp(n) {
       this.moveMin = this.moveMax = !1, window.removeEventListener("mousemove", this.handleMouseMove), window.removeEventListener("mouseup", this.handleMouseUp), this.$emit("update:modelValue", [this.currentMinValue, this.currentMaxValue]);
     }
   }
@@ -337,38 +337,38 @@ const Me = (t, u) => {
   ref: "popover_max",
   class: "ijt-range-filter__popover"
 }, fn = { key: 0 }, mn = { key: 1 }, pn = { draggable: "true" }, gn = { class: "ijt-range-filter__label ijt-range-filter__label--min" }, _n = { key: 0 }, bn = { key: 1 }, yn = { class: "ijt-range-filter__label ijt-range-filter__label--max" }, kn = { key: 0 }, wn = { key: 1 };
-function xn(t, u, l, c, d, e) {
-  var f, p, y, m;
-  return s(), h("div", an, [
-    n("div", sn, [
-      n("div", on, [
-        n("div", {
+function xn(n, i, a, d, v, e) {
+  var c, p, y, h;
+  return s(), f("div", an, [
+    t("div", sn, [
+      t("div", on, [
+        t("div", {
           class: "ijt-range-filter__selected",
-          style: Y(`width: ${e.rangeWidth}% !important; left: ${e.currentMinValueInPercent}% !important;`)
+          style: J(`width: ${e.rangeWidth}% !important; left: ${e.currentMinValueInPercent}% !important;`)
         }, null, 4),
-        n("div", {
+        t("div", {
           class: "ijt-range-filter__handle",
-          style: Y(`left: ${e.currentMinValueInPercent}%;`),
-          onMousedown: u[0] || (u[0] = (r) => e.handleMouseDown(r, !0))
+          style: J(`left: ${e.currentMinValueInPercent}%;`),
+          onMousedown: i[0] || (i[0] = (r) => e.handleMouseDown(r, !0))
         }, [
-          n("div", rn, [
-            n("div", un, [
-              n("div", {
+          t("div", rn, [
+            t("div", un, [
+              t("div", {
                 class: "ijt-range-filter__popover-content",
-                style: Y(e.getMarginTop(d.hasOverlap && e.displayFirstDown))
+                style: J(e.getMarginTop(v.hasOverlap && e.displayFirstDown))
               }, [
-                l.prefix ? (s(), h("span", cn, _(l.prefix), 1)) : b("", !0),
-                te(" " + _((f = e.currentMinValue) != null ? f : 0) + " ", 1),
-                l.suffix ? (s(), h("span", dn, _(l.suffix), 1)) : b("", !0)
+                a.prefix ? (s(), f("span", cn, _(a.prefix), 1)) : b("", !0),
+                te(" " + _((c = e.currentMinValue) != null ? c : 0) + " ", 1),
+                a.suffix ? (s(), f("span", dn, _(a.suffix), 1)) : b("", !0)
               ], 4),
-              (s(), h("svg", {
-                class: P(["ijt-range-filter__popover-arrow", [d.hasOverlap && e.displayFirstDown ? "bottom-6 rotate-180" : "top-100"]]),
+              (s(), f("svg", {
+                class: P(["ijt-range-filter__popover-arrow", [v.hasOverlap && e.displayFirstDown ? "bottom-6 rotate-180" : "top-100"]]),
                 x: "0px",
                 y: "0px",
                 viewBox: "0 0 255 255",
                 "xml:space": "preserve"
-              }, [...u[2] || (u[2] = [
-                n("polygon", {
+              }, [...i[2] || (i[2] = [
+                t("polygon", {
                   class: "fill-current",
                   points: "0,0 127.5,127.5 255,0"
                 }, null, -1)
@@ -376,30 +376,30 @@ function xn(t, u, l, c, d, e) {
             ], 512)
           ])
         ], 36),
-        n("div", {
+        t("div", {
           class: "ijt-range-filter__handle",
-          style: Y(`left: ${e.currentMaxValueInPercent}%;`),
-          onMousedown: u[1] || (u[1] = (r) => e.handleMouseDown(r, !1))
+          style: J(`left: ${e.currentMaxValueInPercent}%;`),
+          onMousedown: i[1] || (i[1] = (r) => e.handleMouseDown(r, !1))
         }, [
-          n("div", vn, [
-            n("div", hn, [
-              n("div", {
+          t("div", vn, [
+            t("div", hn, [
+              t("div", {
                 class: "ijt-range-filter__popover-content",
-                style: Y(e.getMarginTop(d.hasOverlap && !e.displayFirstDown))
+                style: J(e.getMarginTop(v.hasOverlap && !e.displayFirstDown))
               }, [
-                l.prefix ? (s(), h("span", fn, _(l.prefix), 1)) : b("", !0),
+                a.prefix ? (s(), f("span", fn, _(a.prefix), 1)) : b("", !0),
                 te(" " + _((p = e.currentMaxValue) != null ? p : 0) + " ", 1),
-                l.suffix ? (s(), h("span", mn, _(l.suffix), 1)) : b("", !0)
+                a.suffix ? (s(), f("span", mn, _(a.suffix), 1)) : b("", !0)
               ], 4),
-              n("div", pn, [
-                (s(), h("svg", {
-                  class: P(["ijt-range-filter__popover-arrow", [d.hasOverlap && !e.displayFirstDown ? "bottom-6 rotate-180" : "top-100"]]),
+              t("div", pn, [
+                (s(), f("svg", {
+                  class: P(["ijt-range-filter__popover-arrow", [v.hasOverlap && !e.displayFirstDown ? "bottom-6 rotate-180" : "top-100"]]),
                   x: "0px",
                   y: "0px",
                   viewBox: "0 0 255 255",
                   "xml:space": "preserve"
-                }, [...u[3] || (u[3] = [
-                  n("polygon", {
+                }, [...i[3] || (i[3] = [
+                  t("polygon", {
                     class: "fill-current",
                     points: "0,0 127.5,127.5 255,0"
                   }, null, -1)
@@ -408,15 +408,15 @@ function xn(t, u, l, c, d, e) {
             ], 512)
           ])
         ], 36),
-        n("div", gn, [
-          l.prefix ? (s(), h("span", _n, _(l.prefix), 1)) : b("", !0),
-          te(" " + _((y = l.min) != null ? y : 0) + " ", 1),
-          l.suffix ? (s(), h("span", bn, _(l.suffix), 1)) : b("", !0)
+        t("div", gn, [
+          a.prefix ? (s(), f("span", _n, _(a.prefix), 1)) : b("", !0),
+          te(" " + _((y = a.min) != null ? y : 0) + " ", 1),
+          a.suffix ? (s(), f("span", bn, _(a.suffix), 1)) : b("", !0)
         ]),
-        n("div", yn, [
-          l.prefix ? (s(), h("span", kn, _(l.prefix), 1)) : b("", !0),
-          te(" " + _((m = l.max) != null ? m : 0) + " ", 1),
-          l.suffix ? (s(), h("span", wn, _(l.suffix), 1)) : b("", !0)
+        t("div", yn, [
+          a.prefix ? (s(), f("span", kn, _(a.prefix), 1)) : b("", !0),
+          te(" " + _((h = a.max) != null ? h : 0) + " ", 1),
+          a.suffix ? (s(), f("span", wn, _(a.suffix), 1)) : b("", !0)
         ])
       ])
     ])
@@ -466,16 +466,16 @@ const Ze = /* @__PURE__ */ Me(ln, [["render", xn], ["__scopeId", "data-v-b8d9c6c
 function ne() {
   return qe.translations;
 }
-function Hs(t, u) {
-  qe.translations[t] = u;
+function Ks(n, i) {
+  qe.translations[n] = i;
 }
-function Ks(t) {
-  qe.translations = t;
+function Gs(n) {
+  qe.translations = n;
 }
-const jn = { class: "ijt-number-filter" }, Cn = { class: "ijt-number-filter__label" }, $n = { value: "" }, Sn = { value: "exact" }, Mn = { value: "less_than" }, qn = { value: "greater_than" }, In = { value: "less_than_or_equal" }, Nn = { value: "greater_than_or_equal" }, zn = { value: "between" }, Fn = { key: 0 }, Vn = { key: 0 }, Pn = { class: "ijt-number-filter__label" }, Bn = { class: "ijt-number-filter__input-wrapper" }, Ln = {
+const jn = { class: "ijt-number-filter" }, Cn = { class: "ijt-number-filter__label" }, $n = { value: "" }, Sn = { value: "exact" }, Mn = { value: "less_than" }, qn = { value: "greater_than" }, In = { value: "less_than_or_equal" }, zn = { value: "greater_than_or_equal" }, Nn = { value: "between" }, Fn = { key: 0 }, Vn = { key: 0 }, Pn = { class: "ijt-number-filter__label" }, Bn = { class: "ijt-number-filter__input-wrapper" }, Ln = {
   key: 0,
   class: "ijt-number-filter__prefix"
-}, On = ["step"], En = {
+}, En = ["step"], On = {
   key: 1,
   class: "ijt-number-filter__suffix"
 }, Rn = { key: 1 }, Tn = { style: { "margin-bottom": "0.75rem" } }, An = { class: "ijt-number-filter__label" }, Dn = { class: "ijt-number-filter__input-wrapper" }, Wn = {
@@ -505,116 +505,116 @@ const jn = { class: "ijt-number-filter" }, Cn = { class: "ijt-number-filter__lab
       required: !0
     }
   },
-  setup(t) {
-    const u = t, l = ne(), c = S(""), d = S(""), e = S(""), f = S(""), p = M(() => c.value !== "" && (c.value !== "between" && d.value !== "" && d.value !== null || c.value === "between" && e.value !== "" && e.value !== null && f.value !== "" && f.value !== null));
+  setup(n) {
+    const i = n, a = ne(), d = S(""), v = S(""), e = S(""), c = S(""), p = I(() => d.value !== "" && (d.value !== "between" && v.value !== "" && v.value !== null || d.value === "between" && e.value !== "" && e.value !== null && c.value !== "" && c.value !== null));
     function y() {
-      switch (c.value) {
+      switch (d.value) {
         case "exact":
-          return l.exact_number;
+          return a.exact_number;
         case "less_than":
-          return l.less_than;
+          return a.less_than;
         case "greater_than":
-          return l.greater_than;
+          return a.greater_than;
         case "less_than_or_equal":
-          return l.less_than_or_equal;
+          return a.less_than_or_equal;
         case "greater_than_or_equal":
-          return l.greater_than_or_equal;
+          return a.greater_than_or_equal;
         default:
           return "Number";
       }
     }
-    function m() {
-      d.value = "", e.value = "", f.value = "", c.value === "" ? j() : r();
+    function h() {
+      v.value = "", e.value = "", c.value = "", d.value === "" ? w() : r();
     }
     function r() {
-      if (c.value === "")
+      if (d.value === "")
         return;
-      let v = null;
-      switch (c.value) {
+      let m = null;
+      switch (d.value) {
         case "exact":
         case "less_than":
         case "greater_than":
         case "less_than_or_equal":
         case "greater_than_or_equal":
-          d.value !== "" && d.value !== null && (v = {
-            type: c.value,
-            number: d.value
+          v.value !== "" && v.value !== null && (m = {
+            type: d.value,
+            number: v.value
           });
           break;
         case "between":
-          e.value !== "" && e.value !== null && f.value !== "" && f.value !== null && (v = {
-            type: c.value,
+          e.value !== "" && e.value !== null && c.value !== "" && c.value !== null && (m = {
+            type: d.value,
             start_number: e.value,
-            end_number: f.value
+            end_number: c.value
           });
           break;
       }
-      u.onFilterChange(u.filter.key, v);
+      i.onFilterChange(i.filter.key, m);
+    }
+    function x() {
+      d.value = "", v.value = "", e.value = "", c.value = "";
     }
     function w() {
-      c.value = "", d.value = "", e.value = "", f.value = "";
-    }
-    function j() {
-      w(), u.onFilterChange(u.filter.key, null);
+      x(), i.onFilterChange(i.filter.key, null);
     }
     return Z(() => {
-      if (u.filter.value) {
-        const v = u.filter.value;
-        v.type && (c.value = v.type, v.type === "between" ? (e.value = v.start_number || "", f.value = v.end_number || "") : d.value = v.number || "");
+      if (i.filter.value) {
+        const m = i.filter.value;
+        m.type && (d.value = m.type, m.type === "between" ? (e.value = m.start_number || "", c.value = m.end_number || "") : v.value = m.number || "");
       }
-    }), J(() => u.filter.value, (v) => {
-      v ? v.type && (c.value = v.type, v.type === "between" ? (e.value = v.start_number || "", f.value = v.end_number || "") : d.value = v.number || "") : w();
-    }, { deep: !0 }), (v, C) => (s(), h("div", jn, [
-      n("div", null, [
-        n("label", Cn, _($(l).filter_type), 1),
-        A(n("select", {
-          "onUpdate:modelValue": C[0] || (C[0] = (x) => c.value = x),
+    }), G(() => i.filter.value, (m) => {
+      m ? m.type && (d.value = m.type, m.type === "between" ? (e.value = m.start_number || "", c.value = m.end_number || "") : v.value = m.number || "") : x();
+    }, { deep: !0 }), (m, j) => (s(), f("div", jn, [
+      t("div", null, [
+        t("label", Cn, _(C(a).filter_type), 1),
+        A(t("select", {
+          "onUpdate:modelValue": j[0] || (j[0] = ($) => d.value = $),
           class: "ijt-select",
-          onChange: m
+          onChange: h
         }, [
-          n("option", $n, _($(l).no_filter), 1),
-          n("option", Sn, _($(l).exact_number), 1),
-          n("option", Mn, _($(l).less_than), 1),
-          n("option", qn, _($(l).greater_than), 1),
-          n("option", In, _($(l).less_than_or_equal), 1),
-          n("option", Nn, _($(l).greater_than_or_equal), 1),
-          n("option", zn, _($(l).number_range), 1)
+          t("option", $n, _(C(a).no_filter), 1),
+          t("option", Sn, _(C(a).exact_number), 1),
+          t("option", Mn, _(C(a).less_than), 1),
+          t("option", qn, _(C(a).greater_than), 1),
+          t("option", In, _(C(a).less_than_or_equal), 1),
+          t("option", zn, _(C(a).greater_than_or_equal), 1),
+          t("option", Nn, _(C(a).number_range), 1)
         ], 544), [
-          [Ye, c.value]
+          [Ye, d.value]
         ])
       ]),
-      c.value && c.value !== "" ? (s(), h("div", Fn, [
-        ["exact", "less_than", "greater_than", "less_than_or_equal", "greater_than_or_equal"].includes(c.value) ? (s(), h("div", Vn, [
-          n("label", Pn, _(y()), 1),
-          n("div", Bn, [
-            t.filter.prefix ? (s(), h("span", Ln, _(t.filter.prefix), 1)) : b("", !0),
-            A(n("input", {
+      d.value && d.value !== "" ? (s(), f("div", Fn, [
+        ["exact", "less_than", "greater_than", "less_than_or_equal", "greater_than_or_equal"].includes(d.value) ? (s(), f("div", Vn, [
+          t("label", Pn, _(y()), 1),
+          t("div", Bn, [
+            n.filter.prefix ? (s(), f("span", Ln, _(n.filter.prefix), 1)) : b("", !0),
+            A(t("input", {
               type: "number",
-              "onUpdate:modelValue": C[1] || (C[1] = (x) => d.value = x),
-              step: t.filter.step || 1,
+              "onUpdate:modelValue": j[1] || (j[1] = ($) => v.value = $),
+              step: n.filter.step || 1,
               class: "ijt-input",
               onInput: r,
               placeholder: "0"
-            }, null, 40, On), [
+            }, null, 40, En), [
               [
                 ie,
-                d.value,
+                v.value,
                 void 0,
                 { number: !0 }
               ]
             ]),
-            t.filter.suffix ? (s(), h("span", En, _(t.filter.suffix), 1)) : b("", !0)
+            n.filter.suffix ? (s(), f("span", On, _(n.filter.suffix), 1)) : b("", !0)
           ])
         ])) : b("", !0),
-        c.value === "between" ? (s(), h("div", Rn, [
-          n("div", Tn, [
-            n("label", An, _($(l).start_number), 1),
-            n("div", Dn, [
-              t.filter.prefix ? (s(), h("span", Wn, _(t.filter.prefix), 1)) : b("", !0),
-              A(n("input", {
+        d.value === "between" ? (s(), f("div", Rn, [
+          t("div", Tn, [
+            t("label", An, _(C(a).start_number), 1),
+            t("div", Dn, [
+              n.filter.prefix ? (s(), f("span", Wn, _(n.filter.prefix), 1)) : b("", !0),
+              A(t("input", {
                 type: "number",
-                "onUpdate:modelValue": C[2] || (C[2] = (x) => e.value = x),
-                step: t.filter.step || 1,
+                "onUpdate:modelValue": j[2] || (j[2] = ($) => e.value = $),
+                step: n.filter.step || 1,
                 class: "ijt-input",
                 onInput: r,
                 placeholder: "0"
@@ -626,48 +626,48 @@ const jn = { class: "ijt-number-filter" }, Cn = { class: "ijt-number-filter__lab
                   { number: !0 }
                 ]
               ]),
-              t.filter.suffix ? (s(), h("span", Hn, _(t.filter.suffix), 1)) : b("", !0)
+              n.filter.suffix ? (s(), f("span", Hn, _(n.filter.suffix), 1)) : b("", !0)
             ])
           ]),
-          n("div", null, [
-            n("label", Kn, _($(l).end_number), 1),
-            n("div", Gn, [
-              t.filter.prefix ? (s(), h("span", Xn, _(t.filter.prefix), 1)) : b("", !0),
-              A(n("input", {
+          t("div", null, [
+            t("label", Kn, _(C(a).end_number), 1),
+            t("div", Gn, [
+              n.filter.prefix ? (s(), f("span", Xn, _(n.filter.prefix), 1)) : b("", !0),
+              A(t("input", {
                 type: "number",
-                "onUpdate:modelValue": C[3] || (C[3] = (x) => f.value = x),
-                step: t.filter.step || 1,
+                "onUpdate:modelValue": j[3] || (j[3] = ($) => c.value = $),
+                step: n.filter.step || 1,
                 class: "ijt-input",
                 onInput: r,
                 placeholder: "0"
               }, null, 40, Qn), [
                 [
                   ie,
-                  f.value,
+                  c.value,
                   void 0,
                   { number: !0 }
                 ]
               ]),
-              t.filter.suffix ? (s(), h("span", Yn, _(t.filter.suffix), 1)) : b("", !0)
+              n.filter.suffix ? (s(), f("span", Yn, _(n.filter.suffix), 1)) : b("", !0)
             ])
           ])
         ])) : b("", !0)
       ])) : b("", !0),
-      p.value ? (s(), h("div", Jn, [
-        n("button", {
+      p.value ? (s(), f("div", Jn, [
+        t("button", {
           type: "button",
           class: "ijt-number-filter__reset-button",
-          onClick: j
+          onClick: w
         }, [
-          n("span", Zn, _($(l).reset_filter), 1),
-          C[4] || (C[4] = n("svg", {
+          t("span", Zn, _(C(a).reset_filter), 1),
+          j[4] || (j[4] = t("svg", {
             xmlns: "http://www.w3.org/2000/svg",
             class: "ijt-number-filter__reset-icon",
             fill: "none",
             viewBox: "0 0 24 24",
             stroke: "currentColor"
           }, [
-            n("path", {
+            t("path", {
               "stroke-linecap": "round",
               "stroke-linejoin": "round",
               "stroke-width": "2",
@@ -693,128 +693,128 @@ const jn = { class: "ijt-number-filter" }, Cn = { class: "ijt-number-filter__lab
       required: !0
     }
   },
-  setup(t) {
-    const u = t, l = ne(), c = S(""), d = S(""), e = S(""), f = S(""), p = M(() => c.value !== "" && (c.value !== "between" && d.value || c.value === "between" && e.value && f.value));
+  setup(n) {
+    const i = n, a = ne(), d = S(""), v = S(""), e = S(""), c = S(""), p = I(() => d.value !== "" && (d.value !== "between" && v.value || d.value === "between" && e.value && c.value));
     function y() {
-      switch (c.value) {
+      switch (d.value) {
         case "exact":
-          return l.exact_date;
+          return a.exact_date;
         case "before":
-          return l.before_date;
+          return a.before_date;
         case "after":
-          return l.after_date;
+          return a.after_date;
         default:
           return "Date";
       }
     }
-    function m() {
-      d.value = "", e.value = "", f.value = "", c.value === "" ? j() : r();
+    function h() {
+      v.value = "", e.value = "", c.value = "", d.value === "" ? w() : r();
     }
     function r() {
-      if (c.value === "")
+      if (d.value === "")
         return;
-      let v = null;
-      switch (c.value) {
+      let m = null;
+      switch (d.value) {
         case "exact":
         case "before":
         case "after":
-          d.value && (v = {
-            type: c.value,
-            date: d.value
+          v.value && (m = {
+            type: d.value,
+            date: v.value
           });
           break;
         case "between":
-          e.value && f.value && (v = {
-            type: c.value,
+          e.value && c.value && (m = {
+            type: d.value,
             start_date: e.value,
-            end_date: f.value
+            end_date: c.value
           });
           break;
       }
-      u.onFilterChange(u.filter.key, v);
+      i.onFilterChange(i.filter.key, m);
+    }
+    function x() {
+      d.value = "", v.value = "", e.value = "", c.value = "";
     }
     function w() {
-      c.value = "", d.value = "", e.value = "", f.value = "";
-    }
-    function j() {
-      w(), u.onFilterChange(u.filter.key, null);
+      x(), i.onFilterChange(i.filter.key, null);
     }
     return Z(() => {
-      if (u.filter.value) {
-        const v = u.filter.value;
-        v.type && (c.value = v.type, v.type === "between" ? (e.value = v.start_date || "", f.value = v.end_date || "") : d.value = v.date || "");
+      if (i.filter.value) {
+        const m = i.filter.value;
+        m.type && (d.value = m.type, m.type === "between" ? (e.value = m.start_date || "", c.value = m.end_date || "") : v.value = m.date || "");
       }
-    }), J(() => u.filter.value, (v) => {
-      v ? v.type && (c.value = v.type, v.type === "between" ? (e.value = v.start_date || "", f.value = v.end_date || "") : d.value = v.date || "") : w();
-    }, { deep: !0 }), (v, C) => (s(), h("div", el, [
-      n("div", null, [
-        n("label", tl, _($(l).filter_type), 1),
-        A(n("select", {
-          "onUpdate:modelValue": C[0] || (C[0] = (x) => c.value = x),
+    }), G(() => i.filter.value, (m) => {
+      m ? m.type && (d.value = m.type, m.type === "between" ? (e.value = m.start_date || "", c.value = m.end_date || "") : v.value = m.date || "") : x();
+    }, { deep: !0 }), (m, j) => (s(), f("div", el, [
+      t("div", null, [
+        t("label", tl, _(C(a).filter_type), 1),
+        A(t("select", {
+          "onUpdate:modelValue": j[0] || (j[0] = ($) => d.value = $),
           class: "ijt-select",
-          onChange: m
+          onChange: h
         }, [
-          n("option", nl, _($(l).no_filter), 1),
-          n("option", ll, _($(l).exact_date), 1),
-          n("option", al, _($(l).before_date), 1),
-          n("option", sl, _($(l).after_date), 1),
-          n("option", ol, _($(l).date_range), 1)
+          t("option", nl, _(C(a).no_filter), 1),
+          t("option", ll, _(C(a).exact_date), 1),
+          t("option", al, _(C(a).before_date), 1),
+          t("option", sl, _(C(a).after_date), 1),
+          t("option", ol, _(C(a).date_range), 1)
         ], 544), [
-          [Ye, c.value]
+          [Ye, d.value]
         ])
       ]),
-      c.value && c.value !== "" ? (s(), h("div", rl, [
-        ["exact", "before", "after"].includes(c.value) ? (s(), h("div", il, [
-          n("label", ul, _(y()), 1),
-          A(n("input", {
+      d.value && d.value !== "" ? (s(), f("div", rl, [
+        ["exact", "before", "after"].includes(d.value) ? (s(), f("div", il, [
+          t("label", ul, _(y()), 1),
+          A(t("input", {
             type: "date",
-            "onUpdate:modelValue": C[1] || (C[1] = (x) => d.value = x),
+            "onUpdate:modelValue": j[1] || (j[1] = ($) => v.value = $),
             class: "ijt-input",
             onChange: r
           }, null, 544), [
-            [ie, d.value]
+            [ie, v.value]
           ])
         ])) : b("", !0),
-        c.value === "between" ? (s(), h("div", cl, [
-          n("div", dl, [
-            n("label", vl, _($(l).start_date), 1),
-            A(n("input", {
+        d.value === "between" ? (s(), f("div", cl, [
+          t("div", dl, [
+            t("label", vl, _(C(a).start_date), 1),
+            A(t("input", {
               type: "date",
-              "onUpdate:modelValue": C[2] || (C[2] = (x) => e.value = x),
+              "onUpdate:modelValue": j[2] || (j[2] = ($) => e.value = $),
               class: "ijt-input",
               onChange: r
             }, null, 544), [
               [ie, e.value]
             ])
           ]),
-          n("div", null, [
-            n("label", hl, _($(l).end_date), 1),
-            A(n("input", {
+          t("div", null, [
+            t("label", hl, _(C(a).end_date), 1),
+            A(t("input", {
               type: "date",
-              "onUpdate:modelValue": C[3] || (C[3] = (x) => f.value = x),
+              "onUpdate:modelValue": j[3] || (j[3] = ($) => c.value = $),
               class: "ijt-input",
               onChange: r
             }, null, 544), [
-              [ie, f.value]
+              [ie, c.value]
             ])
           ])
         ])) : b("", !0)
       ])) : b("", !0),
-      p.value ? (s(), h("div", fl, [
-        n("button", {
+      p.value ? (s(), f("div", fl, [
+        t("button", {
           type: "button",
           class: "ijt-date-filter__reset-button",
-          onClick: j
+          onClick: w
         }, [
-          n("span", ml, _($(l).reset_filter), 1),
-          C[4] || (C[4] = n("svg", {
+          t("span", ml, _(C(a).reset_filter), 1),
+          j[4] || (j[4] = t("svg", {
             xmlns: "http://www.w3.org/2000/svg",
             class: "ijt-date-filter__reset-icon",
             fill: "none",
             viewBox: "0 0 24 24",
             stroke: "currentColor"
           }, [
-            n("path", {
+            t("path", {
               "stroke-linecap": "round",
               "stroke-linejoin": "round",
               "stroke-width": "2",
@@ -826,19 +826,19 @@ const jn = { class: "ijt-number-filter" }, Cn = { class: "ijt-number-filter__lab
     ]));
   }
 };
-function nt(t) {
-  let u = S(null), l = S(null);
+function nt(n) {
+  let i = S(null), a = S(null);
   return Z(() => {
-    Ct((c) => {
-      if (!l.value || !u.value)
+    Ct((d) => {
+      if (!a.value || !i.value)
         return;
-      let d = l.value.el || l.value, e = u.value.el || u.value;
-      if (!(e instanceof HTMLElement) || !(d instanceof HTMLElement))
+      let v = a.value.el || a.value, e = i.value.el || i.value;
+      if (!(e instanceof HTMLElement) || !(v instanceof HTMLElement))
         return;
-      let { destroy: f } = Et(e, d, t);
-      c(f);
+      let { destroy: c } = Ot(e, v, n);
+      d(c);
     });
-  }), [u, l];
+  }), [i, a];
 }
 const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__header" }, bl = { class: "ijt-dropdown__content" }, yl = ["name", "value", "onChange"], kl = ["value"], wl = {
   key: 2,
@@ -865,8 +865,8 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
       required: !0
     }
   },
-  setup(t) {
-    const u = t, l = S(!1), [c, d] = nt({
+  setup(n) {
+    const i = n, a = S(!1), [d, v] = nt({
       placement: "bottom-end",
       strategy: "fixed",
       modifiers: [
@@ -874,58 +874,58 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
         { name: "preventOverflow", options: { padding: 8 } },
         { name: "flip", options: { fallbackPlacements: ["top-end", "bottom-start", "top-start"] } }
       ]
-    }), e = M(() => u.filters.filter((v) => v.key === u.columnKey || v.key.startsWith(u.columnKey + "_") || v.key.includes(u.columnKey))), f = M(() => e.value.some((v) => !m(v)));
+    }), e = I(() => i.filters.filter((m) => m.key === i.columnKey || m.key.startsWith(i.columnKey + "_") || m.key.includes(i.columnKey))), c = I(() => e.value.some((m) => !h(m)));
     function p() {
-      e.value.length > 0 && (l.value = !l.value);
+      e.value.length > 0 && (a.value = !a.value);
     }
     function y() {
-      l.value = !1;
+      a.value = !1;
     }
-    function m(v) {
-      if (v.value === null)
+    function h(m) {
+      if (m.value === null)
         return !0;
-      switch (v.type) {
+      switch (m.type) {
         case "number_range":
-          return Number(Math.max(...v.value)) === Number(v.max) && Number(Math.min(...v.value)) === Number(v.min);
+          return Number(Math.max(...m.value)) === Number(m.max) && Number(Math.min(...m.value)) === Number(m.min);
         case "select":
-          return v.value === "";
+          return m.value === "";
         case "toggle":
           return !1;
         case "date":
-          return !v.value || typeof v.value == "object" && !v.value.type;
+          return !m.value || typeof m.value == "object" && !m.value.type;
         default:
-          return !v.value;
+          return !m.value;
       }
     }
-    function r(v, C) {
-      u.onFilterChange(v, C);
+    function r(m, j) {
+      i.onFilterChange(m, j);
     }
-    function w(v) {
-      let C = v.value;
-      v.value && (Number(Math.max(...v.value)) === Number(v.max) && Number(Math.min(...v.value)) === Number(v.min) ? C = null : Number(Math.min(...v.value)) === 0 && Number(Math.max(...v.value)) === 0 && (C = ["0", "0"])), u.onFilterChange(v.key, C);
+    function x(m) {
+      let j = m.value;
+      m.value && (Number(Math.max(...m.value)) === Number(m.max) && Number(Math.min(...m.value)) === Number(m.min) ? j = null : Number(Math.min(...m.value)) === 0 && Number(Math.max(...m.value)) === 0 && (j = ["0", "0"])), i.onFilterChange(m.key, j);
     }
-    function j(v) {
-      d.value && !d.value.contains(v.target) && !v.target.closest(`[dusk="column-filter-${u.columnKey}"]`) && y();
+    function w(m) {
+      v.value && !v.value.contains(m.target) && !m.target.closest(`[dusk="column-filter-${i.columnKey}"]`) && y();
     }
     return Z(() => {
-      document.addEventListener("click", j);
+      document.addEventListener("click", w);
     }), me(() => {
-      document.removeEventListener("click", j);
-    }), (v, C) => (s(), h("div", pl, [
-      n("button", {
+      document.removeEventListener("click", w);
+    }), (m, j) => (s(), f("div", pl, [
+      t("button", {
         ref_key: "trigger",
-        ref: c,
+        ref: d,
         onClick: p,
-        class: P(["ijt-filter__button", { "ijt-filter__button--active": f.value }]),
-        dusk: `column-filter-${t.columnKey}`
-      }, [...C[1] || (C[1] = [
-        n("svg", {
+        class: P(["ijt-filter__button", { "ijt-filter__button--active": c.value }]),
+        dusk: `column-filter-${n.columnKey}`
+      }, [...j[1] || (j[1] = [
+        t("svg", {
           xmlns: "http://www.w3.org/2000/svg",
           class: "ijt-filter__button-icon",
           viewBox: "0 0 20 20",
           fill: "currentColor"
         }, [
-          n("path", {
+          t("path", {
             "fill-rule": "evenodd",
             d: "M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z",
             "clip-rule": "evenodd"
@@ -933,57 +933,57 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
         ], -1)
       ])], 10, gl),
       (s(), F(fe, { to: "body" }, [
-        l.value ? (s(), h("div", {
+        a.value ? (s(), f("div", {
           key: 0,
           ref_key: "container",
-          ref: d,
+          ref: v,
           class: "ijt-filter__dropdown",
           style: { "z-index": "9999" },
-          onClick: C[0] || (C[0] = R(() => {
+          onClick: j[0] || (j[0] = R(() => {
           }, ["stop"]))
         }, [
-          (s(!0), h(U, null, K(e.value, (x) => (s(), h("div", {
-            key: x.key
+          (s(!0), f(U, null, K(e.value, ($) => (s(), f("div", {
+            key: $.key
           }, [
-            n("h3", _l, _(x.label), 1),
-            n("div", bl, [
-              x.type === "select" ? (s(), h("select", {
+            t("h3", _l, _($.label), 1),
+            t("div", bl, [
+              $.type === "select" ? (s(), f("select", {
                 key: 0,
-                name: x.key,
-                value: x.value,
+                name: $.key,
+                value: $.value,
                 class: "ijt-select",
-                onChange: (I) => r(x.key, I.target.value)
+                onChange: (q) => r($.key, q.target.value)
               }, [
-                (s(!0), h(U, null, K(x.options, (I, q) => (s(), h("option", {
-                  key: q,
-                  value: q
-                }, _(I), 9, kl))), 128))
+                (s(!0), f(U, null, K($.options, (q, M) => (s(), f("option", {
+                  key: M,
+                  value: M
+                }, _(q), 9, kl))), 128))
               ], 40, yl)) : b("", !0),
-              x.type === "toggle" ? (s(), F(Je, {
+              $.type === "toggle" ? (s(), F(Je, {
                 key: 1,
-                filter: x,
+                filter: $,
                 "on-filter-change": r
               }, null, 8, ["filter"])) : b("", !0),
-              x.type === "number" ? (s(), h("div", wl, [
+              $.type === "number" ? (s(), f("div", wl, [
                 H(et, {
-                  filter: x,
+                  filter: $,
                   "on-filter-change": r
                 }, null, 8, ["filter"])
               ])) : b("", !0),
-              x.type === "number_range" ? (s(), h("div", xl, [
+              $.type === "number_range" ? (s(), f("div", xl, [
                 H(Ze, {
-                  modelValue: x.value,
-                  "onUpdate:modelValue": [(I) => x.value = I, (I) => w(x)],
-                  max: x.max,
-                  min: x.min,
-                  prefix: x.prefix,
-                  suffix: x.suffix,
-                  step: x.step
+                  modelValue: $.value,
+                  "onUpdate:modelValue": [(q) => $.value = q, (q) => x($)],
+                  max: $.max,
+                  min: $.min,
+                  prefix: $.prefix,
+                  suffix: $.suffix,
+                  step: $.step
                 }, null, 8, ["modelValue", "onUpdate:modelValue", "max", "min", "prefix", "suffix", "step"])
               ])) : b("", !0),
-              x.type === "date" ? (s(), h("div", jl, [
+              $.type === "date" ? (s(), f("div", jl, [
                 H(tt, {
-                  filter: x,
+                  filter: $,
                   "on-filter-change": r
                 }, null, 8, ["filter"])
               ])) : b("", !0)
@@ -992,7 +992,7 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
         ], 512)) : b("", !0)
       ])),
       (s(), F(fe, { to: "body" }, [
-        l.value ? (s(), h("div", {
+        a.value ? (s(), f("div", {
           key: 0,
           class: "ijt-filter__backdrop",
           style: { "z-index": "9998" },
@@ -1001,10 +1001,10 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
       ]))
     ]));
   }
-}, $l = { class: "ijt-filter" }, Sl = ["dusk"], Ml = { class: "ijt-column-search__header" }, ql = { class: "ijt-column-search__content" }, Il = ["value", "placeholder"], Nl = {
+}, $l = { class: "ijt-filter" }, Sl = ["dusk"], Ml = { class: "ijt-column-search__header" }, ql = { class: "ijt-column-search__content" }, Il = ["value", "placeholder"], zl = {
   key: 0,
   class: "ijt-column-search__reset"
-}, zl = { class: "ijt-sr-only" }, Fl = {
+}, Nl = { class: "ijt-sr-only" }, Fl = {
   __name: "ColumnSearch",
   props: {
     columnKey: {
@@ -1024,8 +1024,8 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
       required: !0
     }
   },
-  setup(t) {
-    const u = t, l = ne(), c = S(!1), d = S(null), [e, f] = nt({
+  setup(n) {
+    const i = n, a = ne(), d = S(!1), v = S(null), [e, c] = nt({
       placement: "bottom-end",
       strategy: "fixed",
       modifiers: [
@@ -1033,42 +1033,45 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
         { name: "preventOverflow", options: { padding: 8 } },
         { name: "flip", options: { fallbackPlacements: ["top-end", "bottom-start", "top-start"] } }
       ]
-    }), p = M(() => u.searchInputs.find((x) => x.key === u.columnKey)), y = M(() => p.value && p.value.value || ""), m = M(() => y.value !== "");
-    async function r() {
-      p.value && (c.value = !c.value, c.value && (await Se(), d.value && d.value.focus()));
+    }), p = I(() => i.searchInputs.find((q) => q.key === i.columnKey)), y = I(() => p.value && p.value.value || ""), h = S(y.value);
+    G(y, (q) => {
+      document.activeElement !== v.value && (h.value = q);
+    });
+    const r = I(() => y.value !== "");
+    async function x() {
+      p.value && (d.value = !d.value, d.value && (await Se(), v.value && v.value.focus()));
     }
     function w() {
-      c.value = !1;
+      d.value = !1;
     }
-    function j(x) {
-      const I = x.target.value;
-      v(I);
+    function m(q) {
+      j(q.target.value);
     }
-    function v(x) {
-      u.onSearchChange(u.columnKey, x);
+    function j(q) {
+      h.value = q, i.onSearchChange(i.columnKey, q);
     }
-    function C(x) {
-      f.value && !f.value.contains(x.target) && !x.target.closest(`[dusk="column-search-${u.columnKey}"]`) && w();
+    function $(q) {
+      c.value && !c.value.contains(q.target) && !q.target.closest(`[dusk="column-search-${i.columnKey}"]`) && w();
     }
     return Z(() => {
-      document.addEventListener("click", C);
+      document.addEventListener("click", $);
     }), me(() => {
-      document.removeEventListener("click", C);
-    }), (x, I) => (s(), h("div", $l, [
-      n("button", {
+      document.removeEventListener("click", $);
+    }), (q, M) => (s(), f("div", $l, [
+      t("button", {
         ref_key: "trigger",
         ref: e,
-        onClick: r,
-        class: P(["ijt-filter__button", { "ijt-filter__button--active": m.value }]),
-        dusk: `column-search-${t.columnKey}`
-      }, [...I[2] || (I[2] = [
-        n("svg", {
+        onClick: x,
+        class: P(["ijt-filter__button", { "ijt-filter__button--active": r.value }]),
+        dusk: `column-search-${n.columnKey}`
+      }, [...M[2] || (M[2] = [
+        t("svg", {
           xmlns: "http://www.w3.org/2000/svg",
           class: "ijt-filter__button-icon",
           viewBox: "0 0 20 20",
           fill: "currentColor"
         }, [
-          n("path", {
+          t("path", {
             "fill-rule": "evenodd",
             d: "M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z",
             "clip-rule": "evenodd"
@@ -1076,45 +1079,45 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
         ], -1)
       ])], 10, Sl),
       (s(), F(fe, { to: "body" }, [
-        c.value ? (s(), h("div", {
+        d.value ? (s(), f("div", {
           key: 0,
           ref_key: "container",
-          ref: f,
+          ref: c,
           class: "ijt-filter__dropdown ijt-column-search",
           style: { "z-index": "9999" },
-          onClick: I[1] || (I[1] = R(() => {
+          onClick: M[1] || (M[1] = R(() => {
           }, ["stop"]))
         }, [
-          n("h3", Ml, _($(l).search) + " " + _(t.columnLabel), 1),
-          n("div", ql, [
-            n("input", {
+          t("h3", Ml, _(C(a).search) + " " + _(n.columnLabel), 1),
+          t("div", ql, [
+            t("input", {
               ref_key: "searchInput",
-              ref: d,
+              ref: v,
               type: "text",
-              value: y.value,
+              value: h.value,
               class: "ijt-column-search__input",
-              placeholder: `${$(l).search} ${t.columnLabel.toLowerCase()}...`,
-              onInput: j,
+              placeholder: `${C(a).search} ${n.columnLabel.toLowerCase()}...`,
+              onInput: m,
               onKeydown: [
                 He(w, ["enter"]),
                 He(w, ["escape"])
               ]
             }, null, 40, Il),
-            y.value && y.value !== "" ? (s(), h("div", Nl, [
-              n("button", {
+            h.value !== "" ? (s(), f("div", zl, [
+              t("button", {
                 type: "button",
                 class: "ijt-search-row__remove-button",
-                onClick: I[0] || (I[0] = (q) => v(""))
+                onClick: M[0] || (M[0] = (B) => j(""))
               }, [
-                n("span", zl, _($(l).reset), 1),
-                I[3] || (I[3] = n("svg", {
+                t("span", Nl, _(C(a).reset), 1),
+                M[3] || (M[3] = t("svg", {
                   xmlns: "http://www.w3.org/2000/svg",
                   class: "ijt-search-row__remove-icon",
                   fill: "none",
                   viewBox: "0 0 24 24",
                   stroke: "currentColor"
                 }, [
-                  n("path", {
+                  t("path", {
                     "stroke-linecap": "round",
                     "stroke-linejoin": "round",
                     "stroke-width": "2",
@@ -1127,7 +1130,7 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
         ], 512)) : b("", !0)
       ])),
       (s(), F(fe, { to: "body" }, [
-        c.value ? (s(), h("div", {
+        d.value ? (s(), f("div", {
           key: 0,
           class: "ijt-filter__backdrop",
           style: { "z-index": "9998" },
@@ -1136,11 +1139,11 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
       ]))
     ]));
   }
-}, Vl = ["data-column-key"], Pl = { class: "ijt-table__th-content" }, Bl = { class: "ijt-table__th-label" }, Ll = ["sorted"], Ol = {
+}, Vl = ["data-column-key"], Pl = { class: "ijt-table__th-content" }, Bl = { class: "ijt-table__th-label" }, Ll = ["sorted"], El = {
   key: 0,
   fill: "currentColor",
   d: "M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41zm255-105L177 64c-9.4-9.4-24.6-9.4-33.9 0L24 183c-15.1 15.1-4.4 41 17 41h238c21.4 0 32.1-25.9 17-41z"
-}, El = {
+}, Ol = {
   key: 1,
   fill: "currentColor",
   d: "M279 224H41c-21.4 0-32.1-25.9-17-41L143 64c9.4-9.4 24.6-9.4 33.9 0l119 119c15.2 15.1 4.5 41-16.9 41z"
@@ -1156,71 +1159,71 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
       required: !0
     }
   },
-  setup(t) {
-    const u = t, l = $t("columnResize", null), c = M(() => {
-      if (!l)
+  setup(n) {
+    const i = n, a = $t("columnResize", null), d = I(() => {
+      if (!a)
         return "auto";
-      const y = l.getColumnWidth(u.cell.key);
+      const y = a.getColumnWidth(i.cell.key);
       return y === "auto" ? y : `${y}px`;
-    }), d = M(() => (l == null ? void 0 : l.isResizing) || !1), e = M(() => (l == null ? void 0 : l.resizingColumn) || null);
-    function f() {
-      u.cell.sortable && u.cell.onSort(u.cell.key);
+    }), v = I(() => (a == null ? void 0 : a.isResizing) || !1), e = I(() => (a == null ? void 0 : a.resizingColumn) || null);
+    function c() {
+      i.cell.sortable && i.cell.onSort(i.cell.key);
     }
-    function p(y, m) {
-      l && l.startResize(y, m);
+    function p(y, h) {
+      a && a.startResize(y, h);
     }
-    return (y, m) => A((s(), h("th", {
-      class: P(["ijt-table__th", t.cell.header_class]),
-      style: Y({ width: c.value }),
-      "data-column-key": t.cell.key
+    return (y, h) => A((s(), f("th", {
+      class: P(["ijt-table__th", n.cell.header_class]),
+      style: J({ width: d.value }),
+      "data-column-key": n.cell.key
     }, [
-      (s(), F(re(t.cell.sortable ? "button" : "div"), {
+      (s(), F(re(n.cell.sortable ? "button" : "div"), {
         class: "ijt-table__th-button",
-        dusk: t.cell.sortable ? `sort-${t.cell.key}` : null,
-        onClick: R(f, ["prevent"])
+        dusk: n.cell.sortable ? `sort-${n.cell.key}` : null,
+        onClick: R(c, ["prevent"])
       }, {
-        default: O(() => [
-          n("span", Pl, [
-            n("span", Bl, [
-              z(y.$slots, "label", {}, () => [
-                n("span", null, _(t.cell.label), 1)
+        default: E(() => [
+          t("span", Pl, [
+            t("span", Bl, [
+              N(y.$slots, "label", {}, () => [
+                t("span", null, _(n.cell.label), 1)
               ]),
-              z(y.$slots, "sort", {}, () => [
-                t.cell.sortable ? (s(), h("svg", {
+              N(y.$slots, "sort", {}, () => [
+                n.cell.sortable ? (s(), f("svg", {
                   key: 0,
                   "aria-hidden": "true",
                   class: P(["ijt-sort-icon", {
-                    "ijt-sort-icon--active": t.cell.sorted
+                    "ijt-sort-icon--active": n.cell.sorted
                   }]),
                   xmlns: "http://www.w3.org/2000/svg",
                   viewBox: "0 0 320 512",
-                  sorted: t.cell.sorted
+                  sorted: n.cell.sorted
                 }, [
-                  t.cell.sorted ? b("", !0) : (s(), h("path", Ol)),
-                  t.cell.sorted === "asc" ? (s(), h("path", El)) : b("", !0),
-                  t.cell.sorted === "desc" ? (s(), h("path", Rl)) : b("", !0)
+                  n.cell.sorted ? b("", !0) : (s(), f("path", El)),
+                  n.cell.sorted === "asc" ? (s(), f("path", Ol)) : b("", !0),
+                  n.cell.sorted === "desc" ? (s(), f("path", Rl)) : b("", !0)
                 ], 10, Ll)) : b("", !0)
               ])
             ]),
-            n("span", Tl, [
-              z(y.$slots, "search", {}, () => [
-                t.cell.searchable && t.cell.searchInputs && t.cell.searchInputs.length > 0 ? (s(), F(Fl, {
+            t("span", Tl, [
+              N(y.$slots, "search", {}, () => [
+                n.cell.searchable && n.cell.searchInputs && n.cell.searchInputs.length > 0 ? (s(), F(Fl, {
                   key: 0,
-                  "column-key": t.cell.key,
-                  "column-label": t.cell.label,
-                  "search-inputs": t.cell.searchInputs,
-                  "on-search-change": t.cell.onSearchChange,
-                  onClick: m[0] || (m[0] = R(() => {
+                  "column-key": n.cell.key,
+                  "column-label": n.cell.label,
+                  "search-inputs": n.cell.searchInputs,
+                  "on-search-change": n.cell.onSearchChange,
+                  onClick: h[0] || (h[0] = R(() => {
                   }, ["stop"]))
                 }, null, 8, ["column-key", "column-label", "search-inputs", "on-search-change"])) : b("", !0)
               ]),
-              z(y.$slots, "filter", {}, () => [
-                t.cell.filters && t.cell.filters.length > 0 ? (s(), F(Cl, {
+              N(y.$slots, "filter", {}, () => [
+                n.cell.filters && n.cell.filters.length > 0 ? (s(), F(Cl, {
                   key: 0,
-                  "column-key": t.cell.key,
-                  filters: t.cell.filters,
-                  "on-filter-change": t.cell.onFilterChange,
-                  onClick: m[1] || (m[1] = R(() => {
+                  "column-key": n.cell.key,
+                  filters: n.cell.filters,
+                  "on-filter-change": n.cell.onFilterChange,
+                  onClick: h[1] || (h[1] = R(() => {
                   }, ["stop"]))
                 }, null, 8, ["column-key", "filters", "on-filter-change"])) : b("", !0)
               ])
@@ -1229,14 +1232,14 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
         ]),
         _: 3
       }, 8, ["dusk"])),
-      t.cell.resizable !== !1 && $(l) ? (s(), F(Zt, {
+      n.cell.resizable !== !1 && C(a) ? (s(), F(Zt, {
         key: 0,
-        "column-key": t.cell.key,
+        "column-key": n.cell.key,
         "on-resize": p,
-        "is-active": d.value && e.value === t.cell.key
+        "is-active": v.value && e.value === n.cell.key
       }, null, 8, ["column-key", "is-active"])) : b("", !0)
     ], 14, Vl)), [
-      [ae, !t.cell.hidden]
+      [ae, !n.cell.hidden]
     ]);
   }
 }, Dl = ["dusk", "value"], Wl = ["value"], Xe = {
@@ -1264,22 +1267,22 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
       required: !0
     }
   },
-  setup(t) {
-    const u = ne(), l = t, c = M(() => {
-      let d = [...l.options];
-      return d.push(parseInt(l.value)), Rt(d).sort((e, f) => e - f);
+  setup(n) {
+    const i = ne(), a = n, d = I(() => {
+      let v = [...a.options];
+      return v.push(parseInt(a.value)), Rt(v).sort((e, c) => e - c);
     });
-    return (d, e) => (s(), h("select", {
+    return (v, e) => (s(), f("select", {
       name: "per_page",
-      dusk: t.dusk,
-      value: t.value,
+      dusk: n.dusk,
+      value: n.value,
       class: "ijt-per-page",
-      onChange: e[0] || (e[0] = (f) => t.onChange(f.target.value))
+      onChange: e[0] || (e[0] = (c) => n.onChange(c.target.value))
     }, [
-      (s(!0), h(U, null, K(c.value, (f) => (s(), h("option", {
-        key: f,
-        value: f
-      }, _(f) + " " + _($(u).per_page), 9, Wl))), 128))
+      (s(!0), f(U, null, K(d.value, (c) => (s(), f("option", {
+        key: c,
+        value: c
+      }, _(c) + " " + _(C(i).per_page), 9, Wl))), 128))
     ], 40, Dl));
   }
 }, Ul = {
@@ -1334,27 +1337,27 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
       required: !1
     }
   },
-  setup(t) {
-    const u = ne(), l = t, c = M(() => "links" in e.value ? e.value.links.length > 0 : !1), d = M(() => Object.keys(e.value).length > 0), e = M(() => l.meta), f = M(() => "prev_page_url" in e.value ? e.value.prev_page_url : null), p = M(() => "next_page_url" in e.value ? e.value.next_page_url : null), y = M(() => parseInt(e.value.per_page));
-    return (m, r) => d.value ? (s(), h("nav", Ul, [
-      !t.hasData || e.value.total < 1 ? (s(), h("p", Hl, _($(u).no_results_found), 1)) : b("", !0),
-      t.hasData ? (s(), h("div", {
+  setup(n) {
+    const i = ne(), a = n, d = I(() => "links" in e.value ? e.value.links.length > 0 : !1), v = I(() => Object.keys(e.value).length > 0), e = I(() => a.meta), c = I(() => "prev_page_url" in e.value ? e.value.prev_page_url : null), p = I(() => "next_page_url" in e.value ? e.value.next_page_url : null), y = I(() => parseInt(e.value.per_page));
+    return (h, r) => v.value ? (s(), f("nav", Ul, [
+      !n.hasData || e.value.total < 1 ? (s(), f("p", Hl, _(C(i).no_results_found), 1)) : b("", !0),
+      n.hasData ? (s(), f("div", {
         key: 1,
-        class: P(["ijt-pagination--simple", { "ijt-pagination--has-links": c.value }])
+        class: P(["ijt-pagination--simple", { "ijt-pagination--has-links": d.value }])
       }, [
-        (s(), F(re(f.value ? "a" : "div"), {
+        (s(), F(re(c.value ? "a" : "div"), {
           class: P([
             "ijt-pagination__button",
             {
-              "ijt-pagination__button--disabled": !f.value
+              "ijt-pagination__button--disabled": !c.value
             }
           ]),
-          href: f.value,
-          dusk: f.value ? "pagination-simple-previous" : null,
-          onClick: r[0] || (r[0] = R((w) => t.onClick(f.value), ["prevent"]))
+          href: c.value,
+          dusk: c.value ? "pagination-simple-previous" : null,
+          onClick: r[0] || (r[0] = R((x) => n.onClick(c.value), ["prevent"]))
         }, {
-          default: O(() => [
-            r[4] || (r[4] = n("svg", {
+          default: E(() => [
+            r[4] || (r[4] = t("svg", {
               xmlns: "http://www.w3.org/2000/svg",
               class: "ijt-pagination__button-icon",
               fill: "none",
@@ -1362,21 +1365,21 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
               stroke: "currentColor",
               "stroke-width": "2"
             }, [
-              n("path", {
+              t("path", {
                 "stroke-linecap": "round",
                 "stroke-linejoin": "round",
                 d: "M7 16l-4-4m0 0l4-4m-4 4h18"
               })
             ], -1)),
-            n("span", Kl, _($(u).previous), 1)
+            t("span", Kl, _(C(i).previous), 1)
           ]),
           _: 1
         }, 8, ["class", "href", "dusk"])),
         H(Xe, {
           dusk: "per-page-mobile",
           value: y.value,
-          options: t.perPageOptions,
-          "on-change": t.onPerPageChange
+          options: n.perPageOptions,
+          "on-change": n.onPerPageChange
         }, null, 8, ["value", "options", "on-change"]),
         (s(), F(re(p.value ? "a" : "div"), {
           class: P([
@@ -1387,11 +1390,11 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
           ]),
           href: p.value,
           dusk: p.value ? "pagination-simple-next" : null,
-          onClick: r[1] || (r[1] = R((w) => t.onClick(p.value), ["prevent"]))
+          onClick: r[1] || (r[1] = R((x) => n.onClick(p.value), ["prevent"]))
         }, {
-          default: O(() => [
-            n("span", Gl, _($(u).next), 1),
-            r[5] || (r[5] = n("svg", {
+          default: E(() => [
+            t("span", Gl, _(C(i).next), 1),
+            r[5] || (r[5] = t("svg", {
               xmlns: "http://www.w3.org/2000/svg",
               class: "ijt-pagination__button-icon",
               fill: "none",
@@ -1399,7 +1402,7 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
               stroke: "currentColor",
               "stroke-width": "2"
             }, [
-              n("path", {
+              t("path", {
                 "stroke-linecap": "round",
                 "stroke-linejoin": "round",
                 d: "M17 8l4 4m0 0l-4 4m4-4H3"
@@ -1409,46 +1412,46 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
           _: 1
         }, 8, ["class", "href", "dusk"]))
       ], 2)) : b("", !0),
-      t.hasData && c.value ? (s(), h("div", Xl, [
-        n("div", Ql, [
+      n.hasData && d.value ? (s(), f("div", Xl, [
+        t("div", Ql, [
           H(Xe, {
             dusk: "per-page-full",
             value: y.value,
-            options: t.perPageOptions,
-            "on-change": t.onPerPageChange
+            options: n.perPageOptions,
+            "on-change": n.onPerPageChange
           }, null, 8, ["value", "options", "on-change"]),
-          n("p", Yl, [
-            n("span", Jl, _(e.value.from), 1),
-            te(" " + _($(u).to) + " ", 1),
-            n("span", Zl, _(e.value.to), 1),
-            te(" " + _($(u).of) + " ", 1),
-            n("span", ea, _(e.value.total), 1),
-            te(" " + _($(u).results), 1)
+          t("p", Yl, [
+            t("span", Jl, _(e.value.from), 1),
+            te(" " + _(C(i).to) + " ", 1),
+            t("span", Zl, _(e.value.to), 1),
+            te(" " + _(C(i).of) + " ", 1),
+            t("span", ea, _(e.value.total), 1),
+            te(" " + _(C(i).results), 1)
           ])
         ]),
-        n("div", ta, [
-          n("nav", na, [
-            (s(), F(re(f.value ? "a" : "div"), {
+        t("div", ta, [
+          t("nav", na, [
+            (s(), F(re(c.value ? "a" : "div"), {
               class: P([
                 "ijt-pagination__button",
                 "ijt-pagination__button--first",
                 {
-                  "ijt-pagination__button--disabled": !f.value
+                  "ijt-pagination__button--disabled": !c.value
                 }
               ]),
-              href: f.value,
-              dusk: f.value ? "pagination-previous" : null,
-              onClick: r[2] || (r[2] = R((w) => t.onClick(f.value), ["prevent"]))
+              href: c.value,
+              dusk: c.value ? "pagination-previous" : null,
+              onClick: r[2] || (r[2] = R((x) => n.onClick(c.value), ["prevent"]))
             }, {
-              default: O(() => [
-                n("span", la, _($(u).previous), 1),
-                r[6] || (r[6] = n("svg", {
+              default: E(() => [
+                t("span", la, _(C(i).previous), 1),
+                r[6] || (r[6] = t("svg", {
                   xmlns: "http://www.w3.org/2000/svg",
                   class: "ijt-pagination__button-icon",
                   viewBox: "0 0 20 20",
                   fill: "currentColor"
                 }, [
-                  n("path", {
+                  t("path", {
                     "fill-rule": "evenodd",
                     d: "M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z",
                     "clip-rule": "evenodd"
@@ -1457,20 +1460,20 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
               ]),
               _: 1
             }, 8, ["class", "href", "dusk"])),
-            (s(!0), h(U, null, K(e.value.links, (w, j) => (s(), h("div", { key: j }, [
-              z(m.$slots, "link", {}, () => [
-                !isNaN(w.label) || w.label === "..." ? (s(), F(re(w.url ? "a" : "div"), {
+            (s(!0), f(U, null, K(e.value.links, (x, w) => (s(), f("div", { key: w }, [
+              N(h.$slots, "link", {}, () => [
+                !isNaN(x.label) || x.label === "..." ? (s(), F(re(x.url ? "a" : "div"), {
                   key: 0,
-                  href: w.url,
-                  dusk: w.url ? `pagination-${w.label}` : null,
+                  href: x.url,
+                  dusk: x.url ? `pagination-${x.label}` : null,
                   class: P(["ijt-pagination__button", {
-                    "ijt-pagination__button--disabled": !w.url,
-                    "ijt-pagination__button--active": w.active
+                    "ijt-pagination__button--disabled": !x.url,
+                    "ijt-pagination__button--active": x.active
                   }]),
-                  onClick: R((v) => t.onClick(w.url), ["prevent"])
+                  onClick: R((m) => n.onClick(x.url), ["prevent"])
                 }, {
-                  default: O(() => [
-                    n("span", aa, _(w.label), 1)
+                  default: E(() => [
+                    t("span", aa, _(x.label), 1)
                   ]),
                   _: 2
                 }, 1032, ["href", "dusk", "class", "onClick"])) : b("", !0)
@@ -1486,17 +1489,17 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
               ]),
               href: p.value,
               dusk: p.value ? "pagination-next" : null,
-              onClick: r[3] || (r[3] = R((w) => t.onClick(p.value), ["prevent"]))
+              onClick: r[3] || (r[3] = R((x) => n.onClick(p.value), ["prevent"]))
             }, {
-              default: O(() => [
-                n("span", sa, _($(u).next), 1),
-                r[7] || (r[7] = n("svg", {
+              default: E(() => [
+                t("span", sa, _(C(i).next), 1),
+                r[7] || (r[7] = t("svg", {
                   xmlns: "http://www.w3.org/2000/svg",
                   class: "ijt-pagination__button-icon",
                   viewBox: "0 0 20 20",
                   fill: "currentColor"
                 }, [
-                  n("path", {
+                  t("path", {
                     "fill-rule": "evenodd",
                     d: "M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z",
                     "clip-rule": "evenodd"
@@ -1531,41 +1534,41 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
       required: !0
     }
   },
-  setup(t) {
-    const u = t, l = S(null);
-    function c(d) {
-      u.onAdd(d), l.value.hide();
+  setup(n) {
+    const i = n, a = S(null);
+    function d(v) {
+      i.onAdd(v), a.value.hide();
     }
-    return (d, e) => (s(), F(pe, {
+    return (v, e) => (s(), F(pe, {
       ref_key: "dropdown",
-      ref: l,
+      ref: a,
       dusk: "add-search-row-dropdown",
-      disabled: !t.hasSearchInputsWithoutValue,
+      disabled: !n.hasSearchInputsWithoutValue,
       class: "ijt-dropdown--auto-width"
     }, {
-      button: O(() => [...e[0] || (e[0] = [
-        n("svg", {
+      button: E(() => [...e[0] || (e[0] = [
+        t("svg", {
           xmlns: "http://www.w3.org/2000/svg",
           class: "ijt-button__icon",
           viewBox: "0 0 20 20",
           fill: "currentColor"
         }, [
-          n("path", {
+          t("path", {
             "fill-rule": "evenodd",
             d: "M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z",
             "clip-rule": "evenodd"
           })
         ], -1)
       ])]),
-      default: O(() => [
-        n("div", ra, [
-          (s(!0), h(U, null, K(t.searchInputs, (f, p) => (s(), h("button", {
+      default: E(() => [
+        t("div", ra, [
+          (s(!0), f(U, null, K(n.searchInputs, (c, p) => (s(), f("button", {
             key: p,
-            dusk: `add-search-row-${f.key}`,
+            dusk: `add-search-row-${c.key}`,
             class: "ijt-dropdown__item",
             role: "menuitem",
-            onClick: R((y) => c(f.key), ["prevent"])
-          }, _(f.label), 9, ia))), 128))
+            onClick: R((y) => d(c.key), ["prevent"])
+          }, _(c.label), 9, ia))), 128))
         ])
       ]),
       _: 1
@@ -1594,75 +1597,75 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
     }
   },
   emits: ["columns-changed"],
-  setup(t, { emit: u }) {
-    const l = t, c = u, d = S([...l.columns]), e = S(!1), f = S(!1);
-    J(() => l.columns, (r) => {
-      !e.value && !f.value && (d.value = [...r]), f.value && setTimeout(() => {
-        f.value = !1;
+  setup(n, { emit: i }) {
+    const a = n, d = i, v = S([...a.columns]), e = S(!1), c = S(!1);
+    G(() => a.columns, (r) => {
+      !e.value && !c.value && (v.value = [...r]), c.value && setTimeout(() => {
+        c.value = !1;
       }, 100);
     }, { deep: !0 });
-    function p(r, w) {
-      const j = d.value.findIndex((v) => v.key === r);
-      j !== -1 && (d.value[j].hidden = !w), c("columns-changed", d.value);
+    function p(r, x) {
+      const w = v.value.findIndex((m) => m.key === r);
+      w !== -1 && (v.value[w].hidden = !x), d("columns-changed", v.value);
     }
-    function y(r, w) {
-      const j = d.value.findIndex((v) => v.key === r);
-      j !== -1 && (d.value[j].pinned = !w), d.value.sort((v, C) => v.pinned && !C.pinned ? -1 : !v.pinned && C.pinned ? 1 : 0), c("columns-changed", d.value);
+    function y(r, x) {
+      const w = v.value.findIndex((m) => m.key === r);
+      w !== -1 && (v.value[w].pinned = !x), v.value.sort((m, j) => m.pinned && !j.pinned ? -1 : !m.pinned && j.pinned ? 1 : 0), d("columns-changed", v.value);
     }
-    function m() {
-      f.value = !0, c("columns-changed", d.value);
+    function h() {
+      c.value = !0, d("columns-changed", v.value);
     }
-    return (r, w) => (s(), F($(Tt), {
-      modelValue: d.value,
-      "onUpdate:modelValue": w[0] || (w[0] = (j) => d.value = j),
+    return (r, x) => (s(), F(C(Tt), {
+      modelValue: v.value,
+      "onUpdate:modelValue": x[0] || (x[0] = (w) => v.value = w),
       "item-key": "key",
       animation: 200,
       handle: ".ijt-column-manager__drag-handle",
       "ghost-class": "ijt-sortable-ghost",
       "chosen-class": "ijt-sortable-chosen",
-      onChange: m,
-      onStart: w[1] || (w[1] = (j) => e.value = !0),
-      onEnd: w[2] || (w[2] = (j) => e.value = !1)
+      onChange: h,
+      onStart: x[1] || (x[1] = (w) => e.value = !0),
+      onEnd: x[2] || (x[2] = (w) => e.value = !1)
     }, {
-      item: O(({ element: j }) => [
-        n("div", {
+      item: E(({ element: w }) => [
+        t("div", {
           class: "ijt-column-manager__item",
           "data-test": "column-item",
-          "data-column-key": j.key
+          "data-column-key": w.key
         }, [
-          n("div", da, [
-            w[5] || (w[5] = n("div", { class: "ijt-column-manager__drag-handle" }, [
-              n("svg", {
+          t("div", da, [
+            x[5] || (x[5] = t("div", { class: "ijt-column-manager__drag-handle" }, [
+              t("svg", {
                 class: "ijt-column-manager__drag-handle-icon",
                 fill: "currentColor",
                 viewBox: "0 0 20 20"
               }, [
-                n("path", { d: "M7 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM7 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM7 14a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM13 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM13 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM13 14a2 2 0 1 1 0 4 2 2 0 0 1 0-4z" })
+                t("path", { d: "M7 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM7 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM7 14a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM13 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM13 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM13 14a2 2 0 1 1 0 4 2 2 0 0 1 0-4z" })
               ])
             ], -1)),
-            j.can_be_pinned !== !1 ? (s(), h("button", {
+            w.can_be_pinned !== !1 ? (s(), f("button", {
               key: 0,
               type: "button",
-              class: P(["ijt-column-manager__pin-button", { "ijt-column-manager__pin-button--active": j.pinned }]),
-              onClick: R((v) => y(j.key, j.pinned), ["prevent"]),
-              title: j.pinned ? "Unpin column" : "Pin column"
+              class: P(["ijt-column-manager__pin-button", { "ijt-column-manager__pin-button--active": w.pinned }]),
+              onClick: R((m) => y(w.key, w.pinned), ["prevent"]),
+              title: w.pinned ? "Unpin column" : "Pin column"
             }, [
-              j.pinned ? (s(), h("svg", ha, [...w[3] || (w[3] = [
-                n("g", {
+              w.pinned ? (s(), f("svg", ha, [...x[3] || (x[3] = [
+                t("g", {
                   fill: "none",
                   stroke: "currentColor",
                   "stroke-linecap": "round",
                   "stroke-linejoin": "round",
                   "stroke-width": "1.5"
                 }, [
-                  n("path", { d: "M9.5 14.5L3 21" }),
-                  n("path", {
+                  t("path", { d: "M9.5 14.5L3 21" }),
+                  t("path", {
                     fill: "currentColor",
                     d: "m5 9.485l9.193 9.193l1.697-1.697l-.393-3.787l5.51-4.673l-5.85-5.85l-4.674 5.51l-3.786-.393z"
                   })
                 ], -1)
-              ])])) : (s(), h("svg", fa, [...w[4] || (w[4] = [
-                n("path", {
+              ])])) : (s(), f("svg", fa, [...x[4] || (x[4] = [
+                t("path", {
                   fill: "none",
                   stroke: "currentColor",
                   "stroke-linecap": "round",
@@ -1672,28 +1675,28 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
                 }, null, -1)
               ])]))
             ], 10, va)) : b("", !0),
-            n("p", {
+            t("p", {
               class: P(["ijt-column-manager__label", {
-                "ijt-column-manager__label--hidden": j.hidden,
-                "ijt-column-manager__label--pinned": j.pinned
+                "ijt-column-manager__label--hidden": w.hidden,
+                "ijt-column-manager__label--pinned": w.pinned
               }])
-            }, _(j.label), 3)
+            }, _(w.label), 3)
           ]),
-          j.can_be_hidden && !j.pinned ? (s(), h("button", {
+          w.can_be_hidden && !w.pinned ? (s(), f("button", {
             key: 0,
             type: "button",
             class: P(["ijt-toggle", {
-              "ijt-toggle--on": !j.hidden,
-              "ijt-toggle--off": j.hidden
+              "ijt-toggle--on": !w.hidden,
+              "ijt-toggle--off": w.hidden
             }]),
-            "aria-pressed": !j.hidden,
-            "aria-labelledby": `toggle-column-${j.key}`,
-            "aria-describedby": `toggle-column-${j.key}`,
-            dusk: `toggle-column-${j.key}`,
-            onClick: R((v) => p(j.key, j.hidden), ["prevent"])
-          }, [...w[6] || (w[6] = [
-            n("span", { class: "ijt-sr-only" }, "Column status", -1),
-            n("span", {
+            "aria-pressed": !w.hidden,
+            "aria-labelledby": `toggle-column-${w.key}`,
+            "aria-describedby": `toggle-column-${w.key}`,
+            dusk: `toggle-column-${w.key}`,
+            onClick: R((m) => p(w.key, w.hidden), ["prevent"])
+          }, [...x[6] || (x[6] = [
+            t("span", { class: "ijt-sr-only" }, "Column status", -1),
+            t("span", {
               "aria-hidden": "true",
               class: "ijt-toggle__handle"
             }, null, -1)
@@ -1732,26 +1735,26 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
       required: !1
     }
   },
-  setup(t) {
-    const u = t, l = S([...u.columns]);
-    J(() => u.columns, (e) => {
-      l.value = [...e];
+  setup(n) {
+    const i = n, a = S([...i.columns]);
+    G(() => i.columns, (e) => {
+      a.value = [...e];
     }, { deep: !0, immediate: !0 });
-    const c = M(() => l.value.filter((e) => e.hidden).length);
-    function d(e) {
-      l.value = [...e], u.onChange(e);
+    const d = I(() => a.value.filter((e) => e.hidden).length);
+    function v(e) {
+      a.value = [...e], i.onChange(e);
     }
-    return (e, f) => (s(), F(pe, {
+    return (e, c) => (s(), F(pe, {
       placement: "bottom-end",
       dusk: "columns-dropdown"
     }, {
-      button: O(() => [
-        f[0] || (f[0] = n("svg", {
+      button: E(() => [
+        c[0] || (c[0] = t("svg", {
           xmlns: "http://www.w3.org/2000/svg",
           class: "ijt-button__icon",
           viewBox: "0 0 48 48"
         }, [
-          n("path", {
+          t("path", {
             fill: "none",
             stroke: "currentColor",
             "stroke-linecap": "round",
@@ -1760,14 +1763,14 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
             d: "m5 10l3 3l6-6M5 24l3 3l6-6M5 38l3 3l6-6m7-11h22M21 38h22M21 10h22"
           })
         ], -1)),
-        t.hasHiddenColumns ? (s(), h("span", pa, "(" + _(c.value) + ")", 1)) : b("", !0)
+        n.hasHiddenColumns ? (s(), f("span", pa, "(" + _(d.value) + ")", 1)) : b("", !0)
       ]),
-      default: O(() => [
-        n("div", ga, [
+      default: E(() => [
+        t("div", ga, [
           H(lt, {
-            columns: l.value,
+            columns: a.value,
             "can-sort": !0,
-            onColumnsChanged: d
+            onColumnsChanged: v
           }, null, 8, ["columns"])
         ])
       ]),
@@ -1807,9 +1810,9 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
       required: !0
     }
   },
-  setup(t) {
-    const u = t, l = M(() => u.filters.filter((e) => !c(e)).length);
-    function c(e) {
+  setup(n) {
+    const i = n, a = I(() => i.filters.filter((e) => !d(e)).length);
+    function d(e) {
       if (e.value === null)
         return !0;
       switch (e.type) {
@@ -1827,55 +1830,55 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
           return !e.value;
       }
     }
-    function d(e) {
-      let f = e.value;
-      e.value && (Number(Math.max(...e.value)) === Number(e.max) && Number(Math.min(...e.value)) === Number(e.min) ? f = null : Number(Math.min(...e.value)) === 0 && Number(Math.max(...e.value)) === 0 && (f = ["0", "0"])), u.onFilterChange(e.key, f);
+    function v(e) {
+      let c = e.value;
+      e.value && (Number(Math.max(...e.value)) === Number(e.max) && Number(Math.min(...e.value)) === Number(e.min) ? c = null : Number(Math.min(...e.value)) === 0 && Number(Math.max(...e.value)) === 0 && (c = ["0", "0"])), i.onFilterChange(e.key, c);
     }
-    return (e, f) => (s(), F(pe, {
+    return (e, c) => (s(), F(pe, {
       placement: "bottom-end",
       dusk: "filters-dropdown"
     }, {
-      button: O(() => [
-        f[0] || (f[0] = n("svg", {
+      button: E(() => [
+        c[0] || (c[0] = t("svg", {
           xmlns: "http://www.w3.org/2000/svg",
           class: "ijt-button__icon",
           viewBox: "0 0 20 20",
           fill: "currentColor"
         }, [
-          n("path", {
+          t("path", {
             "fill-rule": "evenodd",
             d: "M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z",
             "clip-rule": "evenodd"
           })
         ], -1)),
-        t.hasEnabledFilters ? (s(), h("span", ba, "(" + _(l.value) + ")", 1)) : b("", !0)
+        n.hasEnabledFilters ? (s(), f("span", ba, "(" + _(a.value) + ")", 1)) : b("", !0)
       ]),
-      default: O(() => [
-        n("div", ya, [
-          (s(!0), h(U, null, K(t.filters, (p, y) => (s(), h("div", { key: y }, [
-            n("h3", ka, _(p.label), 1),
-            n("div", wa, [
-              p.type === "select" ? (s(), h("select", {
+      default: E(() => [
+        t("div", ya, [
+          (s(!0), f(U, null, K(n.filters, (p, y) => (s(), f("div", { key: y }, [
+            t("h3", ka, _(p.label), 1),
+            t("div", wa, [
+              p.type === "select" ? (s(), f("select", {
                 key: 0,
                 name: p.key,
                 value: p.value,
                 class: "ijt-select",
-                onChange: (m) => t.onFilterChange(p.key, m.target.value)
+                onChange: (h) => n.onFilterChange(p.key, h.target.value)
               }, [
-                (s(!0), h(U, null, K(p.options, (m, r) => (s(), h("option", {
+                (s(!0), f(U, null, K(p.options, (h, r) => (s(), f("option", {
                   key: r,
                   value: r
-                }, _(m), 9, ja))), 128))
+                }, _(h), 9, ja))), 128))
               ], 40, xa)) : b("", !0),
               p.type === "toggle" ? (s(), F(Je, {
                 key: 1,
                 filter: p,
-                "on-filter-change": t.onFilterChange
+                "on-filter-change": n.onFilterChange
               }, null, 8, ["filter", "on-filter-change"])) : b("", !0),
-              p.type === "number_range" ? (s(), h("div", Ca, [
+              p.type === "number_range" ? (s(), f("div", Ca, [
                 H(Ze, {
                   modelValue: p.value,
-                  "onUpdate:modelValue": [(m) => p.value = m, (m) => d(p)],
+                  "onUpdate:modelValue": [(h) => p.value = h, (h) => v(p)],
                   max: p.max,
                   min: p.min,
                   prefix: p.prefix,
@@ -1883,16 +1886,16 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
                   step: p.step
                 }, null, 8, ["modelValue", "onUpdate:modelValue", "max", "min", "prefix", "suffix", "step"])
               ])) : b("", !0),
-              p.type === "date" ? (s(), h("div", $a, [
+              p.type === "date" ? (s(), f("div", $a, [
                 H(tt, {
                   filter: p,
-                  "on-filter-change": t.onFilterChange
+                  "on-filter-change": n.onFilterChange
                 }, null, 8, ["filter", "on-filter-change"])
               ])) : b("", !0),
-              p.type === "number" ? (s(), h("div", Sa, [
+              p.type === "number" ? (s(), f("div", Sa, [
                 H(et, {
                   filter: p,
-                  "on-filter-change": t.onFilterChange
+                  "on-filter-change": n.onFilterChange
                 }, null, 8, ["filter", "on-filter-change"])
               ])) : b("", !0)
             ])
@@ -1902,7 +1905,7 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
       _: 1
     }));
   }
-}, qa = { class: "ijt-global-search" }, Ia = ["placeholder", "value"], Na = {
+}, qa = { class: "ijt-global-search" }, Ia = ["placeholder", "value"], za = {
   __name: "TableGlobalSearch",
   props: {
     label: {
@@ -1920,23 +1923,33 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
       required: !0
     }
   },
-  setup(t) {
-    return (u, l) => (s(), h("div", qa, [
-      n("input", {
+  setup(n) {
+    var e;
+    const i = n, a = S(null), d = S((e = i.value) != null ? e : "");
+    G(() => i.value, (c) => {
+      document.activeElement !== a.value && (d.value = c != null ? c : "");
+    });
+    function v(c) {
+      d.value = c.target.value, i.onChange(d.value);
+    }
+    return (c, p) => (s(), f("div", qa, [
+      t("input", {
+        ref_key: "inputEl",
+        ref: a,
         class: "ijt-global-search__input",
-        placeholder: t.label,
-        value: t.value,
+        placeholder: n.label,
+        value: d.value,
         type: "text",
         name: "global",
-        onInput: l[0] || (l[0] = (c) => t.onChange(c.target.value))
+        onInput: v
       }, null, 40, Ia),
-      l[1] || (l[1] = n("div", { class: "ijt-global-search__icon" }, [
-        n("svg", {
+      p[0] || (p[0] = t("div", { class: "ijt-global-search__icon" }, [
+        t("svg", {
           xmlns: "http://www.w3.org/2000/svg",
           viewBox: "0 0 20 20",
           fill: "currentColor"
         }, [
-          n("path", {
+          t("path", {
             "fill-rule": "evenodd",
             d: "M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z",
             "clip-rule": "evenodd"
@@ -1945,7 +1958,7 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
       ], -1))
     ]));
   }
-}, za = { class: "ijt-search-row__container" }, Fa = ["for"], Va = ["id", "name", "value", "onInput"], Pa = { class: "ijt-search-row__remove" }, Ba = ["dusk", "onClick"], La = {
+}, Na = { class: "ijt-search-row__container" }, Fa = ["for"], Va = ["id", "name", "value", "onInput"], Pa = { class: "ijt-search-row__remove" }, Ba = ["dusk", "onClick"], La = {
   __name: "TableSearchRows",
   props: {
     searchInputs: {
@@ -1965,68 +1978,68 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
       required: !0
     }
   },
-  setup(t) {
-    const u = { el: S([]) };
-    let l = M(() => u.el.value);
-    const c = t;
-    function d(e) {
-      return c.forcedVisibleSearchInputs.includes(e);
+  setup(n) {
+    const i = { el: S([]) };
+    let a = I(() => i.el.value);
+    const d = n;
+    function v(e) {
+      return d.forcedVisibleSearchInputs.includes(e);
     }
-    return J(c.forcedVisibleSearchInputs, (e) => {
-      const f = e.length > 0 ? e[e.length - 1] : null;
-      !f || Se().then(() => {
-        const p = At(l.value, (y) => y.name === f);
+    return G(d.forcedVisibleSearchInputs, (e) => {
+      const c = e.length > 0 ? e[e.length - 1] : null;
+      !c || Se().then(() => {
+        const p = At(a.value, (y) => y.name === c);
         p && p.focus();
       });
-    }, { immediate: !0 }), (e, f) => (s(!0), h(U, null, K(t.searchInputs, (p, y) => A((s(), h("div", {
+    }, { immediate: !0 }), (e, c) => (s(!0), f(U, null, K(n.searchInputs, (p, y) => A((s(), f("div", {
       key: y,
       class: "ijt-search-row"
     }, [
-      n("div", za, [
-        n("label", {
+      t("div", Na, [
+        t("label", {
           for: p.key,
           class: "ijt-search-row__label"
         }, [
-          f[0] || (f[0] = n("svg", {
+          c[0] || (c[0] = t("svg", {
             xmlns: "http://www.w3.org/2000/svg",
             class: "ijt-search-row__label-icon",
             viewBox: "0 0 20 20",
             fill: "currentColor"
           }, [
-            n("path", {
+            t("path", {
               "fill-rule": "evenodd",
               d: "M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z",
               "clip-rule": "evenodd"
             })
           ], -1)),
-          n("span", null, _(p.label), 1)
+          t("span", null, _(p.label), 1)
         ], 8, Fa),
-        (s(), h("input", {
+        (s(), f("input", {
           id: p.key,
           ref_for: !0,
-          ref: u.el,
+          ref: i.el,
           key: p.key,
           name: p.key,
           value: p.value,
           type: "text",
           class: "ijt-search-row__input",
-          onInput: (m) => t.onChange(p.key, m.target.value)
+          onInput: (h) => n.onChange(p.key, h.target.value)
         }, null, 40, Va)),
-        n("div", Pa, [
-          n("button", {
+        t("div", Pa, [
+          t("button", {
             class: "ijt-search-row__remove-button",
             dusk: `remove-search-row-${p.key}`,
-            onClick: R((m) => t.onRemove(p.key), ["prevent"])
-          }, [...f[1] || (f[1] = [
-            n("span", { class: "ijt-sr-only" }, "Remove search", -1),
-            n("svg", {
+            onClick: R((h) => n.onRemove(p.key), ["prevent"])
+          }, [...c[1] || (c[1] = [
+            t("span", { class: "ijt-sr-only" }, "Remove search", -1),
+            t("svg", {
               xmlns: "http://www.w3.org/2000/svg",
               class: "ijt-search-row__remove-icon",
               fill: "none",
               viewBox: "0 0 24 24",
               stroke: "currentColor"
             }, [
-              n("path", {
+              t("path", {
                 "stroke-linecap": "round",
                 "stroke-linejoin": "round",
                 "stroke-width": "2",
@@ -2037,10 +2050,10 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
         ])
       ])
     ])), [
-      [ae, p.value !== null || d(p.key)]
+      [ae, p.value !== null || v(p.key)]
     ])), 128));
   }
-}, Oa = {
+}, Ea = ["aria-label"], Oa = { class: "ijt-reset__label" }, Ra = {
   __name: "TableReset",
   props: {
     onClick: {
@@ -2048,53 +2061,54 @@ const pl = { class: "ijt-filter" }, gl = ["dusk"], _l = { class: "ijt-dropdown__
       required: !0
     }
   },
-  setup(t) {
-    const u = ne();
-    return (l, c) => {
-      var d;
-      return s(), h("button", {
+  setup(n) {
+    const i = ne();
+    return (a, d) => {
+      var v, e;
+      return s(), f("button", {
         ref: "button",
         type: "button",
         dusk: "reset-table",
+        "aria-label": (v = C(i).reset) != null ? v : "Reset",
         class: "ijt-reset",
         "aria-haspopup": "true",
-        onClick: c[0] || (c[0] = R((...e) => t.onClick && t.onClick(...e), ["prevent"]))
+        onClick: d[0] || (d[0] = R((...c) => n.onClick && n.onClick(...c), ["prevent"]))
       }, [
-        c[1] || (c[1] = n("svg", {
+        d[1] || (d[1] = t("svg", {
           xmlns: "http://www.w3.org/2000/svg",
           class: "ijt-reset__icon",
           viewBox: "0 0 20 20",
           fill: "currentColor"
         }, [
-          n("path", {
+          t("path", {
             "fill-rule": "evenodd",
             d: "M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z",
             "clip-rule": "evenodd"
           })
         ], -1)),
-        n("span", null, _((d = $(u).reset) != null ? d : "Reset"), 1)
-      ], 512);
+        t("span", Oa, _((e = C(i).reset) != null ? e : "Reset"), 1)
+      ], 8, Ea);
     };
   }
-}, Ea = {}, Ra = { class: "ijt-wrapper" }, Ta = { class: "ijt-wrapper__outer" }, Aa = { class: "ijt-wrapper__inner" }, Da = { class: "ijt-wrapper__container" };
-function Wa(t, u) {
-  return s(), h("div", Ra, [
-    n("div", Ta, [
-      n("div", Aa, [
-        n("div", Da, [
-          z(t.$slots, "default")
+}, Ta = {}, Aa = { class: "ijt-wrapper" }, Da = { class: "ijt-wrapper__outer" }, Wa = { class: "ijt-wrapper__inner" }, Ua = { class: "ijt-wrapper__container" };
+function Ha(n, i) {
+  return s(), f("div", Aa, [
+    t("div", Da, [
+      t("div", Wa, [
+        t("div", Ua, [
+          N(n.$slots, "default")
         ])
       ])
     ])
   ]);
 }
-const Ua = /* @__PURE__ */ Me(Ea, [["render", Wa]]), Ha = {
+const Ka = /* @__PURE__ */ Me(Ta, [["render", Ha]]), Ga = {
   role: "menu",
   "aria-orientation": "horizontal",
   "aria-labelledby": "grouped-actions-menu",
   class: "ijt-dropdown__content",
   style: { "min-width": "14rem" }
-}, Ka = ["dusk", "onClick"], Ga = { class: "ijt-dropdown__content" }, Xa = {
+}, Xa = ["dusk", "onClick"], Qa = { class: "ijt-dropdown__content" }, Ya = {
   __name: "GroupedActions",
   props: {
     actions: {
@@ -2102,119 +2116,119 @@ const Ua = /* @__PURE__ */ Me(Ea, [["render", Wa]]), Ha = {
       required: !0
     }
   },
-  setup(t) {
-    const u = ne(), l = t, c = S(!1), d = S(!1);
+  setup(n) {
+    const i = ne(), a = n, d = S(!1), v = S(!1);
     function e() {
-      c.value = d.value = !1;
+      d.value = v.value = !1;
     }
-    function f(p) {
-      var y, m;
-      (y = l.actions.toggleColumns) != null && y.onReorder ? l.actions.toggleColumns.onReorder(p) : (m = l.actions.toggleColumns) != null && m.onChange && l.actions.toggleColumns.onChange(p);
+    function c(p) {
+      var y, h;
+      (y = a.actions.toggleColumns) != null && y.onReorder ? a.actions.toggleColumns.onReorder(p) : (h = a.actions.toggleColumns) != null && h.onChange && a.actions.toggleColumns.onChange(p);
     }
     return (p, y) => (s(), F(pe, {
       ref: "dropdown",
       dusk: "grouped-actions-dropdown",
       onClosed: e
     }, {
-      button: O(() => [...y[5] || (y[5] = [
-        n("svg", {
+      button: E(() => [...y[5] || (y[5] = [
+        t("svg", {
           viewBox: "0 0 16 16",
           xmlns: "http://www.w3.org/2000/svg",
           fill: "currentColor",
           class: "ijt-button__icon"
         }, [
-          n("path", { d: "M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" })
+          t("path", { d: "M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" })
         ], -1)
       ])]),
-      default: O(() => {
-        var m, r, w, j, v;
+      default: E(() => {
+        var h, r, x, w, m;
         return [
-          n("div", Ha, [
-            A(n("div", null, [
-              "searchFields" in t.actions && t.actions.searchFields.show ? (s(), h("button", {
+          t("div", Ga, [
+            A(t("div", null, [
+              "searchFields" in n.actions && n.actions.searchFields.show ? (s(), f("button", {
                 key: 0,
                 dusk: "add-search-fields-button",
                 class: "ijt-dropdown__item",
                 role: "menuitem",
-                onClick: y[0] || (y[0] = (C) => d.value = !0)
+                onClick: y[0] || (y[0] = (j) => v.value = !0)
               }, [
-                y[6] || (y[6] = n("svg", {
+                y[6] || (y[6] = t("svg", {
                   xmlns: "http://www.w3.org/2000/svg",
                   class: "ijt-dropdown__item-icon",
                   viewBox: "0 0 20 20",
                   fill: "currentColor"
                 }, [
-                  n("path", {
+                  t("path", {
                     "fill-rule": "evenodd",
                     d: "M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z",
                     "clip-rule": "evenodd"
                   })
                 ], -1)),
-                n("span", null, _((m = $(u).add_search_fields) != null ? m : "Add search field"), 1)
+                t("span", null, _((h = C(i).add_search_fields) != null ? h : "Add search field"), 1)
               ])) : b("", !0),
-              "toggleColumns" in t.actions && t.actions.toggleColumns.show ? (s(), h("button", {
+              "toggleColumns" in n.actions && n.actions.toggleColumns.show ? (s(), f("button", {
                 key: 1,
                 dusk: "toggle-column-button",
                 class: "ijt-dropdown__item",
                 role: "menuitem",
-                onClick: y[1] || (y[1] = (C) => c.value = !0)
+                onClick: y[1] || (y[1] = (j) => d.value = !0)
               }, [
-                y[7] || (y[7] = n("svg", {
+                y[7] || (y[7] = t("svg", {
                   xmlns: "http://www.w3.org/2000/svg",
                   class: "ijt-dropdown__item-icon",
                   viewBox: "0 0 20 20",
                   fill: "currentColor"
                 }, [
-                  n("path", { d: "M10 12a2 2 0 100-4 2 2 0 000 4z" }),
-                  n("path", {
+                  t("path", { d: "M10 12a2 2 0 100-4 2 2 0 000 4z" }),
+                  t("path", {
                     "fill-rule": "evenodd",
                     d: "M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z",
                     "clip-rule": "evenodd"
                   })
                 ], -1)),
-                n("span", null, _((r = $(u).show_hide_columns) != null ? r : "Show / Hide columns"), 1)
+                t("span", null, _((r = C(i).show_hide_columns) != null ? r : "Show / Hide columns"), 1)
               ])) : b("", !0),
-              y[9] || (y[9] = n("div", { class: "ijt-dropdown__divider" }, null, -1)),
-              "reset" in t.actions ? (s(), h("button", {
+              y[9] || (y[9] = t("div", { class: "ijt-dropdown__divider" }, null, -1)),
+              "reset" in n.actions ? (s(), f("button", {
                 key: 2,
                 dusk: "reset-button",
                 class: "ijt-dropdown__item ijt-dropdown__item--danger",
                 role: "menuitem",
-                onClick: y[2] || (y[2] = (...C) => {
-                  var x, I;
-                  return ((x = t.actions.reset) == null ? void 0 : x.onClick) && ((I = t.actions.reset) == null ? void 0 : I.onClick(...C));
+                onClick: y[2] || (y[2] = (...j) => {
+                  var $, q;
+                  return (($ = n.actions.reset) == null ? void 0 : $.onClick) && ((q = n.actions.reset) == null ? void 0 : q.onClick(...j));
                 })
               }, [
-                y[8] || (y[8] = n("svg", {
+                y[8] || (y[8] = t("svg", {
                   xmlns: "http://www.w3.org/2000/svg",
                   class: "ijt-dropdown__item-icon",
                   viewBox: "0 0 20 20",
                   fill: "currentColor"
                 }, [
-                  n("path", {
+                  t("path", {
                     "fill-rule": "evenodd",
                     d: "M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z",
                     "clip-rule": "evenodd"
                   })
                 ], -1)),
-                n("span", null, _((w = $(u).grouped_reset) != null ? w : "Reset"), 1)
+                t("span", null, _((x = C(i).grouped_reset) != null ? x : "Reset"), 1)
               ])) : b("", !0)
             ], 512), [
-              [ae, !c.value && !d.value]
+              [ae, !d.value && !v.value]
             ]),
-            A(n("div", null, [
-              n("button", {
+            A(t("div", null, [
+              t("button", {
                 type: "button",
                 class: "ijt-dropdown__item",
-                onClick: y[3] || (y[3] = (C) => d.value = !1)
+                onClick: y[3] || (y[3] = (j) => v.value = !1)
               }, [
-                y[10] || (y[10] = n("svg", {
+                y[10] || (y[10] = t("svg", {
                   viewBox: "0 0 24 24",
                   fill: "currentColor",
                   xmlns: "http://www.w3.org/2000/svg",
                   class: "ijt-dropdown__item-icon"
                 }, [
-                  n("path", {
+                  t("path", {
                     d: "M5 12H19M5 12L11 6M5 12L11 18",
                     stroke: "#000000",
                     "stroke-width": "2",
@@ -2222,31 +2236,31 @@ const Ua = /* @__PURE__ */ Me(Ea, [["render", Wa]]), Ha = {
                     "stroke-linejoin": "round"
                   })
                 ], -1)),
-                n("span", null, _((j = $(u).add_search_fields) != null ? j : "Add search field"), 1)
+                t("span", null, _((w = C(i).add_search_fields) != null ? w : "Add search field"), 1)
               ]),
-              (s(!0), h(U, null, K(t.actions.searchFields.searchInputs, (C, x) => (s(), h("button", {
-                key: x,
-                dusk: `add-search-row-${C.key}`,
+              (s(!0), f(U, null, K(n.actions.searchFields.searchInputs, (j, $) => (s(), f("button", {
+                key: $,
+                dusk: `add-search-row-${j.key}`,
                 class: "ijt-dropdown__item",
                 role: "menuitem",
-                onClick: R((I) => t.actions.searchFields.onClick(C.key), ["prevent"])
-              }, _(C.label), 9, Ka))), 128))
+                onClick: R((q) => n.actions.searchFields.onClick(j.key), ["prevent"])
+              }, _(j.label), 9, Xa))), 128))
             ], 512), [
-              [ae, d.value]
+              [ae, v.value]
             ]),
-            A(n("div", null, [
-              n("button", {
+            A(t("div", null, [
+              t("button", {
                 type: "button",
                 class: "ijt-dropdown__item",
-                onClick: y[4] || (y[4] = (C) => c.value = !1)
+                onClick: y[4] || (y[4] = (j) => d.value = !1)
               }, [
-                y[11] || (y[11] = n("svg", {
+                y[11] || (y[11] = t("svg", {
                   viewBox: "0 0 24 24",
                   fill: "currentColor",
                   xmlns: "http://www.w3.org/2000/svg",
                   class: "ijt-dropdown__item-icon"
                 }, [
-                  n("path", {
+                  t("path", {
                     d: "M5 12H19M5 12L11 6M5 12L11 18",
                     stroke: "#000000",
                     "stroke-width": "2",
@@ -2254,22 +2268,22 @@ const Ua = /* @__PURE__ */ Me(Ea, [["render", Wa]]), Ha = {
                     "stroke-linejoin": "round"
                   })
                 ], -1)),
-                n("span", null, _((v = $(u).show_hide_columns) != null ? v : "Show / Hide columns"), 1)
+                t("span", null, _((m = C(i).show_hide_columns) != null ? m : "Show / Hide columns"), 1)
               ]),
-              n("div", Ga, [
+              t("div", Qa, [
                 H(lt, {
-                  columns: t.actions.toggleColumns.columns,
+                  columns: n.actions.toggleColumns.columns,
                   "can-sort": !0,
-                  onColumnsChanged: f
+                  onColumnsChanged: c
                 }, null, 8, ["columns"])
               ])
             ], 512), [
-              [ae, c.value]
+              [ae, d.value]
             ]),
-            A(n("div", null, [
-              z(p.$slots, "default")
+            A(t("div", null, [
+              N(p.$slots, "default")
             ], 512), [
-              [ae, !c.value && !d.value]
+              [ae, !d.value && !v.value]
             ])
           ])
         ];
@@ -2278,119 +2292,119 @@ const Ua = /* @__PURE__ */ Me(Ea, [["render", Wa]]), Ha = {
     }, 512));
   }
 };
-function Qa(t) {
-  const u = S(!1), l = S(null), c = S(0), d = S(0), e = St({}), f = () => {
-    const q = Mt(t) ? $(t) : t;
-    return q ? `${q}-columnWidths` : null;
+function Ja(n) {
+  const i = S(!1), a = S(null), d = S(0), v = S(0), e = St({}), c = () => {
+    const M = Mt(n) ? C(n) : n;
+    return M ? `${M}-columnWidths` : null;
   }, p = () => {
-    const q = f();
-    if (!q)
+    const M = c();
+    if (!M)
       return;
-    const L = localStorage.getItem(q);
-    if (L)
+    const B = localStorage.getItem(M);
+    if (B)
       try {
-        const V = JSON.parse(L);
+        const V = JSON.parse(B);
         Object.assign(e, V);
       } catch (V) {
         console.warn("Unable to load column widths:", V);
       }
   }, y = () => {
-    const q = f();
-    !q || localStorage.setItem(q, JSON.stringify(e));
-  }, m = (q, L) => {
-    q.preventDefault(), q.stopPropagation(), u.value = !0, l.value = L, c.value = q.clientX;
-    const V = q.target.closest("th");
-    d.value = V.offsetWidth;
-    const E = V.closest("table");
-    E && E.querySelectorAll("thead th[data-column-key]").forEach((T) => {
+    const M = c();
+    !M || localStorage.setItem(M, JSON.stringify(e));
+  }, h = (M, B) => {
+    M.preventDefault(), M.stopPropagation(), i.value = !0, a.value = B, d.value = M.clientX;
+    const V = M.target.closest("th");
+    v.value = V.offsetWidth;
+    const O = V.closest("table");
+    O && O.querySelectorAll("thead th[data-column-key]").forEach((T) => {
       const D = T.getAttribute("data-column-key"), W = T.offsetWidth;
       e[D] || (e[D] = W), T.style.width = `${e[D]}px`;
-      const X = Array.from(T.parentNode.children).indexOf(T);
-      E.querySelectorAll("tbody tr").forEach((ge) => {
-        const le = ge.children[X];
+      const Q = Array.from(T.parentNode.children).indexOf(T);
+      O.querySelectorAll("tbody tr").forEach((ge) => {
+        const le = ge.children[Q];
         le && (le.style.width = `${e[D]}px`);
       });
-    }), document.addEventListener("mousemove", r), document.addEventListener("mouseup", w), document.body.style.userSelect = "none", document.body.style.cursor = "col-resize", document.body.classList.add("is-resizing-columns");
-  }, r = (q) => {
-    if (!u.value || !l.value)
+    }), document.addEventListener("mousemove", r), document.addEventListener("mouseup", x), document.body.style.userSelect = "none", document.body.style.cursor = "col-resize", document.body.classList.add("is-resizing-columns");
+  }, r = (M) => {
+    if (!i.value || !a.value)
       return;
-    const L = q.clientX - c.value, V = Math.max(50, d.value + L);
-    e[l.value] = V;
-    const E = document.querySelector(`th[data-column-key="${l.value}"]`);
-    if (E) {
-      E.style.width = `${V}px`;
-      const G = E.closest("table");
-      if (G) {
-        const T = Array.from(E.parentNode.children).indexOf(E);
-        G.querySelectorAll("tbody tr").forEach((W) => {
-          const X = W.children[T];
-          X && (X.style.width = `${V}px`);
+    const B = M.clientX - d.value, V = Math.max(50, v.value + B);
+    e[a.value] = V;
+    const O = document.querySelector(`th[data-column-key="${a.value}"]`);
+    if (O) {
+      O.style.width = `${V}px`;
+      const X = O.closest("table");
+      if (X) {
+        const T = Array.from(O.parentNode.children).indexOf(O);
+        X.querySelectorAll("tbody tr").forEach((W) => {
+          const Q = W.children[T];
+          Q && (Q.style.width = `${V}px`);
         });
       }
     }
-  }, w = () => {
-    u.value && (u.value = !1, l.value = null, y(), document.removeEventListener("mousemove", r), document.removeEventListener("mouseup", w), document.body.style.userSelect = "", document.body.style.cursor = "", document.body.classList.remove("is-resizing-columns"));
-  }, j = (q) => e[q] || "auto", v = (q, L) => {
-    e[q] = L, y();
-  }, C = (q) => {
-    if (!q)
+  }, x = () => {
+    i.value && (i.value = !1, a.value = null, y(), document.removeEventListener("mousemove", r), document.removeEventListener("mouseup", x), document.body.style.userSelect = "", document.body.style.cursor = "", document.body.classList.remove("is-resizing-columns"));
+  }, w = (M) => e[M] || "auto", m = (M, B) => {
+    e[M] = B, y();
+  }, j = (M) => {
+    if (!M)
       return;
-    q.querySelectorAll("thead th[data-column-key]").forEach((V) => {
-      const E = V.getAttribute("data-column-key");
-      if (!e[E]) {
+    M.querySelectorAll("thead th[data-column-key]").forEach((V) => {
+      const O = V.getAttribute("data-column-key");
+      if (!e[O]) {
         const D = V.offsetWidth;
-        e[E] = Math.max(D, 100);
+        e[O] = Math.max(D, 100);
       }
-      V.style.width = `${e[E]}px`;
-      const G = Array.from(V.parentNode.children).indexOf(V);
-      q.querySelectorAll("tbody tr").forEach((D) => {
-        const W = D.children[G];
-        W && (W.style.width = `${e[E]}px`);
+      V.style.width = `${e[O]}px`;
+      const X = Array.from(V.parentNode.children).indexOf(V);
+      M.querySelectorAll("tbody tr").forEach((D) => {
+        const W = D.children[X];
+        W && (W.style.width = `${e[O]}px`);
       });
     });
-  }, x = () => {
-    Object.keys(e).forEach((L) => {
-      delete e[L];
+  }, $ = () => {
+    Object.keys(e).forEach((B) => {
+      delete e[B];
     });
-    const q = f();
-    q && localStorage.removeItem(q);
-  }, I = () => {
-    u.value && (document.removeEventListener("mousemove", r), document.removeEventListener("mouseup", w), document.body.style.userSelect = "", document.body.style.cursor = "", document.body.classList.remove("is-resizing-columns"));
+    const M = c();
+    M && localStorage.removeItem(M);
+  }, q = () => {
+    i.value && (document.removeEventListener("mousemove", r), document.removeEventListener("mouseup", x), document.body.style.userSelect = "", document.body.style.cursor = "", document.body.classList.remove("is-resizing-columns"));
   };
   return Z(() => {
     p();
   }), me(() => {
-    I();
+    q();
   }), {
-    isResizing: u,
-    resizingColumn: l,
+    isResizing: i,
+    resizingColumn: a,
     columnWidths: e,
-    startResize: m,
-    getColumnWidth: j,
-    setColumnWidth: v,
-    resetColumnWidths: x,
+    startResize: h,
+    getColumnWidth: w,
+    setColumnWidth: m,
+    resetColumnWidths: $,
     loadColumnWidths: p,
     saveColumnWidths: y,
-    initializeColumnWidths: C
+    initializeColumnWidths: j
   };
 }
-const Ya = ["dusk"], Ja = { class: "ijt-toolbar" }, Za = {
+const Za = ["dusk"], es = { class: "ijt-toolbar" }, ts = {
   key: 0,
   class: "ijt-toolbar__section ijt-toolbar__section--grow ijt-toolbar__section--mb"
-}, es = {
-  key: 1,
+}, ns = { class: "ijt-toolbar__actions" }, ls = { key: 0 }, as = {
+  key: 4,
   class: "ijt-toolbar__mobile-sort"
-}, ts = ["for"], ns = ["id", "value", "aria-label"], ls = { value: "" }, as = ["value"], ss = ["value"], os = { class: "ijt-toolbar__actions" }, rs = { key: 0 }, is = ["href"], us = { class: "ijt-table-container" }, cs = { class: "ijt-table__thead" }, ds = { class: "ijt-table__tr" }, vs = {
+}, ss = ["id", "value", "aria-label", "title"], os = { value: "" }, rs = ["value"], is = ["value"], us = ["href"], cs = { class: "ijt-table-container" }, ds = { class: "ijt-table__thead" }, vs = { class: "ijt-table__tr" }, hs = {
   key: 0,
   class: "ijt-table__th ijt-table__th--pinned-checkbox",
   style: { width: "60px" }
-}, hs = ["for"], fs = ["id", "aria-label"], ms = { class: "ijt-table__tbody" }, ps = ["data-column-label"], gs = { class: "ijt-sr-only" }, _s = { class: "ijt-table__td-content" }, bs = ["for"], ys = ["id", "onUpdate:modelValue", "aria-label"], ks = ["onClick", "data-column-key", "data-column-label", "data-column-hidden"], ws = { class: "ijt-table__td-label" }, xs = { class: "ijt-table__td-content" }, js = { class: "ijt-footer" }, Cs = {
+}, fs = ["for"], ms = ["id", "aria-label"], ps = { class: "ijt-table__tbody" }, gs = ["data-column-label"], _s = { class: "ijt-sr-only" }, bs = { class: "ijt-table__td-content" }, ys = ["for"], ks = ["id", "onUpdate:modelValue", "aria-label"], ws = ["onClick", "data-column-key", "data-column-label", "data-column-hidden"], xs = { class: "ijt-table__td-label" }, js = { class: "ijt-table__td-content" }, Cs = { class: "ijt-footer" }, $s = {
   key: 0,
   class: "ijt-footer__selection-info"
-}, $s = {
+}, Ss = {
   key: 1,
   class: "ijt-loading"
-}, Ss = {
+}, Ms = {
   __name: "Table",
   props: {
     inertia: {
@@ -2485,203 +2499,203 @@ const Ya = ["dusk"], Ja = { class: "ijt-toolbar" }, Za = {
     }
   },
   emits: ["rowClicked", "selectionChanged"],
-  setup(t, { emit: u }) {
-    const l = ne(), c = qt(), d = u, e = t, f = M(() => e.localStorageName ? e.localStorageName : e.name && e.name !== "default" ? `table-${e.name}` : null);
+  setup(n, { emit: i }) {
+    const a = ne(), d = qt(), v = i, e = n, c = I(() => e.localStorageName ? e.localStorageName : e.name && e.name !== "default" ? `table-${e.name}` : null);
     It();
-    const p = e.resizeableColumns ? Qa(f) : null;
-    Nt("columnResize", p);
-    const y = S(!1), m = M(() => Ge().props.queryBuilderProps ? { ...Ge().props.queryBuilderProps[e.name] } : {}), r = S(m.value), w = M(() => r.value.columns.filter((a) => !a.hidden)), j = M(() => w.value.filter((a) => a.sortable && !C(a))), v = M(() => w.value.some((a) => a.key === "actions"));
-    function C(a) {
-      const o = String(a.body_class || "").split(/\s+/);
+    const p = e.resizeableColumns ? Ja(c) : null;
+    zt("columnResize", p);
+    const y = S(!1), h = I(() => Ge().props.queryBuilderProps ? { ...Ge().props.queryBuilderProps[e.name] } : {}), r = S(h.value), x = I(() => r.value.columns.filter((l) => !l.hidden)), w = I(() => x.value.filter((l) => l.sortable && !j(l))), m = I(() => x.value.some((l) => l.key === "actions"));
+    function j(l) {
+      const o = String(l.body_class || "").split(/\s+/);
       return o.includes("hidden") || o.includes("ijt-hidden");
     }
-    const x = M(() => {
-      const a = r.value.sort;
-      return a && a !== m.value.defaultSort ? a : "";
-    }), I = M(() => Boolean(e.withInfiniteScrolling || m.value.infiniteScrolling));
-    function q() {
-      var a, o, i, k, g, N, B, Q, oe, de;
-      return (de = (oe = (N = (i = (a = se.value) == null ? void 0 : a.next_page_url) != null ? i : (o = e.resource) == null ? void 0 : o.next_page_url) != null ? N : (g = (k = e.resource) == null ? void 0 : k.links) == null ? void 0 : g.next) != null ? oe : (Q = (B = e.resource) == null ? void 0 : B.meta) == null ? void 0 : Q.next_page_url) != null ? de : null;
+    const $ = I(() => {
+      const l = r.value.sort;
+      return l && l !== h.value.defaultSort ? l : "";
+    }), q = I(() => Boolean(e.withInfiniteScrolling || h.value.infiniteScrolling));
+    function M() {
+      var l, o, u, k, g, z, L, Y, oe, de;
+      return (de = (oe = (z = (u = (l = se.value) == null ? void 0 : l.next_page_url) != null ? u : (o = e.resource) == null ? void 0 : o.next_page_url) != null ? z : (g = (k = e.resource) == null ? void 0 : k.links) == null ? void 0 : g.next) != null ? oe : (Y = (L = e.resource) == null ? void 0 : L.meta) == null ? void 0 : Y.next_page_url) != null ? de : null;
     }
-    const L = S([]), V = S(null), E = S(null), G = S(!1);
+    const B = S([]), V = S(null), O = S(null), X = S(!1);
     let T;
-    const D = M(() => m.value.pageName), W = S([]), X = S(null), ue = S(!1), ge = M(() => m.value.hasToggleableColumns || m.value.hasFilters || m.value.hasSearchInputs ? !1 : !m.value.globalSearch), le = M(() => I.value ? L.value : Object.keys(e.resource).length === 0 ? e.data : "data" in e.resource ? e.resource.data : e.resource), se = M(() => Object.keys(e.resource).length === 0 ? e.meta : "links" in e.resource && "meta" in e.resource && Object.keys(e.resource.links).length === 4 && "next" in e.resource.links && "prev" in e.resource.links ? {
+    const D = I(() => h.value.pageName), W = S([]), Q = S(null), ue = S(!1), ge = I(() => h.value.hasToggleableColumns || h.value.hasFilters || h.value.hasSearchInputs ? !1 : !h.value.globalSearch), le = I(() => q.value ? B.value : Object.keys(e.resource).length === 0 ? e.data : "data" in e.resource ? e.resource.data : e.resource), se = I(() => Object.keys(e.resource).length === 0 ? e.meta : "links" in e.resource && "meta" in e.resource && Object.keys(e.resource.links).length === 4 && "next" in e.resource.links && "prev" in e.resource.links ? {
       ...e.resource.meta,
       next_page_url: e.resource.links.next,
       prev_page_url: e.resource.links.prev
-    } : "meta" in e.resource ? e.resource.meta : e.resource), Ie = M(() => le.value.length > 0 ? !0 : se.value.total > 0), Ne = S({
+    } : "meta" in e.resource ? e.resource.meta : e.resource), Ie = I(() => le.value.length > 0 ? !0 : se.value.total > 0), ze = S({
       reset: {
         onClick: be
       },
       toggleColumns: {
-        show: m.value.hasToggleableColumns,
-        columns: m.value.columns,
+        show: h.value.hasToggleableColumns,
+        columns: h.value.columns,
         onChange: ke
       },
       searchFields: {
-        show: m.value.hasSearchInputs && !e.hideSearchInputsAboveTable,
-        searchInputs: m.value.searchInputsWithoutGlobal,
-        hasSearchInputsWithoutValue: m.value.hasSearchInputsWithoutValue,
+        show: h.value.hasSearchInputs && !e.hideSearchInputsAboveTable,
+        searchInputs: h.value.searchInputsWithoutGlobal,
+        hasSearchInputsWithoutValue: h.value.hasSearchInputsWithoutValue,
         onClick: _e
       }
     });
-    function at(a) {
-      W.value = W.value.filter((o) => o != a), ce(a, null);
+    function at(l) {
+      W.value = W.value.filter((o) => o != l), ce(l, null);
     }
-    function _e(a) {
-      W.value.push(a);
+    function _e(l) {
+      W.value.push(l);
     }
-    const ze = M(() => {
+    const Ne = I(() => {
       if (W.value.length > 0)
         return !0;
-      const a = $e.parse(location.search.substring(1));
-      if (a[D.value] > 1)
+      const l = $e.parse(location.search.substring(1));
+      if (l[D.value] > 1)
         return !0;
-      const i = e.name === "default" ? "" : e.name + "_";
+      const u = e.name === "default" ? "" : e.name + "_";
       let k = !1;
       return ee(["filter", "columns", "cursor", "sort"], (g) => {
-        const N = a[i + g];
-        g === "sort" && N === m.value.defaultSort || N !== void 0 && (k = !0);
+        const z = l[u + g];
+        g === "sort" && z === h.value.defaultSort || z !== void 0 && (k = !0);
       }), k;
-    }), st = (a, o) => {
-      let i = [];
-      if (e.striped && o % 2 && i.push("ijt-table__tr--striped"), e.rowClass && typeof e.rowClass == "function") {
-        const k = e.rowClass(a);
-        k && i.push(k);
+    }), st = (l, o) => {
+      let u = [];
+      if (e.striped && o % 2 && u.push("ijt-table__tr--striped"), e.rowClass && typeof e.rowClass == "function") {
+        const k = e.rowClass(l);
+        k && u.push(k);
       }
-      return i.join(" ");
-    }, Fe = M(() => {
+      return u.join(" ");
+    }, Fe = I(() => {
       if (!e.showExportButton)
         return null;
-      const a = new URL(window.location.href);
-      a.search = "";
+      const l = new URL(window.location.href);
+      l.search = "";
       const o = new URLSearchParams();
-      if (m.value.page && m.value.page > 1 && o.set(D.value, m.value.page), m.value.sort) {
+      if (h.value.page && h.value.page > 1 && o.set(D.value, h.value.page), h.value.sort) {
         const g = e.name === "default" ? "sort" : `${e.name}_sort`;
-        o.set(g, m.value.sort);
+        o.set(g, h.value.sort);
       }
-      const i = {};
+      const u = {};
       if (r.value.filters.forEach((g) => {
-        g.value !== null && g.value !== void 0 && g.value !== "" && (i[g.key] = g.value);
+        g.value !== null && g.value !== void 0 && g.value !== "" && (u[g.key] = g.value);
       }), r.value.searchInputs.forEach((g) => {
-        g.value !== null && g.value !== void 0 && g.value !== "" && (i[g.key] = g.value);
-      }), Object.keys(i).length > 0) {
+        g.value !== null && g.value !== void 0 && g.value !== "" && (u[g.key] = g.value);
+      }), Object.keys(u).length > 0) {
         const g = e.name === "default" ? "filter" : `${e.name}_filter`;
-        Object.keys(i).forEach((N) => {
-          const B = i[N];
-          Array.isArray(B) ? B.forEach((Q, oe) => {
-            o.set(`${g}[${N}][${oe}]`, Q);
-          }) : typeof B == "object" && B !== null ? Object.keys(B).forEach((Q) => {
-            o.set(`${g}[${N}][${Q}]`, B[Q]);
-          }) : o.set(`${g}[${N}]`, B);
+        Object.keys(u).forEach((z) => {
+          const L = u[z];
+          Array.isArray(L) ? L.forEach((Y, oe) => {
+            o.set(`${g}[${z}][${oe}]`, Y);
+          }) : typeof L == "object" && L !== null ? Object.keys(L).forEach((Y) => {
+            o.set(`${g}[${z}][${Y}]`, L[Y]);
+          }) : o.set(`${g}[${z}]`, L);
         });
       }
       const k = r.value.columns.filter((g) => !g.hidden).map((g) => g.key);
       if (k.length !== r.value.columns.length) {
         const g = e.name === "default" ? "columns" : `${e.name}_columns`;
-        k.forEach((N) => {
-          o.append(`${g}[]`, N);
+        k.forEach((z) => {
+          o.append(`${g}[]`, z);
         });
       }
-      if (m.value.perPageOptions && m.value.perPageOptions.length > 0) {
-        const g = new URLSearchParams(window.location.search).get("perPage") || m.value.perPageOptions[0];
-        g && g !== m.value.perPageOptions[0] && o.set("perPage", g);
+      if (h.value.perPageOptions && h.value.perPageOptions.length > 0) {
+        const g = new URLSearchParams(window.location.search).get("perPage") || h.value.perPageOptions[0];
+        g && g !== h.value.perPageOptions[0] && o.set("perPage", g);
       }
-      return o.set("do_export", "1"), o.set("table", e.name || "default"), a.search = o.toString(), a.toString();
+      return o.set("do_export", "1"), o.set("table", e.name || "default"), l.search = o.toString(), l.toString();
     });
     function be() {
-      W.value = [], ee(r.value.filters, (a, o) => {
+      W.value = [], ee(r.value.filters, (l, o) => {
         r.value.filters[o].value = null;
-      }), ee(r.value.searchInputs, (a, o) => {
+      }), ee(r.value.searchInputs, (l, o) => {
         r.value.searchInputs[o].value = null;
-      }), ee(r.value.columns, (a, o) => {
-        r.value.columns[o].hidden = a.can_be_hidden ? !m.value.defaultVisibleToggleableColumns.includes(a.key) : !1, r.value.columns[o].pinned = !1;
-      }), f.value && localStorage.removeItem(`${f.value}-columns`), e.resizeableColumns && p && p.resetColumnWidths(), r.value.sort = null, r.value.cursor = null, r.value.page = 1;
+      }), ee(r.value.columns, (l, o) => {
+        r.value.columns[o].hidden = l.can_be_hidden ? !h.value.defaultVisibleToggleableColumns.includes(l.key) : !1, r.value.columns[o].pinned = !1;
+      }), c.value && localStorage.removeItem(`${c.value}-columns`), e.resizeableColumns && p && p.resetColumnWidths(), r.value.sort = null, r.value.cursor = null, r.value.page = 1;
     }
     const Ve = {};
-    function ce(a, o) {
-      clearTimeout(Ve[a]), Ve[a] = setTimeout(() => {
+    function ce(l, o) {
+      clearTimeout(Ve[l]), Ve[l] = setTimeout(() => {
         xe.value && e.preventOverlappingRequests && xe.value.cancel();
-        const i = ve("searchInputs", a);
-        r.value.searchInputs[i].value = o, r.value.cursor = null, r.value.page = 1;
+        const u = ve("searchInputs", l);
+        r.value.searchInputs[u].value = o, r.value.cursor = null, r.value.page = 1;
       }, e.inputDebounceMs);
     }
-    function Pe(a) {
-      ce("global", a);
+    function Pe(l) {
+      ce("global", l);
     }
-    function ye(a, o) {
-      const i = ve("filters", a);
-      r.value.filters[i].value = o, r.value.cursor = null, r.value.page = 1;
+    function ye(l, o) {
+      const u = ve("filters", l);
+      r.value.filters[u].value = o, r.value.cursor = null, r.value.page = 1;
     }
-    function Be(a) {
-      r.value.cursor = null, r.value.perPage = a, r.value.page = 1;
+    function Be(l) {
+      r.value.cursor = null, r.value.perPage = l, r.value.page = 1;
     }
-    function ve(a, o) {
-      return Ut(r.value[a], (i) => i.key == o);
+    function ve(l, o) {
+      return Ut(r.value[l], (u) => u.key == o);
     }
-    function ke(a) {
-      r.value.columns = a, r.value.columns.sort((o, i) => o.pinned && !i.pinned ? -1 : !o.pinned && i.pinned ? 1 : 0), ot();
+    function ke(l) {
+      r.value.columns = l, r.value.columns.sort((o, u) => o.pinned && !u.pinned ? -1 : !o.pinned && u.pinned ? 1 : 0), ot();
     }
     function ot() {
-      if (!f.value)
+      if (!c.value)
         return;
-      const a = r.value.columns.map((o, i) => ({
+      const l = r.value.columns.map((o, u) => ({
         key: o.key,
         hidden: o.hidden,
         pinned: o.pinned || !1,
-        order: i
+        order: u
       }));
-      localStorage.setItem(`${f.value}-columns`, JSON.stringify(a));
+      localStorage.setItem(`${c.value}-columns`, JSON.stringify(l));
     }
     function rt() {
-      let a = {};
+      let l = {};
       return ee(r.value.searchInputs, (o) => {
-        o.value !== null && (a[o.key] = o.value);
+        o.value !== null && (l[o.key] = o.value);
       }), ee(r.value.filters, (o) => {
-        let i = o.value;
-        i !== null && (o.type === "number_range" && Number(Math.max(...o.value)) === Number(o.max) && Number(Math.min(...o.value)) === Number(o.min) && (i = null), a[o.key] = i);
-      }), a;
+        let u = o.value;
+        u !== null && (o.type === "number_range" && Number(Math.max(...o.value)) === Number(o.max) && Number(Math.min(...o.value)) === Number(o.min) && (u = null), l[o.key] = u);
+      }), l;
     }
     function it() {
-      const a = r.value.columns;
-      let o = Wt(a, (k) => !k.hidden), i = Kt(o, (k) => k.key).sort();
-      return Ht(i, m.value.defaultVisibleToggleableColumns) ? {} : i;
+      const l = r.value.columns;
+      let o = Wt(l, (k) => !k.hidden), u = Kt(o, (k) => k.key).sort();
+      return Ht(u, h.value.defaultVisibleToggleableColumns) ? {} : u;
     }
     function ut() {
-      const a = rt(), o = it(), i = {};
-      Object.keys(a).length > 0 && (i.filter = a), Object.keys(o).length > 0 && (i.columns = o);
-      const k = r.value.cursor, g = r.value.page, N = r.value.sort, B = r.value.perPage;
-      return k && (i.cursor = k), g > 1 && (i.page = g), B > 1 && (i.perPage = B), N && (i.sort = N), i;
+      const l = rt(), o = it(), u = {};
+      Object.keys(l).length > 0 && (u.filter = l), Object.keys(o).length > 0 && (u.columns = o);
+      const k = r.value.cursor, g = r.value.page, z = r.value.sort, L = r.value.perPage;
+      return k && (u.cursor = k), g > 1 && (u.page = g), L > 1 && (u.perPage = L), z && (u.sort = z), u;
     }
-    function Le(a) {
-      if (!a)
+    function Le(l) {
+      if (!l)
         return null;
       if (e.paginationClickCallback && typeof e.paginationClickCallback == "function") {
-        e.paginationClickCallback(a);
+        e.paginationClickCallback(l);
         return;
       }
-      Oe(a);
+      Ee(l);
     }
     function ct() {
-      const a = $e.parse(location.search.substring(1)), o = e.name === "default" ? "" : e.name + "_";
+      const l = $e.parse(location.search.substring(1)), o = e.name === "default" ? "" : e.name + "_";
       ee(["filter", "columns", "cursor", "sort"], (k) => {
-        delete a[o + k];
-      }), delete a[D.value], ee(ut(), (k, g) => {
-        g === "page" ? a[D.value] = k : g === "perPage" ? a.perPage = k : a[o + g] = k;
+        delete l[o + k];
+      }), delete l[D.value], ee(ut(), (k, g) => {
+        g === "page" ? l[D.value] = k : g === "perPage" ? l.perPage = k : l[o + g] = k;
       });
-      let i = $e.stringify(a, {
+      let u = $e.stringify(l, {
         filter(k, g) {
           return typeof g == "object" && g !== null ? Gt(g) : g;
         },
         skipNulls: !0,
         strictNullHandling: !0
       });
-      return (!i || i === D.value + "=1") && (i = ""), i;
+      return (!u || u === D.value + "=1") && (u = ""), u;
     }
     const we = S(!1), xe = S(null);
-    function Oe(a) {
-      !a || Xt.get(
-        a,
+    function Ee(l) {
+      !l || Xt.get(
+        l,
         {},
         {
           replace: !0,
@@ -2698,167 +2712,167 @@ const Ya = ["dusk"], Ja = { class: "ijt-toolbar" }, Za = {
           },
           onSuccess() {
             if (e.preserveScroll === "table-top") {
-              const i = X.value.getBoundingClientRect().top + window.pageYOffset + -8;
-              window.scrollTo({ top: i });
+              const u = Q.value.getBoundingClientRect().top + window.pageYOffset + -8;
+              window.scrollTo({ top: u });
             }
           }
         }
       );
     }
-    function dt(a, o, i) {
+    function dt(l, o, u) {
       var k;
-      e.hasCheckboxes && ((k = a.target) == null ? void 0 : k.parentElement.cellIndex) === 0 || d("rowClicked", a, o, i);
+      e.hasCheckboxes && ((k = l.target) == null ? void 0 : k.parentElement.cellIndex) === 0 || v("rowClicked", l, o, u);
     }
     async function vt() {
-      var a, o, i, k, g;
-      if (!(G.value || !V.value)) {
-        G.value = !0;
+      var l, o, u, k, g;
+      if (!(X.value || !V.value)) {
+        X.value = !0;
         try {
-          const N = await fetch(V.value, {
+          const z = await fetch(V.value, {
             headers: {
               Accept: "application/json",
               "X-Requested-With": "XMLHttpRequest"
             }
           });
-          if (!N.ok)
+          if (!z.ok)
             throw new Error("Network response was not ok");
-          const B = await N.json();
-          L.value = [...L.value, ...B.data || []], V.value = (g = (k = (o = B.next_page_url) != null ? o : (a = B.links) == null ? void 0 : a.next) != null ? k : (i = B.meta) == null ? void 0 : i.next_page_url) != null ? g : null;
-        } catch (N) {
-          console.error("Error loading more data:", N);
+          const L = await z.json();
+          B.value = [...B.value, ...L.data || []], V.value = (g = (k = (o = L.next_page_url) != null ? o : (l = L.links) == null ? void 0 : l.next) != null ? k : (u = L.meta) == null ? void 0 : u.next_page_url) != null ? g : null;
+        } catch (z) {
+          console.error("Error loading more data:", z);
         } finally {
-          G.value = !1;
+          X.value = !1;
         }
       }
     }
     function je() {
-      !I.value || !E.value || (T && (T.disconnect(), T = null), e.resource && e.resource.data && L.value.length === 0 && (L.value = [...e.resource.data], V.value = q()), T = new IntersectionObserver(
-        (a) => {
-          a.forEach((o) => {
+      !q.value || !O.value || (T && (T.disconnect(), T = null), e.resource && e.resource.data && B.value.length === 0 && (B.value = [...e.resource.data], V.value = M()), T = new IntersectionObserver(
+        (l) => {
+          l.forEach((o) => {
             o.isIntersecting && vt();
           });
         },
         {
           rootMargin: "0px 0px 500px 0px"
         }
-      ), T.observe(E.value));
+      ), T.observe(O.value));
     }
-    J(r, () => {
-      I.value && (L.value = [], V.value = null), Oe(location.pathname + "?" + ct()), ue.value = !1;
-    }, { deep: !0 }), J(() => e.resource, () => {
-      var a;
-      if (!I.value && ((a = e.resource) == null ? void 0 : a.data)) {
-        const o = e.resource.data.filter((i) => i.__itSelected);
-        d("selectionChanged", o);
+    G(r, () => {
+      q.value && (B.value = [], V.value = null), Ee(location.pathname + "?" + ct()), ue.value = !1;
+    }, { deep: !0 }), G(() => e.resource, () => {
+      var l;
+      if (!q.value && ((l = e.resource) == null ? void 0 : l.data)) {
+        const o = e.resource.data.filter((u) => u.__itSelected);
+        v("selectionChanged", o);
       }
-    }, { deep: !0 }), J(() => m.value, (a) => {
-      var i;
-      if (!I.value)
+    }, { deep: !0 }), G(() => h.value, (l) => {
+      var u;
+      if (!q.value)
         return;
-      const o = ((i = e.resource) == null ? void 0 : i.data) || [];
+      const o = ((u = e.resource) == null ? void 0 : u.data) || [];
       if (o.length > 0) {
-        L.value = [...o], V.value = q();
+        B.value = [...o], V.value = M();
         const k = o.filter((g) => g.__itSelected);
-        d("selectionChanged", k), setTimeout(() => {
-          E.value && je();
+        v("selectionChanged", k), setTimeout(() => {
+          O.value && je();
         }, 100);
       }
     }, { deep: !0 });
-    const Ee = () => {
+    const Oe = () => {
       e.resizeableColumns && p && setTimeout(() => {
         var o;
-        const a = (o = X.value) == null ? void 0 : o.querySelector("table");
-        a && p.initializeColumnWidths(a);
-      }, 0), I.value && setTimeout(() => {
-        E.value && je();
+        const l = (o = Q.value) == null ? void 0 : o.querySelector("table");
+        l && p.initializeColumnWidths(l);
+      }, 0), q.value && setTimeout(() => {
+        O.value && je();
       }, 100);
     };
     Z(() => {
-      document.addEventListener("inertia:success", Ee), ht(), e.resizeableColumns && p && setTimeout(() => {
+      document.addEventListener("inertia:success", Oe), ht(), e.resizeableColumns && p && setTimeout(() => {
         var o;
-        const a = (o = X.value) == null ? void 0 : o.querySelector("table");
-        a && p.initializeColumnWidths(a);
-      }, 0), I.value && je();
+        const l = (o = Q.value) == null ? void 0 : o.querySelector("table");
+        l && p.initializeColumnWidths(l);
+      }, 0), q.value && je();
     });
     function ht() {
-      if (!f.value)
+      if (!c.value)
         return;
-      const a = localStorage.getItem(`${f.value}-columns`);
-      if (!!a)
+      const l = localStorage.getItem(`${c.value}-columns`);
+      if (!!l)
         try {
-          const o = JSON.parse(a);
+          const o = JSON.parse(l);
           if (o.length > 0 && "order" in o[0]) {
-            const i = new Map(o.map((k) => [k.key, k]));
+            const u = new Map(o.map((k) => [k.key, k]));
             r.value.columns.forEach((k, g) => {
-              const N = i.get(k.key);
-              N && (r.value.columns[g].hidden = N.hidden, r.value.columns[g].pinned = N.pinned || !1);
+              const z = u.get(k.key);
+              z && (r.value.columns[g].hidden = z.hidden, r.value.columns[g].pinned = z.pinned || !1);
             }), r.value.columns.sort((k, g) => {
               var de, Ue;
-              const N = i.get(k.key), B = i.get(g.key);
+              const z = u.get(k.key), L = u.get(g.key);
               if (k.pinned && !g.pinned)
                 return -1;
               if (!k.pinned && g.pinned)
                 return 1;
-              const Q = (de = N == null ? void 0 : N.order) != null ? de : 999, oe = (Ue = B == null ? void 0 : B.order) != null ? Ue : 999;
-              return Q - oe;
+              const Y = (de = z == null ? void 0 : z.order) != null ? de : 999, oe = (Ue = L == null ? void 0 : L.order) != null ? Ue : 999;
+              return Y - oe;
             });
           } else
-            o.forEach((i, k) => {
-              const g = r.value.columns.findIndex((N) => N.key === i.key);
-              g !== -1 && (r.value.columns[g].hidden = i.hidden, r.value.columns[g].pinned = i.pinned || !1);
+            o.forEach((u, k) => {
+              const g = r.value.columns.findIndex((z) => z.key === u.key);
+              g !== -1 && (r.value.columns[g].hidden = u.hidden, r.value.columns[g].pinned = u.pinned || !1);
             });
         } catch (o) {
           console.warn("Error loading column order from localStorage:", o);
         }
     }
     me(() => {
-      document.removeEventListener("inertia:success", Ee), T && (T.disconnect(), T = null);
+      document.removeEventListener("inertia:success", Oe), T && (T.disconnect(), T = null);
     });
-    function Re(a) {
-      r.value.sort == a ? r.value.sort = `-${a}` : r.value.sort = a, r.value.cursor = null, r.value.page = 1;
+    function Re(l) {
+      r.value.sort == l ? r.value.sort = `-${l}` : r.value.sort = l, r.value.cursor = null, r.value.page = 1;
     }
-    function ft(a) {
-      r.value.sort = a || null, r.value.cursor = null, r.value.page = 1;
+    function ft(l) {
+      r.value.sort = l || null, r.value.cursor = null, r.value.page = 1;
     }
-    function mt(a, o) {
-      if (c[`cell(${o})`])
+    function mt(l, o) {
+      if (d[`cell(${o})`])
         return !1;
-      const i = a[o];
-      return i == null || typeof i == "string" && i.trim() === "";
+      const u = l[o];
+      return u == null || typeof u == "string" && u.trim() === "";
     }
-    function Ce(a) {
-      const o = ve("columns", a);
+    function Ce(l) {
+      const o = ve("columns", l);
       return !r.value.columns[o].hidden;
     }
-    function he(a) {
-      const o = ve("columns", a), i = Dt(r.value.columns[o]);
-      i.onSort = Re, i.filters = r.value.filters.filter(
-        (g) => g.key === a || g.key.startsWith(a + "_") || g.key.includes(a)
+    function he(l) {
+      const o = ve("columns", l), u = Dt(r.value.columns[o]);
+      u.onSort = Re, u.filters = r.value.filters.filter(
+        (g) => g.key === l || g.key.startsWith(l + "_") || g.key.includes(l)
       );
       const k = r.value.searchInputs.filter(
-        (g) => g.key === a
+        (g) => g.key === l
       );
-      return k.length > 0 ? (i.searchable = !0, i.searchInputs = k) : (i.searchable = !1, i.searchInputs = []), i.onFilterChange = ye, i.onSearchChange = ce, i;
+      return k.length > 0 ? (u.searchable = !0, u.searchInputs = k) : (u.searchable = !1, u.searchInputs = []), u.onFilterChange = ye, u.onSearchChange = ce, u;
     }
     function pt() {
-      e.resource.data.forEach((a) => {
-        a.__itSelected = ue.value;
+      e.resource.data.forEach((l) => {
+        l.__itSelected = ue.value;
       });
     }
-    function gt(a) {
+    function gt(l) {
       if (!e.resizeableColumns || !p)
         return "auto";
-      const o = p.getColumnWidth(a);
+      const o = p.getColumnWidth(l);
       return o === "auto" ? o : `${o}px`;
     }
-    function Te(a) {
+    function Te(l) {
       if (!e.resizeableColumns || !p)
         return "0px";
       let o = 0;
-      const i = r.value.columns.filter((k) => !k.hidden);
+      const u = r.value.columns.filter((k) => !k.hidden);
       e.hasCheckboxes && (o += 60);
-      for (const k of i) {
-        if (k.key === a)
+      for (const k of u) {
+        if (k.key === l)
           break;
         if (k.pinned) {
           const g = p.getColumnWidth(k.key);
@@ -2867,39 +2881,39 @@ const Ya = ["dusk"], Ja = { class: "ijt-toolbar" }, Za = {
       }
       return `${o}px`;
     }
-    function Ae(a) {
-      const o = r.value.columns.find((i) => i.key === a);
+    function Ae(l) {
+      const o = r.value.columns.find((u) => u.key === l);
       return o && o.pinned;
     }
-    function _t(a) {
-      return Ae(a) ? {
+    function _t(l) {
+      return Ae(l) ? {
         position: "sticky",
-        left: Te(a),
+        left: Te(l),
         zIndex: 10,
         backgroundColor: "var(--ijt-color-bg, white)",
         boxShadow: "2px 0 4px -2px rgba(0, 0, 0, 0.1)"
       } : {};
     }
-    function bt(a) {
-      return Ae(a) ? {
+    function bt(l) {
+      return Ae(l) ? {
         position: "sticky",
-        left: Te(a),
+        left: Te(l),
         zIndex: 11,
         backgroundColor: "var(--ijt-color-bg-secondary, #f9fafb)",
         boxShadow: "2px 0 4px -2px rgba(0, 0, 0, 0.1)"
       } : {};
     }
-    const yt = M(() => {
+    const yt = I(() => {
       if (!e.resizeableColumns || !p)
         return "100%";
-      let a = 0, o = !1;
-      return e.hasCheckboxes && (a += 60), m.value.columns.forEach((i) => {
-        if (!Ce(i.key))
+      let l = 0, o = !1;
+      return e.hasCheckboxes && (l += 60), h.value.columns.forEach((u) => {
+        if (!Ce(u.key))
           return;
-        const k = p.getColumnWidth(i.key);
-        k === "auto" ? o = !0 : a += k;
-      }), !o && a > 0 ? `${a}px` : "max(100%, " + (a > 0 ? a + "px" : "800px") + ")";
-    }), De = M(() => le.value.filter((a) => a.__itSelected)), We = M(() => De.value.length), kt = M(() => We.value === 0 ? l.noLineSelected : `${We.value} ${l.lineSelected}`);
+        const k = p.getColumnWidth(u.key);
+        k === "auto" ? o = !0 : l += k;
+      }), !o && l > 0 ? `${l}px` : "max(100%, " + (l > 0 ? l + "px" : "800px") + ")";
+    }), De = I(() => le.value.filter((l) => l.__itSelected)), We = I(() => De.value.length), kt = I(() => We.value === 0 ? a.noLineSelected : `${We.value} ${a.lineSelected}`);
     function wt() {
       e.resizeableColumns && (y.value = !0);
     }
@@ -2908,207 +2922,217 @@ const Ya = ["dusk"], Ja = { class: "ijt-toolbar" }, Za = {
         y.value = !1;
       }, 100);
     }
-    return (a, o) => (s(), F(zt, null, {
-      default: O(() => [
-        (s(), h("fieldset", {
+    return (l, o) => (s(), F(Nt, null, {
+      default: E(() => [
+        (s(), f("fieldset", {
           ref_key: "tableFieldset",
-          ref: X,
-          key: `table-${t.name}`,
-          dusk: `table-${t.name}`,
+          ref: Q,
+          key: `table-${n.name}`,
+          dusk: `table-${n.name}`,
           class: P(["ijt-table-fieldset", { "ijt-table-fieldset--loading": we.value }])
         }, [
-          n("div", Ja, [
-            m.value.globalSearch ? (s(), h("div", Za, [
-              z(a.$slots, "tableGlobalSearch", {
-                hasGlobalSearch: m.value.globalSearch,
-                label: m.value.globalSearch ? m.value.globalSearch.label : null,
-                value: m.value.globalSearch ? m.value.globalSearch.value : null,
+          t("div", es, [
+            h.value.globalSearch ? (s(), f("div", ts, [
+              N(l.$slots, "tableGlobalSearch", {
+                hasGlobalSearch: h.value.globalSearch,
+                label: h.value.globalSearch ? h.value.globalSearch.label : null,
+                value: h.value.globalSearch ? h.value.globalSearch.value : null,
                 onChange: Pe
               }, () => [
-                m.value.globalSearch ? (s(), F(Na, {
+                h.value.globalSearch ? (s(), F(za, {
                   key: 0,
                   class: "ijt-global-search--grow",
-                  label: m.value.globalSearch.label,
-                  value: m.value.globalSearch.value,
+                  label: h.value.globalSearch.label,
+                  value: h.value.globalSearch.value,
                   "on-change": Pe
                 }, null, 8, ["label", "value"])) : b("", !0)
               ], !0)
             ])) : b("", !0),
-            j.value.length ? (s(), h("div", es, [
-              n("label", {
-                for: `table-${t.name}-mobile-sort`,
-                class: "ijt-toolbar__mobile-sort-label"
-              }, _($(l).sort_by), 9, ts),
-              n("select", {
-                id: `table-${t.name}-mobile-sort`,
-                class: "ijt-toolbar__mobile-sort-select",
-                value: x.value,
-                "aria-label": $(l).sort_by,
-                onChange: o[0] || (o[0] = (i) => ft(i.target.value))
-              }, [
-                n("option", ls, _($(l).default_sort), 1),
-                (s(!0), h(U, null, K(j.value, (i) => (s(), h(U, {
-                  key: i.key
-                }, [
-                  n("option", {
-                    value: i.key
-                  }, _(i.label) + " (" + _($(l).ascending) + ")", 9, as),
-                  n("option", {
-                    value: `-${i.key}`
-                  }, _(i.label) + " (" + _($(l).descending) + ")", 9, ss)
-                ], 64))), 128))
-              ], 40, ns)
-            ])) : b("", !0),
-            n("div", os, [
-              n("div", null, [
-                z(a.$slots, "tableFilter", {
-                  hasFilters: m.value.hasFilters,
-                  hasEnabledFilters: m.value.hasEnabledFilters,
-                  filters: m.value.filters,
+            t("div", ns, [
+              t("div", null, [
+                N(l.$slots, "tableFilter", {
+                  hasFilters: h.value.hasFilters,
+                  hasEnabledFilters: h.value.hasEnabledFilters,
+                  filters: h.value.filters,
                   onFilterChange: ye
                 }, () => [
-                  m.value.hasFilters ? (s(), F(Ma, {
+                  h.value.hasFilters ? (s(), F(Ma, {
                     key: 0,
-                    "has-enabled-filters": m.value.hasEnabledFilters,
-                    filters: m.value.filters,
+                    "has-enabled-filters": h.value.hasEnabledFilters,
+                    filters: h.value.filters,
                     "on-filter-change": ye
                   }, null, 8, ["has-enabled-filters", "filters"])) : b("", !0)
                 ], !0)
               ]),
-              !t.withGroupedMenu && !t.hideSearchInputsAboveTable ? z(a.$slots, "tableAddSearchRow", {
+              !n.withGroupedMenu && !n.hideSearchInputsAboveTable ? N(l.$slots, "tableAddSearchRow", {
                 key: 0,
-                hasSearchInputs: m.value.hasSearchInputs,
-                hasSearchInputsWithoutValue: m.value.hasSearchInputsWithoutValue,
-                searchInputs: m.value.searchInputsWithoutGlobal,
+                hasSearchInputs: h.value.hasSearchInputs,
+                hasSearchInputsWithoutValue: h.value.hasSearchInputsWithoutValue,
+                searchInputs: h.value.searchInputsWithoutGlobal,
                 onAdd: _e
               }, () => [
-                m.value.hasSearchInputs ? (s(), F(ua, {
+                h.value.hasSearchInputs ? (s(), F(ua, {
                   key: 0,
-                  "search-inputs": m.value.searchInputsWithoutGlobal,
-                  "has-search-inputs-without-value": m.value.hasSearchInputsWithoutValue,
+                  "search-inputs": h.value.searchInputsWithoutGlobal,
+                  "has-search-inputs-without-value": h.value.hasSearchInputsWithoutValue,
                   "on-add": _e
                 }, null, 8, ["search-inputs", "has-search-inputs-without-value"])) : b("", !0)
               ], !0) : b("", !0),
-              t.withGroupedMenu ? b("", !0) : z(a.$slots, "tableColumns", {
+              n.withGroupedMenu ? b("", !0) : N(l.$slots, "tableColumns", {
                 key: 1,
-                hasColumns: m.value.hasToggleableColumns,
+                hasColumns: h.value.hasToggleableColumns,
                 columns: r.value.columns,
-                hasHiddenColumns: m.value.hasHiddenColumns,
+                hasHiddenColumns: h.value.hasHiddenColumns,
                 onChange: ke
               }, () => [
-                m.value.hasToggleableColumns ? (s(), F(_a, {
+                h.value.hasToggleableColumns ? (s(), F(_a, {
                   key: 0,
                   columns: r.value.columns,
-                  "has-hidden-columns": m.value.hasHiddenColumns,
+                  "has-hidden-columns": h.value.hasHiddenColumns,
                   "on-change": ke,
-                  "table-name": t.name
+                  "table-name": n.name
                 }, null, 8, ["columns", "has-hidden-columns", "table-name"])) : b("", !0)
               ], !0),
-              t.withGroupedMenu ? z(a.$slots, "groupedAction", {
+              n.withGroupedMenu ? N(l.$slots, "groupedAction", {
                 key: 2,
-                actions: Ne.value
+                actions: ze.value
               }, () => [
-                H(Xa, { actions: Ne.value }, {
-                  default: O(() => [
-                    z(a.$slots, "bulk-actions", {}, void 0, !0)
+                H(Ya, { actions: ze.value }, {
+                  default: E(() => [
+                    N(l.$slots, "bulk-actions", {}, void 0, !0)
                   ]),
                   _: 3
                 }, 8, ["actions"])
               ], !0) : b("", !0),
-              t.withGroupedMenu ? b("", !0) : z(a.$slots, "tableReset", {
+              n.withGroupedMenu ? b("", !0) : N(l.$slots, "tableReset", {
                 key: 3,
-                canBeReset: ze.value,
+                canBeReset: Ne.value,
                 onClick: be
               }, () => [
-                ze.value ? (s(), h("div", rs, [
-                  H(Oa, { "on-click": be })
+                Ne.value ? (s(), f("div", ls, [
+                  H(Ra, { "on-click": be })
                 ])) : b("", !0)
               ], !0),
-              t.showExportButton ? z(a.$slots, "exportButton", {
-                key: 4,
+              w.value.length ? (s(), f("div", as, [
+                o[4] || (o[4] = t("svg", {
+                  class: "ijt-toolbar__mobile-sort-icon",
+                  xmlns: "http://www.w3.org/2000/svg",
+                  width: "1em",
+                  height: "1em",
+                  viewBox: "0 0 1024 1024",
+                  "aria-hidden": "true"
+                }, [
+                  t("path", {
+                    fill: "currentColor",
+                    d: "M839.6 433.8L749 150.5a9.24 9.24 0 0 0-8.9-6.5h-77.4c-4.1 0-7.6 2.6-8.9 6.5l-91.3 283.3c-.3.9-.5 1.9-.5 2.9c0 5.1 4.2 9.3 9.3 9.3h56.4c4.2 0 7.8-2.8 9-6.8l17.5-61.6h89l17.3 61.5c1.1 4 4.8 6.8 9 6.8h61.2c1 0 1.9-.1 2.8-.4c2.4-.8 4.3-2.4 5.5-4.6c1.1-2.2 1.3-4.7.6-7.1M663.3 325.5l32.8-116.9h6.3l32.1 116.9zm143.5 492.9H677.2v-.4l132.6-188.9c1.1-1.6 1.7-3.4 1.7-5.4v-36.4c0-5.1-4.2-9.3-9.3-9.3h-204c-5.1 0-9.3 4.2-9.3 9.3v43c0 5.1 4.2 9.3 9.3 9.3h122.6v.4L587.7 828.9a9.35 9.35 0 0 0-1.7 5.4v36.4c0 5.1 4.2 9.3 9.3 9.3h211.4c5.1 0 9.3-4.2 9.3-9.3v-43a9.2 9.2 0 0 0-9.2-9.3M416 702h-76V172c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v530h-76c-6.7 0-10.5 7.8-6.3 13l112 141.9a8 8 0 0 0 12.6 0l112-141.9c4.1-5.2.4-13-6.3-13"
+                  })
+                ], -1)),
+                t("select", {
+                  id: `table-${n.name}-mobile-sort`,
+                  class: "ijt-toolbar__mobile-sort-select",
+                  value: $.value,
+                  "aria-label": C(a).sort_by,
+                  title: C(a).sort_by,
+                  onChange: o[0] || (o[0] = (u) => ft(u.target.value))
+                }, [
+                  t("option", os, _(C(a).default_sort), 1),
+                  (s(!0), f(U, null, K(w.value, (u) => (s(), f(U, {
+                    key: u.key
+                  }, [
+                    t("option", {
+                      value: u.key
+                    }, _(u.label) + " (" + _(C(a).ascending) + ")", 9, rs),
+                    t("option", {
+                      value: `-${u.key}`
+                    }, _(u.label) + " (" + _(C(a).descending) + ")", 9, is)
+                  ], 64))), 128))
+                ], 40, ss)
+              ])) : b("", !0),
+              n.showExportButton ? N(l.$slots, "exportButton", {
+                key: 5,
                 exportUrl: Fe.value,
-                translations: $(l)
+                translations: C(a)
               }, () => [
-                n("a", {
+                t("a", {
                   href: Fe.value,
                   class: "ijt-export"
-                }, [...o[4] || (o[4] = [
-                  n("svg", {
+                }, [...o[5] || (o[5] = [
+                  t("svg", {
                     class: "ijt-export__icon",
                     fill: "none",
                     stroke: "currentColor",
                     viewBox: "0 0 24 24"
                   }, [
-                    n("path", {
+                    t("path", {
                       "stroke-linecap": "round",
                       "stroke-linejoin": "round",
                       "stroke-width": "2",
                       d: "M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                     })
                   ], -1)
-                ])], 8, is)
+                ])], 8, us)
               ], !0) : b("", !0)
             ])
           ]),
-          t.hideSearchInputsAboveTable ? b("", !0) : z(a.$slots, "tableSearchRows", {
+          n.hideSearchInputsAboveTable ? b("", !0) : N(l.$slots, "tableSearchRows", {
             key: 0,
-            hasSearchRowsWithValue: m.value.hasSearchInputsWithValue,
-            searchInputs: m.value.searchInputsWithoutGlobal,
+            hasSearchRowsWithValue: h.value.hasSearchInputsWithValue,
+            searchInputs: h.value.searchInputsWithoutGlobal,
             forcedVisibleSearchInputs: W.value,
             onChange: ce
           }, () => [
-            m.value.hasSearchInputsWithValue || W.value.length > 0 ? (s(), F(La, {
+            h.value.hasSearchInputsWithValue || W.value.length > 0 ? (s(), F(La, {
               key: 0,
-              "search-inputs": m.value.searchInputsWithoutGlobal,
+              "search-inputs": h.value.searchInputsWithoutGlobal,
               "forced-visible-search-inputs": W.value,
               "on-change": ce,
               "on-remove": at
             }, null, 8, ["search-inputs", "forced-visible-search-inputs"])) : b("", !0)
           ], !0),
-          z(a.$slots, "tableWrapper", { meta: se.value }, () => [
-            H(Ua, {
+          N(l.$slots, "tableWrapper", { meta: se.value }, () => [
+            H(Ka, {
               class: P({ "ijt-wrapper--mt": !ge.value })
             }, {
-              default: O(() => [
-                z(a.$slots, "table", {}, () => [
-                  n("div", us, [
-                    n("table", {
-                      class: P(["ijt-table", { "ijt-table--show-resize-indicators": t.resizeableColumns && y.value }]),
-                      style: Y([{ "table-layout": "fixed", "min-width": "100%" }, { width: yt.value }]),
-                      onMouseenter: o[2] || (o[2] = (i) => t.resizeableColumns ? wt : null),
-                      onMouseleave: o[3] || (o[3] = (i) => t.resizeableColumns ? xt : null)
+              default: E(() => [
+                N(l.$slots, "table", {}, () => [
+                  t("div", cs, [
+                    t("table", {
+                      class: P(["ijt-table", { "ijt-table--show-resize-indicators": n.resizeableColumns && y.value }]),
+                      style: J([{ "table-layout": "fixed", "min-width": "100%" }, { width: yt.value }]),
+                      onMouseenter: o[2] || (o[2] = (u) => n.resizeableColumns ? wt : null),
+                      onMouseleave: o[3] || (o[3] = (u) => n.resizeableColumns ? xt : null)
                     }, [
-                      n("thead", cs, [
-                        z(a.$slots, "head", {
+                      t("thead", ds, [
+                        N(l.$slots, "head", {
                           show: Ce,
                           sortBy: Re,
                           header: he
                         }, () => [
-                          n("tr", ds, [
-                            t.hasCheckboxes ? (s(), h("th", vs, [
-                              n("label", {
-                                for: `table-${t.name}-select-header`,
+                          t("tr", vs, [
+                            n.hasCheckboxes ? (s(), f("th", hs, [
+                              t("label", {
+                                for: `table-${n.name}-select-header`,
                                 class: "ijt-sr-only"
-                              }, _($(l).select_row), 9, hs),
-                              A(n("input", {
+                              }, _(C(a).select_row), 9, fs),
+                              A(t("input", {
                                 type: "checkbox",
-                                id: `table-${t.name}-select-header`,
+                                id: `table-${n.name}-select-header`,
                                 onChange: pt,
-                                "onUpdate:modelValue": o[1] || (o[1] = (i) => ue.value = i),
+                                "onUpdate:modelValue": o[1] || (o[1] = (u) => ue.value = u),
                                 class: "ijt-table__checkbox",
-                                "aria-label": $(l).select_row
-                              }, null, 40, fs), [
+                                "aria-label": C(a).select_row
+                              }, null, 40, ms), [
                                 [Ke, ue.value]
                               ])
                             ])) : b("", !0),
-                            (s(!0), h(U, null, K(r.value.columns, (i) => (s(), F(Al, {
-                              cell: he(i.key),
-                              style: Y(bt(i.key))
+                            (s(!0), f(U, null, K(r.value.columns, (u) => (s(), F(Al, {
+                              cell: he(u.key),
+                              style: J(bt(u.key))
                             }, {
-                              label: O(() => [
-                                z(a.$slots, `header(${i.key})`, {
-                                  label: he(i.key).label,
-                                  column: he(i.key)
+                              label: E(() => [
+                                N(l.$slots, `header(${u.key})`, {
+                                  label: he(u.key).label,
+                                  column: he(u.key)
                                 }, void 0, !0)
                               ]),
                               _: 2
@@ -3116,132 +3140,132 @@ const Ya = ["dusk"], Ja = { class: "ijt-toolbar" }, Za = {
                           ])
                         ], !0)
                       ]),
-                      n("tbody", ms, [
-                        z(a.$slots, "body", { show: Ce }, () => [
-                          (s(!0), h(U, null, K(le.value, (i, k) => (s(), h("tr", {
-                            key: `table-${t.name}-row-${k}`,
-                            class: P(["ijt-table__tr", [st(i, k), {
-                              "ijt-table__tr--has-actions": v.value,
-                              "ijt-table__tr--has-checkboxes": t.hasCheckboxes,
-                              "ijt-table__tr--has-card-controls": v.value || t.hasCheckboxes
+                      t("tbody", ps, [
+                        N(l.$slots, "body", { show: Ce }, () => [
+                          (s(!0), f(U, null, K(le.value, (u, k) => (s(), f("tr", {
+                            key: `table-${n.name}-row-${k}`,
+                            class: P(["ijt-table__tr", [st(u, k), {
+                              "ijt-table__tr--has-actions": m.value,
+                              "ijt-table__tr--has-checkboxes": n.hasCheckboxes,
+                              "ijt-table__tr--has-card-controls": m.value || n.hasCheckboxes
                             }]])
                           }, [
-                            t.hasCheckboxes ? (s(), h("td", {
+                            n.hasCheckboxes ? (s(), f("td", {
                               key: 0,
                               class: "ijt-table__td ijt-table__td--pinned-checkbox",
                               style: { width: "60px" },
-                              "data-column-label": $(l).select_row
+                              "data-column-label": C(a).select_row
                             }, [
-                              n("div", gs, _($(l).select_row), 1),
-                              n("div", _s, [
-                                n("label", {
-                                  for: `table-${t.name}-select-${k}`,
+                              t("div", _s, _(C(a).select_row), 1),
+                              t("div", bs, [
+                                t("label", {
+                                  for: `table-${n.name}-select-${k}`,
                                   class: "ijt-sr-only"
-                                }, _($(l).select_row), 9, bs),
-                                A(n("input", {
+                                }, _(C(a).select_row), 9, ys),
+                                A(t("input", {
                                   type: "checkbox",
-                                  id: `table-${t.name}-select-${k}`,
+                                  id: `table-${n.name}-select-${k}`,
                                   class: "ijt-table__checkbox",
-                                  "onUpdate:modelValue": (g) => i.__itSelected = g,
-                                  "aria-label": $(l).select_row
-                                }, null, 8, ys), [
-                                  [Ke, i.__itSelected]
+                                  "onUpdate:modelValue": (g) => u.__itSelected = g,
+                                  "aria-label": C(a).select_row
+                                }, null, 8, ks), [
+                                  [Ke, u.__itSelected]
                                 ])
                               ])
-                            ], 8, ps)) : b("", !0),
-                            (s(!0), h(U, null, K(w.value, (g) => (s(), h("td", {
-                              key: `table-${t.name}-row-${k}-column-${g.key}`,
-                              onClick: (N) => dt(N, i, g.key),
+                            ], 8, gs)) : b("", !0),
+                            (s(!0), f(U, null, K(x.value, (g) => (s(), f("td", {
+                              key: `table-${n.name}-row-${k}-column-${g.key}`,
+                              onClick: (z) => dt(z, u, g.key),
                               class: P(["ijt-table__td", [g.body_class, {
-                                "ijt-table__td--empty": mt(i, g.key)
+                                "ijt-table__td--empty": mt(u, g.key)
                               }]]),
                               "data-column-key": g.key,
                               "data-column-label": g.label || g.key,
                               "data-column-hidden": g.hidden ? "true" : "false",
-                              style: Y({
+                              style: J({
                                 width: gt(g.key),
                                 overflow: "hidden",
                                 textOverflow: "ellipsis",
                                 ..._t(g.key)
                               })
                             }, [
-                              n("div", ws, _(g.label || g.key), 1),
-                              n("div", xs, [
-                                z(a.$slots, `cell(${g.key})`, { item: i }, () => [
-                                  te(_(i[g.key]), 1)
+                              t("div", xs, _(g.label || g.key), 1),
+                              t("div", js, [
+                                N(l.$slots, `cell(${g.key})`, { item: u }, () => [
+                                  te(_(u[g.key]), 1)
                                 ], !0)
                               ])
-                            ], 14, ks))), 128))
+                            ], 14, ws))), 128))
                           ], 2))), 128))
                         ], !0)
                       ])
                     ], 38)
                   ])
                 ], !0),
-                I.value ? b("", !0) : z(a.$slots, "pagination", {
+                q.value ? b("", !0) : N(l.$slots, "pagination", {
                   key: 0,
                   onClick: Le,
                   hasData: Ie.value,
                   meta: se.value,
-                  perPageOptions: m.value.perPageOptions,
+                  perPageOptions: h.value.perPageOptions,
                   onPerPageChange: Be,
-                  showExportButton: t.showExportButton
+                  showExportButton: n.showExportButton
                 }, () => [
-                  n("div", js, [
-                    t.hasCheckboxes ? (s(), h("span", Cs, _(kt.value), 1)) : b("", !0),
+                  t("div", Cs, [
+                    n.hasCheckboxes ? (s(), f("span", $s, _(kt.value), 1)) : b("", !0),
                     H(oa, {
                       "on-click": Le,
                       "has-data": Ie.value,
                       meta: se.value,
-                      "per-page-options": m.value.perPageOptions,
+                      "per-page-options": h.value.perPageOptions,
                       "on-per-page-change": Be,
-                      "show-export-button": t.showExportButton
+                      "show-export-button": n.showExportButton
                     }, {
-                      exportButton: O((i) => [
-                        z(a.$slots, "exportButton", Ft(Vt(i)), void 0, !0)
+                      exportButton: E((u) => [
+                        N(l.$slots, "exportButton", Ft(Vt(u)), void 0, !0)
                       ]),
                       _: 3
                     }, 8, ["has-data", "meta", "per-page-options", "show-export-button"])
                   ])
                 ], !0),
-                I.value && G.value ? (s(), h("div", $s, [...o[5] || (o[5] = [
-                  n("div", { class: "ijt-loading__spinner" }, null, -1)
+                q.value && X.value ? (s(), f("div", Ss, [...o[6] || (o[6] = [
+                  t("div", { class: "ijt-loading__spinner" }, null, -1)
                 ])])) : b("", !0)
               ]),
               _: 3
             }, 8, ["class"])
           ], !0),
-          I.value ? (s(), h("div", {
+          q.value ? (s(), f("div", {
             key: 1,
             ref_key: "intersectElement",
-            ref: E,
+            ref: O,
             style: { height: "20px", width: "100%" }
           }, null, 512)) : b("", !0),
-          z(a.$slots, "tableSummary", {
+          N(l.$slots, "tableSummary", {
             data: le.value,
             meta: se.value,
             selectedItems: De.value
           }, void 0, !0)
-        ], 10, Ya))
+        ], 10, Za))
       ]),
       _: 3
     }));
   }
-}, Gs = /* @__PURE__ */ Me(Ss, [["__scopeId", "data-v-4b329704"]]);
+}, Xs = /* @__PURE__ */ Me(Ms, [["__scopeId", "data-v-ee0bf632"]]);
 export {
   pe as ButtonWithDropdown,
   Al as HeaderCell,
   Qt as OnClickOutside,
   oa as Pagination,
-  Gs as Table,
+  Xs as Table,
   ua as TableAddSearchRow,
   _a as TableColumns,
   Ma as TableFilter,
-  Na as TableGlobalSearch,
-  Oa as TableReset,
+  za as TableGlobalSearch,
+  Ra as TableReset,
   La as TableSearchRows,
-  Ua as TableWrapper,
+  Ka as TableWrapper,
   ne as getTranslations,
-  Hs as setTranslation,
-  Ks as setTranslations
+  Ks as setTranslation,
+  Gs as setTranslations
 };

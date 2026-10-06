@@ -19,10 +19,10 @@
                     {{ translations.search }} {{ columnLabel }}
                 </h3>
                 <div class="ijt-column-search__content">
-                    <input ref="searchInput" type="text" :value="currentSearchValue" class="ijt-column-search__input"
+                    <input ref="searchInput" type="text" :value="localValue" class="ijt-column-search__input"
                         :placeholder="`${translations.search} ${columnLabel.toLowerCase()}...`"
                         @input="onSearchInput" @keydown.enter="closeDropdown" @keydown.escape="closeDropdown" />
-                    <div v-if="currentSearchValue && currentSearchValue !== ''" class="ijt-column-search__reset">
+                    <div v-if="localValue !== ''" class="ijt-column-search__reset">
                         <button type="button" class="ijt-search-row__remove-button" @click="onSearchChange('')">
                             <span class="ijt-sr-only">{{ translations.reset }}</span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="ijt-search-row__remove-icon" fill="none" viewBox="0 0 24 24"
@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, onUnmounted, Teleport, nextTick } from "vue";
+import { computed, ref, watch, onMounted, onUnmounted, Teleport, nextTick } from "vue";
 import { getTranslations } from "../translations.js";
 import { usePopper } from "../composables/usePopper.js";
 
@@ -93,6 +93,17 @@ const currentSearchValue = computed(() => {
     return columnSearchInput.value ? columnSearchInput.value.value || '' : '';
 });
 
+// Local copy of the typed text, so a late or stale server response cannot overwrite it
+const localValue = ref(currentSearchValue.value);
+
+watch(currentSearchValue, (newValue) => {
+    if (document.activeElement === searchInput.value) {
+        return;
+    }
+
+    localValue.value = newValue;
+});
+
 // Check if there is an active search
 const hasActiveSearch = computed(() => {
     return currentSearchValue.value !== '';
@@ -117,11 +128,11 @@ function closeDropdown() {
 }
 
 function onSearchInput(event) {
-    const value = event.target.value;
-    onSearchChange(value);
+    onSearchChange(event.target.value);
 }
 
 function onSearchChange(value) {
+    localValue.value = value;
     props.onSearchChange(props.columnKey, value);
 }
 

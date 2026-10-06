@@ -3,6 +3,7 @@
     ref="button"
     type="button"
     dusk="reset-table"
+    :aria-label="translations.reset ?? 'Reset'"
     class="ijt-reset"
     aria-haspopup="true"
     @click.prevent="onClick"
@@ -19,7 +20,7 @@
         clip-rule="evenodd"
       />
     </svg>
-    <span>{{ translations.reset ?? 'Reset' }}</span>
+    <span class="ijt-reset__label">{{ translations.reset ?? 'Reset' }}</span>
   </button>
 </template>
 
