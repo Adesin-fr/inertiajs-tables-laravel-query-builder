@@ -7,10 +7,10 @@
                     class="ijt-toolbar__section ijt-toolbar__section--grow ijt-toolbar__section--mb">
                     <slot name="tableGlobalSearch" :has-global-search="queryBuilderProps.globalSearch"
                         :label="queryBuilderProps.globalSearch ? queryBuilderProps.globalSearch.label : null"
-                        :value="queryBuilderProps.globalSearch ? queryBuilderProps.globalSearch.value : null"
+                        :value="globalSearchValue"
                         :on-change="changeGlobalSearchValue">
                         <TableGlobalSearch v-if="queryBuilderProps.globalSearch" class="ijt-global-search--grow"
-                            :label="queryBuilderProps.globalSearch.label" :value="queryBuilderProps.globalSearch.value"
+                            :label="queryBuilderProps.globalSearch.label" :value="globalSearchValue"
                             :on-change="changeGlobalSearchValue" />
                     </slot>
                 </div>
@@ -684,6 +684,7 @@ const exportUrlWithParams = computed(() => {
 });
 
 function resetQuery() {
+    globalSearchValue.value = "";
     forcedVisibleSearchInputs.value = [];
 
     forEach(queryBuilderData.value.filters, (filter, key) => {
@@ -734,7 +735,23 @@ function changeSearchInputValue(key, value) {
     }, props.inputDebounceMs);
 }
 
+// Term shown in the global search bar. Seeded from the server-provided value (so it survives
+// a remount or reload), updated immediately while typing, and re-synced from the server only
+// when the user is not typing, so a late or stale response cannot overwrite the input.
+const globalSearchValue = ref(queryBuilderProps.value.globalSearch?.value ?? "");
+
+watch(() => queryBuilderProps.value.globalSearch?.value, (newValue) => {
+    const active = document.activeElement;
+
+    if (active && tableFieldset.value?.contains(active) && ["INPUT", "TEXTAREA"].includes(active.tagName)) {
+        return;
+    }
+
+    globalSearchValue.value = newValue ?? "";
+});
+
 function changeGlobalSearchValue(value) {
+    globalSearchValue.value = value;
     changeSearchInputValue("global", value);
 }
 
