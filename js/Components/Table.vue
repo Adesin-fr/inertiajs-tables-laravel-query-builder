@@ -121,7 +121,7 @@
                                                     @change="toggleSelection" v-model="headerCheckboxSelected"
                                                     class="ijt-table__checkbox" :aria-label="translations.select_row" />
                                             </th>
-                                            <template v-for="column in queryBuilderData.columns">
+                                            <template v-for="column in orderedColumns">
                                                 <HeaderCell :cell="header(column.key)"
                                                     :class="{ 'ijt-table__th--sticky-right': isColumnStickyRight(column.key) }"
                                                     :style="getPinnedHeaderStyle(column.key)">
@@ -395,8 +395,18 @@ const queryBuilderProps = computed(() => {
 
 const queryBuilderData = ref(queryBuilderProps.value);
 
+// Sticky right columns are always rendered last, whatever the server, saved or dragged order
+const orderedColumns = computed(() => {
+    const columns = queryBuilderData.value.columns;
+
+    return [
+        ...columns.filter((column) => !isStickyRightColumn(column)),
+        ...columns.filter((column) => isStickyRightColumn(column)),
+    ];
+});
+
 const visibleColumns = computed(() => {
-    return queryBuilderData.value.columns.filter((column) => !column.hidden);
+    return orderedColumns.value.filter((column) => !column.hidden);
 });
 
 const mobileSortableColumns = computed(() => {
@@ -1341,9 +1351,12 @@ function isColumnPinned(columnKey) {
 }
 
 // A left-pinned column takes precedence over sticky_right
-function isColumnStickyRight(columnKey) {
-    const column = queryBuilderData.value.columns.find(col => col.key === columnKey);
+function isStickyRightColumn(column) {
     return Boolean(column && column.sticky_right && !column.pinned);
+}
+
+function isColumnStickyRight(columnKey) {
+    return isStickyRightColumn(queryBuilderData.value.columns.find(col => col.key === columnKey));
 }
 
 // Calculer le style pour une colonne épinglée
