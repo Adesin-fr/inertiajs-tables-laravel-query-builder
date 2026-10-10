@@ -406,6 +406,36 @@
 }
 
 /* ========================================
+   Sticky Right Columns
+   Desktop only: the mobile card layout keeps its own rendering.
+   ======================================== */
+@media (min-width: 640px) {
+  /* Opaque by default so the sticky cell, which inherits the row background, hides what scrolls under it.
+     Zero specificity: any row class (rowClass, striped, selected, hover) still wins. */
+  :where(.ijt-table__tbody > .ijt-table__tr--has-sticky-right) {
+    background-color: var(--ijt-color-bg);
+  }
+
+  .ijt-table__th--sticky-right,
+  .ijt-table__td--sticky-right {
+    position: sticky;
+    right: 0;
+    z-index: 1;
+    border-left: 1px solid var(--ijt-color-border);
+    box-shadow: -2px 0 4px -2px rgba(0, 0, 0, 0.1);
+  }
+
+  .ijt-table__td--sticky-right {
+    background-color: inherit;
+  }
+
+  .ijt-table__th--sticky-right {
+    background-color: var(--ijt-color-bg-secondary);
+    z-index: 2;
+  }
+}
+
+/* ========================================
    Global Search
    ======================================== */
 .ijt-global-search {

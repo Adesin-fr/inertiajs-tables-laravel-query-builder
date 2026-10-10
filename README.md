@@ -437,8 +437,17 @@ Inertia::render('Page/Index')->table(function (InertiaTable $table) {
 		headerClass: 'hidden md:table-cell', // This cell will be hidden on small screens
 		bodyClass: 'hidden md:table-cell', // This cell will be hidden on small screens
 	);
+
+	$table->column(
+		key: 'actions',
+		label: 'Actions',
+		canBeHidden: false,
+		stickyRight: true, // Stays visible on the right edge when the table overflows horizontally
+	);
 });
 ```
+
+The `stickyRight` option only applies on desktop (the mobile card layout is unchanged) and is ignored when the user pins the column on the left. The sticky cell inherits the row background, so row classes (`rowClass`, striped, hover) are preserved.
 
 The `searchable` option is a shortcut to the `searchInput` method. The example below will essentially call `$table->searchInput('name', 'User Name')`.
 

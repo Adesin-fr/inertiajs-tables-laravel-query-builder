@@ -15,6 +15,7 @@ class Column implements Arrayable
         public bool|string $sorted,
         public string $headerClass = '',
         public string $bodyClass = '',
+        public bool $stickyRight = false,
     ) {}
 
     public function toArray()
@@ -28,6 +29,7 @@ class Column implements Arrayable
             'sorted'        => $this->sorted,
             'header_class'  => $this->headerClass,
             'body_class'    => $this->bodyClass,
+            'sticky_right'  => $this->stickyRight,
         ];
     }
 }

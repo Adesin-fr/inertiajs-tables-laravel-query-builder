@@ -123,6 +123,7 @@
                                             </th>
                                             <template v-for="column in queryBuilderData.columns">
                                                 <HeaderCell :cell="header(column.key)"
+                                                    :class="{ 'ijt-table__th--sticky-right': isColumnStickyRight(column.key) }"
                                                     :style="getPinnedHeaderStyle(column.key)">
                                                     <template #label>
                                                         <slot :name="`header(${column.key})`"
@@ -140,7 +141,8 @@
                                             class="ijt-table__tr" :class="[getRowClass(item, key), {
                                                 'ijt-table__tr--has-actions': hasVisibleActionsColumn,
                                                 'ijt-table__tr--has-checkboxes': hasCheckboxes,
-                                                'ijt-table__tr--has-card-controls': hasVisibleActionsColumn || hasCheckboxes
+                                                'ijt-table__tr--has-card-controls': hasVisibleActionsColumn || hasCheckboxes,
+                                                'ijt-table__tr--has-sticky-right': hasStickyRightColumn
                                             }]">
                                             <td class="ijt-table__td ijt-table__td--pinned-checkbox"
                                                 v-if="hasCheckboxes" style="width: 60px;"
@@ -160,7 +162,8 @@
                                                 :key="`table-${name}-row-${key}-column-${column.key}`"
                                                 @click="rowClicked($event, item, column.key)" class="ijt-table__td"
                                                 :class="[column.body_class, {
-                                                    'ijt-table__td--empty': isEmptyCell(item, column.key)
+                                                    'ijt-table__td--empty': isEmptyCell(item, column.key),
+                                                    'ijt-table__td--sticky-right': isColumnStickyRight(column.key)
                                                 }]" :data-column-key="column.key"
                                                 :data-column-label="column.label || column.key"
                                                 :data-column-hidden="column.hidden ? 'true' : 'false'" :style="{
@@ -402,6 +405,10 @@ const mobileSortableColumns = computed(() => {
 
 const hasVisibleActionsColumn = computed(() => {
     return visibleColumns.value.some((column) => column.key === "actions");
+});
+
+const hasStickyRightColumn = computed(() => {
+    return visibleColumns.value.some((column) => isColumnStickyRight(column.key));
 });
 
 function isHiddenOnMobile(column) {
@@ -1331,6 +1338,12 @@ function getPinnedColumnLeft(columnKey) {
 function isColumnPinned(columnKey) {
     const column = queryBuilderData.value.columns.find(col => col.key === columnKey);
     return column && column.pinned;
+}
+
+// A left-pinned column takes precedence over sticky_right
+function isColumnStickyRight(columnKey) {
+    const column = queryBuilderData.value.columns.find(col => col.key === columnKey);
+    return Boolean(column && column.sticky_right && !column.pinned);
 }
 
 // Calculer le style pour une colonne épinglée

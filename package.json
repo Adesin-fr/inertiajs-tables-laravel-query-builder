@@ -1,6 +1,6 @@
 {
   "name": "@adesin/inertiajs-tables-laravel-query-builder",
-  "version": "4.1.2",
+  "version": "4.2.0",
   "description": "Inertia.js Front-end Components for Spatie's Laravel Query Builder",
   "private": false,
   "author": "AdesinFr <ludovic@adesin.fr>",

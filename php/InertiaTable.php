@@ -439,9 +439,12 @@ class InertiaTable
      * @param bool $hidden
      * @param bool $sortable
      * @param bool $searchable
+     * @param string $headerClass
+     * @param string $bodyClass
+     * @param bool $stickyRight Keep the column stuck to the right edge when the table overflows horizontally
      * @return self
      */
-    public function column(?string $key = null, ?string $label = null, bool $canBeHidden = true, bool $hidden = false, bool $sortable = false, bool $searchable = false, string $headerClass = '', string $bodyClass = ''): self
+    public function column(?string $key = null, ?string $label = null, bool $canBeHidden = true, bool $hidden = false, bool $sortable = false, bool $searchable = false, string $headerClass = '', string $bodyClass = '', bool $stickyRight = false): self
     {
         $key   = $key ?: Str::kebab($label);
         $label = $label ?: Str::headline($key);
@@ -456,7 +459,8 @@ class InertiaTable
             sortable: $sortable,
             sorted: false,
             headerClass: $headerClass,
-            bodyClass: $bodyClass
+            bodyClass: $bodyClass,
+            stickyRight: $stickyRight,
         ))->values();
 
         if ($searchable) {
