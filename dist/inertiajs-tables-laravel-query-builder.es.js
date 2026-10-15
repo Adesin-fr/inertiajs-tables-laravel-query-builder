@@ -2714,6 +2714,7 @@ const os = ["dusk"], rs = { class: "ijt-toolbar" }, is = {
         l,
         {},
         {
+          ...e.inertia,
           replace: !0,
           preserveState: !0,
           preserveScroll: e.preserveScroll !== !1,
@@ -3276,7 +3277,7 @@ const os = ["dusk"], rs = { class: "ijt-toolbar" }, is = {
       _: 3
     }));
   }
-}, no = /* @__PURE__ */ ze(Ps, [["__scopeId", "data-v-901e3c9f"]]);
+}, no = /* @__PURE__ */ ze(Ps, [["__scopeId", "data-v-db468241"]]);
 export {
   be as ButtonWithDropdown,
   Xl as HeaderCell,

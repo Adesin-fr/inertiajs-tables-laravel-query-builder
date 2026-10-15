@@ -901,6 +901,7 @@ The `Table` has some additional properties to tweak its front-end behaviour.
 | rowClass                   | A function that receives the row item as parameter and returns a CSS class string to apply to the table row. Useful for conditional row styling.                                                          | `null`  |
 | paginationClickCallback    | A function that receives the pagination URL as parameter and handles custom pagination logic instead of the default Inertia navigation.                                                                   | `null`  |
 | localStorageName           | Custom key for storing table customizations (column visibility, order, pinned state, and widths) in localStorage. If not provided, falls back to `table-{name}`.                                          | `null`  |
+| inertia                    | Extra [visit options](https://inertiajs.com/manual-visits) merged into the table's visits, e.g. `{ only: ['users', 'queryBuilderProps'] }` for a [partial reload](https://inertiajs.com/partial-reloads). Always include `queryBuilderProps` in `only`. | `{}`    |
 
 #### Custom Pagination Callback ✨ **NEW!**
 

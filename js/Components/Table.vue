@@ -967,6 +967,7 @@ function visit(url) {
         url,
         {},
         {
+            ...props.inertia,
             replace: true,
             preserveState: true,
             preserveScroll: props.preserveScroll !== false,
