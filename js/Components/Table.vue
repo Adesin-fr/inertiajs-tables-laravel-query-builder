@@ -670,17 +670,11 @@ const exportUrlWithParams = computed(() => {
         });
     }
 
-    // Add column visibility
-    const visibleColumns = queryBuilderData.value.columns
-        .filter(column => !column.hidden)
-        .map(column => column.key);
-
-    if (visibleColumns.length !== queryBuilderData.value.columns.length) {
-        const columnsKey = props.name === "default" ? "columns" : `${props.name}_columns`;
-        visibleColumns.forEach(columnKey => {
-            params.append(`${columnsKey}[]`, columnKey);
-        });
-    }
+    // Always send the displayed columns, in their displayed order, so that exports follow the table
+    const columnsKey = props.name === "default" ? "columns" : `${props.name}_columns`;
+    visibleColumns.value.forEach(column => {
+        params.append(`${columnsKey}[]`, column.key);
+    });
 
     // Add per page
     if (queryBuilderProps.value.perPageOptions && queryBuilderProps.value.perPageOptions.length > 0) {

@@ -19,6 +19,11 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class InertiaTable
 {
+    /**
+     * Request attribute holding the columns displayed by the table when an export is requested.
+     */
+    public const EXPORT_COLUMNS_ATTRIBUTE = 'inertia_table_export_columns';
+
     private string $name          = 'default';
     private string $pageName      = 'page';
     private array $perPageOptions = [15, 30, 50, 100];
@@ -809,6 +814,8 @@ class InertiaTable
 
         // If a custom export callback is defined, use it instead of the default export logic
         if ($this->exportCallback) {
+            $this->request->attributes->set(self::EXPORT_COLUMNS_ATTRIBUTE, $this->displayedColumns());
+
             return call_user_func($this->exportCallback, $queryBuilder);
         }
 
@@ -834,6 +841,27 @@ class InertiaTable
             ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
             ->header('Pragma', 'no-cache')
             ->header('Expires', '0');
+    }
+
+    /**
+     * The columns displayed by the table, in their displayed order : the ones listed
+     * in the `columns` query parameter, or the columns visible by default.
+     *
+     * @return array<int, array{key: string, label: string}>
+     */
+    public function displayedColumns(): array
+    {
+        $requested = array_values(array_filter((array) $this->query('columns', []), 'is_string'));
+        $byKey = $this->columns->keyBy('key');
+
+        $columns = $requested === []
+            ? $this->columns->reject->hidden
+            : collect($requested)->map(fn (string $key) => $byKey->get($key))->filter();
+
+        return $columns
+            ->map(fn (Column $column) => ['key' => $column->key, 'label' => (string) ($column->label ?: Str::headline($column->key))])
+            ->values()
+            ->all();
     }
 
     /**
